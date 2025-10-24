@@ -29,7 +29,6 @@ Aplikasi ini memiliki dua modul utama: **User Management** dan **Buwuhan Book Ma
 ## ⚙️ Teknologi yang Digunakan
 - **React + Vite**
 - **Tailwind CSS**
-- **React Router v6**
 - **REST API Ready**
 
 ---
@@ -37,7 +36,7 @@ Aplikasi ini memiliki dua modul utama: **User Management** dan **Buwuhan Book Ma
 ## ⚙️ Cara Menjalankan
 ```bash
 # Clone repository
-git clone https://github.com/hdibudihardoyo/Buwuhan-App.git
+git clone https://github.com/Shrimp-Developers/Buwuhan-App.git
 
 # Masuk folder project
 cd Buwuhan-App
