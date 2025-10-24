@@ -1,0 +1,69 @@
+import { LayoutGrid, PlusCircle, BarChart3, Settings, LogOut, User } from 'lucide-react';
+
+export default function Sidebar({ isOpen, onClose }) {
+    return (
+        <>
+            {/* Mobile Only */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    onClick={onClose}
+                />
+            )}
+
+            {/* Sidebar */}
+            <aside className={`
+                fixed md:static
+                top-0 left-0
+                w-[280px] md:w-[300px]
+                bg-gray-200 
+                flex flex-col 
+                h-screen 
+                z-50
+                transform transition-transform duration-300 ease-in-out
+                md:translate-x-0
+                ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+
+            `}>
+                {/* Profile Section */}
+                <div className="p-6 flex items-center gap-3">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <span className="font-semibold text-lg">BUWUHAN</span>
+                </div>
+
+                {/* Menu Items */}
+                <nav className="flex-1 px-4 py-2 overflow-y-auto">
+                    <button className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm bg-white text-gray-900 font-medium shadow-sm transition-all duration-200">
+                        <LayoutGrid className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-left">Dashboard</span>
+                    </button>
+
+                    <button className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
+                        <PlusCircle className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-left">Tambah Data</span>
+                    </button>
+
+                    <button className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
+                        <BarChart3 className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-left">Lihat Semua Data</span>
+                    </button>
+
+                    <button className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
+                        <Settings className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-left">Pengaturan</span>
+                    </button>
+                </nav>
+
+                {/* Logout Button */}
+                <div className="p-6 border-gray-300">
+                    <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-300 rounded-lg text-sm transition-all duration-200">
+                        <LogOut className="w-5 h-5 flex-shrink-0" />
+                        <span>Log Out</span>
+                    </button>
+                </div>
+            </aside>
+        </>
+    );
+}

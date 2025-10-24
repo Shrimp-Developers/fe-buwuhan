@@ -1,3 +1,4 @@
+import {Link, useNavigate} from "react-router";
 import { Eye, Mail, Lock } from 'lucide-react';
 
 export default function Login() {

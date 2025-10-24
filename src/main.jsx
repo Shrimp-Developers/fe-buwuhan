@@ -16,6 +16,17 @@ createRoot(document.getElementById("root")).render(
                 {/*Auth*/}
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+
+                {/*Buwuhan Pages*/}
+                <Route path="/dashboard" element={<DashboardLayout />}>
+                    {/* Halaman di dalam dashboard */}
+                    <Route index element={<BuwuhanDashboard />} />
+                </Route>
+
+
+
 
                 {/* Fallback jika route tidak ditemukan */}
                 <Route
