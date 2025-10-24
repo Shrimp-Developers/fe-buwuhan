@@ -4,7 +4,22 @@ import Navbar from '../../components/Navbar.jsx';
 import Sidebar from '../../components/Sidebar.jsx';
 import Card from '../../components/Card.jsx';
 
-export default function Dashboard() {
+export default function BuwuhanDashboard() {
+    const [data] = useState({
+        total: 139,
+        barang: { lunas: 10, belum: 70 },
+        beras: { lunas: 10, belum: 70 },
+        uang: { lunas: 10, belum: 70 },
+        lainnya: { lunas: 10, belum: 70 }
+    });
+
+    const categories = [
+        { title: 'Barang', data: data.barang, bgColor: 'bg-[#F9CD19]' },
+        { title: 'Beras', data: data.beras, bgColor: 'bg-[#FF8BE4]' },
+        { title: 'Uang', data: data.uang, bgColor: 'bg-[#B0CE88]' },
+        { title: 'Lainnya', data: data.lainnya, bgColor: 'bg-[#FFB167]' }
+    ];
+
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
