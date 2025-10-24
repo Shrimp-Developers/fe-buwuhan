@@ -13,7 +13,7 @@ export default function DashboardLayout() {
                 {/* Navbar di atas */}
                 <Navbar title="Overview" />
 
-                {/* Isi halaman (Outlet) */}
+                {/* Isi halaman atau (Outlet) */}
                 <main className="flex-1 overflow-auto p-6">
                     <Outlet />
                 </main>
