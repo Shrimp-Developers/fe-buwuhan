@@ -3,7 +3,7 @@ import { LayoutGrid, PlusCircle, BarChart3, Settings, LogOut, User } from 'lucid
 export default function Sidebar({ isOpen, onClose }) {
     return (
         <>
-            {/* Mobile Only */}
+            {/* Mobile Overlay Backdrop */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
@@ -21,16 +21,14 @@ export default function Sidebar({ isOpen, onClose }) {
                 h-screen 
                 z-50
                 transform transition-transform duration-300 ease-in-out
-                md:translate-x-0
-                ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-
+                ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
                 {/* Profile Section */}
                 <div className="p-6 flex items-center gap-3">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0">
                         <User className="w-8 h-8 text-gray-400" />
                     </div>
-                    <span className="font-semibold text-lg">BUWUHAN</span>
+                    <span className="font-semibold text-xl ml-2">BUWUHAN</span>
                 </div>
 
                 {/* Menu Items */}
