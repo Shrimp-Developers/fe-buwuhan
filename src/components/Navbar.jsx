@@ -1,15 +1,31 @@
 import { Search, Moon, User, Menu } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
+    const location = useLocation();
+    const title = (() => {
+        const path = location.pathname.replace(/\/+$/, "");
+        if (path === "/dashboard") return "Ringkasan";
+        if (path === "/dashboard/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
+        if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "Buwuhan List";
+        if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Buwuhan Detail";
+        return "Dashboard";
+    })();
+
     return (
-        <header className="pt-6 px-8 md:px-13 flex items-center justify-between">
+        <header className="py-6 px-6 md:px-14 flex items-center justify-between bg-white sticky top-0 z-40 shadow-sm">
             {/* Hamburger Menu - Mobile Only */}
-            <button className="md:hidden w-10 h-10 flex items-center justify-center">
+            <button
+                className="md:hidden w-10 h-10 flex items-center justify-center"
+                onClick={onMenuClick}
+            >
                 <Menu className="w-6 h-6 text-gray-700" />
             </button>
 
-            {/* Judul kiri - Hidden on mobile */}
-            <h1 className="hidden md:block text-xl font-semibold text-[#000000]">Ringkasan</h1>
+            {/* Judul kiri */}
+            <h1 className="hidden md:block text-xl font-semibold text-[#000000]">
+                {title}
+            </h1>
 
             <div className="flex items-center gap-2 md:gap-4">
                 {/* Search bar - Hidden on mobile */}
@@ -24,17 +40,17 @@ export default function Navbar() {
 
                 {/* Search Icon - Mobile Only */}
                 <button className="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <Search className="w-5 h-5 text-gray-700" />
+                    <Search className="w-6 h-6 text-gray-700" />
                 </button>
 
                 {/* Tombol Mode (Dark/Light) */}
                 <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <Moon className="w-5 h-5 text-gray-700" />
+                    <Moon className="w-6 h-6 text-gray-700" />
                 </button>
 
                 {/* Profil */}
                 <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <User className="w-5 h-5 text-gray-700" />
+                    <User className="w-6 h-6 text-gray-700" />
                 </button>
             </div>
         </header>
