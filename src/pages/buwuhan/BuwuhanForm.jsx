@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function BuwuhanCreate() {
+export default function BuwuhanForm() {
     const [formData, setFormData] = useState({
         namaLaki: '',
         namaPerempuan: '',
@@ -114,8 +114,8 @@ export default function BuwuhanCreate() {
                             className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                         >
                             <option value="">Pilih status</option>
-                            <option value="belum-kawin">Belum Kawin</option>
-                            <option value="sudah-kawin">Sudah Kawin</option>
+                            <option value="belum-kawin">Lunas</option>
+                            <option value="sudah-kawin">Belum Lunas</option>
                         </select>
                     </div>
                 </div>
