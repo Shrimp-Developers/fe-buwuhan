@@ -7,7 +7,7 @@ export default function Login() {
             {/* Left Side - Image Section */}
             <div className="flex items-center justify-center bg-[#8A86D5] w-full lg:w-1/2 h-72 lg:h-auto">
                 <img
-                    src="public/logo.png"
+                    src="/logo.png"
                     alt="Deskripsi icon-buwuhan"
                     className="w-56 h-56 lg:w-[350px] lg:h-[350px] object-contain"
                 />
@@ -38,7 +38,7 @@ export default function Login() {
                                 <input
                                     type="password"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="Kata Sandi"
                                     className="w-full pl-12 pr-12 py-3 bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 transition"
                                 />
                                 <button
@@ -53,13 +53,13 @@ export default function Login() {
                         {/* Forgot Password */}
                         <div className="text-right">
                             <button className="text-sm text-[#000000] hover:underline">
-                                Forgot Password?
+                                Lupa kata sandi?
                             </button>
                         </div>
 
                         {/* Login Button */}
                         <button className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition shadow-lg">
-                            Login
+                            Masuk
                         </button>
 
                         {/* Divider */}
@@ -68,7 +68,7 @@ export default function Login() {
                                 <div className="w-full border-t border-[#000000]"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white text-[#000000]">Or sign with</span>
+                                <span className="px-4 bg-white text-[#000000]">Atau masuk dengan</span>
                             </div>
                         </div>
 
@@ -80,7 +80,7 @@ export default function Login() {
                                 aria-label="Login with Google"
                             >
                                 <img
-                                    src="public/icon-google.png"
+                                    src="/icon-google.png"
                                     alt="deskripsi icon-google"
                                     className="w-6 h-6 object-contain"
                                 />
@@ -91,7 +91,7 @@ export default function Login() {
                                 aria-label="Login with Facebook"
                             >
                                 <img
-                                    src="public/icon-facebook.png"
+                                    src="/icon-facebook.png"
                                     alt="Deskripsi Icon-Buwuhan"
                                     className="w-7 h-7 object-contain"
                                 />
@@ -102,7 +102,7 @@ export default function Login() {
                                 aria-label="Login with apple"
                             >
                                 <img
-                                    src="public/icon-apple.png"
+                                    src="/icon-apple.png"
                                     alt="Deskripsi icon-apple"
                                     className="w-6 h-6 object-contain"
                                 />
@@ -112,9 +112,9 @@ export default function Login() {
                         {/* Sign Up Link */}
                         <div className="text-center mt-6">
                             <p className="text-sm text-gray-600">
-                                Don't have account?{' '}
+                                Tidak punya akun?{' '}
                                 <button className="text-[#8A86D5] font-semibold hover:underline">
-                                    Sign up
+                                    Buat Akun
                                 </button>
                             </p>
                         </div>
