@@ -6,7 +6,7 @@ export default function ResetPassword() {
             {/* Left Side - Image Section */}
             <div className="flex items-center justify-center bg-[#8A86D5] w-full lg:w-1/2 h-72 lg:h-auto">
                 <img
-                    src="public/logo.png"
+                    src="/logo.png"
                     alt="Deskripsi icon-buwuhan"
                     className="w-56 h-56 lg:w-[350px] lg:h-[350px] object-contain"
                 />
