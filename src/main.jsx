@@ -6,8 +6,16 @@ import "./index.css";
 // Auth Pages
 import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
+import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/auth/ResetPassword.jsx";
+
+// Buwuhan Layout
+import DashboardLayout from "./DashboardLayout.jsx";
 
 // Buwuhan Pages
+import BuwuhanDashboard from "./pages/buwuhan/BuwuhanDashboard.jsx";
+import BuwuhanForm from "./pages/buwuhan/BuwuhanForm.jsx";
+import BuwuhanList from "./pages/buwuhan/BuwuhanList.jsx";
 
 createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -23,10 +31,10 @@ createRoot(document.getElementById("root")).render(
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     {/* Halaman di dalam dashboard */}
                     <Route index element={<BuwuhanDashboard />} />
+                    <Route path="create" element={<BuwuhanForm />} />
+                    <Route path="list" element={<BuwuhanList />} />
+
                 </Route>
-
-
-
 
                 {/* Fallback jika route tidak ditemukan */}
                 <Route
