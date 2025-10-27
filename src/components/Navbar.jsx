@@ -1,4 +1,4 @@
-import { Search, Moon, User, Menu } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 export default function Navbar({ onMenuClick }) {
@@ -7,8 +7,8 @@ export default function Navbar({ onMenuClick }) {
         const path = location.pathname.replace(/\/+$/, "");
         if (path === "/dashboard") return "Ringkasan";
         if (path === "/dashboard/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
-        if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "Buwuhan List";
-        if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Buwuhan Detail";
+        if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "List Data";
+        if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Detail Data";
         return "Dashboard";
     })();
 
@@ -44,13 +44,21 @@ export default function Navbar({ onMenuClick }) {
                 </button>
 
                 {/* Tombol Mode (Dark/Light) */}
-                <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <Moon className="w-6 h-6 text-gray-700" />
+                <button className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition border-1 border-[#757575]">
+                    <img
+                        src="/icon-thsirt.png"
+                        alt="deskripsi icon-tshirt"
+                        className="w-6 h-6 text-gray-700"
+                    />
                 </button>
 
                 {/* Profil */}
-                <button className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <User className="w-6 h-6 text-gray-700" />
+                <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition">
+                    <img
+                        src="/icon-user.png"
+                        alt="deskripsi icon-user"
+                        className="w-9 h-9 text-gray-700"
+                    />
                 </button>
             </div>
         </header>
