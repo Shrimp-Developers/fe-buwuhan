@@ -113,9 +113,9 @@ export default function Login() {
                         <div className="text-center mt-6">
                             <p className="text-sm text-gray-600">
                                 Tidak punya akun?{' '}
-                                <button className="text-[#8A86D5] font-semibold hover:underline">
+                                <Link to="/register" className="text-[#8A86D5] font-semibold hover:underline">
                                     Buat Akun
-                                </button>
+                                </Link>
                             </p>
                         </div>
                     </div>
