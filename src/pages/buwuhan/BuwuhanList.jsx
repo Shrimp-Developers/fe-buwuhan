@@ -15,9 +15,17 @@ export default function BuwuhanList() {
 
     // Data dummy
     const dummyData = [
-        { namaLaki: "Andi Saputra", namaPerempuan: "Rina Amelia", kategori: "Uang", status: "Lunas" },
-        { namaLaki: "Budi Santoso", namaPerempuan: "Sari Lestari", kategori: "Barang", status: "Belum Lunas" },
-        { namaLaki: "Rizky Pratama", namaPerempuan: "Dewi Kartika", kategori: "Beras", status: "Lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
+        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
     ];
 
     // Tutup dropdown jika klik di luar
@@ -48,14 +56,14 @@ export default function BuwuhanList() {
     const statusOptions = ["Lunas", "Belum Lunas"];
 
     return (
-        <div className="w-full mx-auto p-6 sm:p-6 relative">
+        <div className="w-full mx-auto p-4 md:p-6">
             {/* Judul (mobile only) */}
             <h1 className="text-lg font-semibold text-[#000000] mb-6 md:hidden">
                 Lihat Semua Data
             </h1>
 
             {/* Filter Bar */}
-            <div className="flex flex-wrap gap-3 mb-6 relative">
+            <div className="flex flex-wrap gap-3 mb-6">
                 {/* Dropdown Kategori */}
                 <div className="relative" ref={kategoriRef}>
                     <button
@@ -63,9 +71,9 @@ export default function BuwuhanList() {
                             setShowKategori(!showKategori);
                             setShowStatus(false);
                         }}
-                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-full shadow-lg"
+                        className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium"
                     >
-                        {kategori} <ChevronDown size={16} />
+                        {kategori} <ChevronDown size={18} />
                     </button>
 
                     {showKategori && (
@@ -77,7 +85,7 @@ export default function BuwuhanList() {
                                         setKategori(opt);
                                         setShowKategori(false);
                                     }}
-                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 first:rounded-t-xl last:rounded-b-xl shadow-lg"
                                 >
                                     {opt}
                                 </button>
@@ -93,9 +101,9 @@ export default function BuwuhanList() {
                             setShowStatus(!showStatus);
                             setShowKategori(false);
                         }}
-                        className="flex items-center gap-2 bg-white border border-gray-300 px-5 py-2 rounded-full shadow-lg"
+                        className="flex items-center gap-2 bg-white border-2 border-gray-300 px-5 py-2.5 rounded-full text-sm font-medium shadow-lg"
                     >
-                        {status} <ChevronDown size={16} />
+                        {status} <ChevronDown size={18} />
                     </button>
 
                     {showStatus && (
@@ -107,7 +115,7 @@ export default function BuwuhanList() {
                                         setStatus(opt);
                                         setShowStatus(false);
                                     }}
-                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 first:rounded-t-xl last:rounded-b-xl"
                                 >
                                     {opt}
                                 </button>
@@ -133,34 +141,36 @@ export default function BuwuhanList() {
             {!loading && !error && (
                 <>
                     {/* Desktop Table */}
-                    <div className="hidden md:block border border-[#000000] rounded-3xl overflow-hidden">
-                        <table className="w-full text-sm border-collapse">
-                            <thead className="bg-[#F9F9FF] text-left">
-                            <tr>
-                                <th className="p-4 border-b">Nama Laki - laki</th>
-                                <th className="p-4 border-b">Nama Perempuan</th>
-                                <th className="p-4 border-b">Kategori</th>
-                                <th className="p-4 border-b">Status</th>
-                                <th className="p-4 border-b text-center">Aksi</th>
+                    <div className="hidden md:block border-2 border-black rounded-3xl overflow-hidden px-8 py-3">
+                        <table className="w-full text-sm">
+                            <thead className="">
+                            <tr className="">
+                                <th className="p-1.5 text-left font-semibold">Nama Laki - laki</th>
+                                <th className="p-1.5 text-left font-semibold">Nama Perempuan</th>
+                                <th className="p-1.5 text-left font-semibold">Kategori</th>
+                                <th className="p-1.5 text-left font-semibold">Status</th>
+                                <th className="p-1.5 text-center font-semibold">Aksi</th>
                             </tr>
                             </thead>
                             <tbody>
                             {data.map((row, index) => (
-                                <tr key={index} className="border-b hover:bg-gray-50">
-                                    <td className="p-4">{row.namaLaki}</td>
-                                    <td className="p-4">{row.namaPerempuan}</td>
-                                    <td className="p-4">{row.kategori}</td>
-                                    <td className="p-4 text-gray-700">{row.status}</td>
-                                    <td className="p-4 flex justify-center gap-2">
-                                        <button className="px-5 py-2 text-xs border border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition">
-                                            Edit
-                                        </button>
-                                        <button className="px-3 py-2 text-xs border border-[#8A86D5] bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition">
-                                            Detail
-                                        </button>
-                                        <button className="px-3 py-2 text-xs border border-[#AB1111] bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition">
-                                            Hapus
-                                        </button>
+                                <tr key={index} className="border-b border-black last:border-b-0">
+                                    <td className="p-1.5">{row.namaLaki}</td>
+                                    <td className="p-1.5">{row.namaPerempuan}</td>
+                                    <td className="p-1.5">{row.kategori}</td>
+                                    <td className="p-1.5">{row.status}</td>
+                                    <td className="p-1.5">
+                                        <div className="flex justify-center gap-3">
+                                            <button className="px-4 py-1 text-sm border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium">
+                                                Edit
+                                            </button>
+                                            <button className="px-4 py-1 text-sm bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium">
+                                                Detail
+                                            </button>
+                                            <button className="px-4 py-1 text-sm bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium">
+                                                Hapus
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -169,27 +179,56 @@ export default function BuwuhanList() {
                     </div>
 
                     {/* Mobile Card */}
-                    <div className="block md:hidden space-y-3">
+                    <div className="block md:hidden border-2 border-black rounded-3xl overflow-hidden bg-white">
+                        {/* Header */}
+                        <div className="grid grid-cols-4 gap-2 p-2 bg-white border-b-2 border-gray-200">
+                            <div className="font-semibold text-sm">Nama<br/>Laki-laki</div>
+                            <div className="font-semibold text-sm">Nama<br/>Perempuan</div>
+                            <div className="font-semibold text-sm">Status</div>
+                            <div></div>
+                        </div>
+
+                        {/* Rows */}
                         {data.map((row, index) => (
                             <div
                                 key={index}
-                                className="border border-gray-300 rounded-2xl p-4 flex justify-between items-center"
+                                className="grid grid-cols-4 gap-2 p-4 border-b border-gray-200 last:border-b-0 items-center"
                             >
-                                <div>
-                                    <p className="text-sm font-medium text-gray-800">
-                                        {row.namaLaki}
-                                    </p>
-                                    <p className="text-sm text-gray-600">{row.namaPerempuan}</p>
-                                    <p className="text-sm text-gray-700 mt-1">{row.status}</p>
+                                <div className="text-sm">{row.namaLaki}</div>
+                                <div className="text-sm">{row.namaPerempuan}</div>
+                                <div className="text-sm text-gray-700">{row.status}</div>
+                                <div className="flex justify-end">
+                                    <button className="px-4 py-1.5 text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] font-medium">
+                                        Edit
+                                    </button>
                                 </div>
-                                <button className="px-4 py-2 text-xs border border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF]">
-                                    Edit
-                                </button>
                             </div>
                         ))}
                     </div>
                 </>
             )}
+
+            {/* Pagination */}
+            <div className="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-700">Baris per halaman</span>
+                    <button className="px-3 py-1 border-2 border-gray-300 rounded-full text-sm flex items-center gap-1">
+                        11 <ChevronDown size={16} />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-500">Sebelumnya</span>
+                    <button className="w-8 h-8 flex items-center justify-center bg-[#8A86D5] text-white rounded-lg font-medium">
+                        1
+                    </button>
+                    <span className="text-sm text-gray-500">Selanjutnya</span>
+                </div>
+
+                <div className="text-sm font-semibold">
+                    Total: <span className="text-black">139</span>
+                </div>
+            </div>
         </div>
     );
 }
