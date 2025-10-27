@@ -76,35 +76,35 @@ export default function Login() {
                         <div className="flex justify-center gap-4">
                             <button
                                 type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
+                                className="w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
                                 aria-label="Login with Google"
                             >
                                 <img
                                     src="/icon-google.png"
                                     alt="deskripsi icon-google"
-                                    className="w-6 h-6 object-contain"
+                                    className="w-8 h-8 object-contain"
                                 />
                             </button>
                             <button
                                 type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
+                                className="w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
                                 aria-label="Login with Facebook"
                             >
                                 <img
                                     src="/icon-facebook.png"
                                     alt="Deskripsi Icon-Buwuhan"
-                                    className="w-7 h-7 object-contain"
+                                    className="w-8 h-8 object-contain"
                                 />
                             </button>
                             <button
                                 type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
+                                className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
                                 aria-label="Login with apple"
                             >
                                 <img
                                     src="/icon-apple.png"
                                     alt="Deskripsi icon-apple"
-                                    className="w-6 h-6 object-contain"
+                                    className="w-7 h-7 object-contain"
                                 />
                             </button>
                         </div>
