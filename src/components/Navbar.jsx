@@ -13,7 +13,7 @@ export default function Navbar({ onMenuClick }) {
     })();
 
     return (
-        <header className="py-6 px-6 md:px-14 flex items-center justify-between bg-white sticky top-0 z-40 shadow-sm">
+        <header className="py-6 px-6 md:px-14 flex items-center justify-between sticky top-0 z-40 ">
             {/* Hamburger Menu - Mobile Only */}
             <button
                 className="md:hidden w-10 h-10 flex items-center justify-center"
