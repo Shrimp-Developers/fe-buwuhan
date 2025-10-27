@@ -75,9 +75,9 @@ export default function Register() {
                         <div className="text-center">
                             <p className="text-sm text-gray-600">
                                 Sudah punya akun?{' '}
-                                <button className="text-[#8A86D5] font-semibold hover:underline">
+                                <Link to="/login" className="text-[#8A86D5] font-semibold hover:underline">
                                     Masuk
-                                </button>
+                                </Link>
                             </p>
                         </div>
                     </div>
