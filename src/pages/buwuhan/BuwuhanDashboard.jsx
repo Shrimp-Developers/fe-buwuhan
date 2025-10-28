@@ -44,7 +44,7 @@ export default function BuwuhanDashboard() {
                 </Card>
 
                 {/* Data Section Title */}
-                <h4 className="font-bold text-base lg:text-lg mb-3 lg:mb-4">Data</h4>
+                <h4 className="font-bold text-xl lg:text-2xl m-3 lg:m-4">Data</h4>
 
                 {/* Desktop Layout (3 columns) */}
                 <div className="hidden lg:grid lg:grid-cols-3 gap-4">
