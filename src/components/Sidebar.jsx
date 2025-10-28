@@ -2,6 +2,16 @@ import { PlusCircle, LogOut, X } from 'lucide-react';
 import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
+
+    const { pathname } = useLocation();
+
+    const menuClasses = (path) =>
+        `w-full flex items-center gap-6 px-4 py-3 mb-2 rounded-lg text-sm font-medium transition-all duration-200
+        ${pathname === path
+            ? "bg-[#F5F6FA] text-[#000000]"
+            : "text-[#000000] hover:bg-gray-300"
+        }`;
+
     return (
         <>
             {/* Mobile   */}
