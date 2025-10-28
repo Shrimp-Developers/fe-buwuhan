@@ -49,9 +49,9 @@ export default function BuwuhanDashboard() {
                 {/* Desktop Layout (3 columns) */}
                 <div className="hidden lg:grid lg:grid-cols-3 gap-4">
                     {/* Total Data Card */}
-                    <Card className="bg-[#C2BFF8] flex flex-col items-center justify-center" height="h-auto">
-                        <p className="text-lg font-semibold mb-2">Total Data</p>
-                        <p className="text-5xl font-bold">{data.total}</p>
+                    <Card className="bg-[#C2BFF8] flex flex-col items-center justify-center px-3 py-8" height="h-auto">
+                        <p className="text-xl font-semibold mb-2">Total Data</p>
+                        <p className="text-3xl font-bold">{data.total}</p>
                     </Card>
 
                     {/* Category Cards */}
