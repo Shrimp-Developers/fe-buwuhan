@@ -62,14 +62,14 @@ export default function Navbar({ onMenuClick }) {
                     <Search className="w-6 h-6 text-gray-700" />
                 </button>
 
-                {/* Tombol Mode (Dark/Light) */}
-                <button className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition border-1 border-[#757575]">
-                    <img
-                        src="/icon-thsirt.png"
-                        alt="deskripsi icon-tshirt"
-                        className="w-6 h-6 text-gray-700"
-                    />
-                </button>
+                        {/* Tombol Mode (Dark/Light) */}
+                        <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]">
+                            <img
+                                src="/icon-moon.png"
+                                alt="deskripsi icon-moon"
+                                className="w-6 h-6"
+                            />
+                        </button>
 
                         {/* Profil */}
                         <div className="relative" ref={profileRef}>
