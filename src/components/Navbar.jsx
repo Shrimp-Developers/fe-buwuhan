@@ -46,16 +46,17 @@ export default function Navbar({ onMenuClick }) {
                 {title}
             </h1>
 
-            <div className="flex items-center gap-2 md:gap-4">
-                {/* Search bar - Hidden on mobile */}
-                <div className="hidden md:block relative">
-                    <input
-                        type="text"
-                        placeholder="Cari . . ."
-                        className="pl-10 pr-4 py-2 w-[300px] lg:w-[420px] h-[42px] bg-gray-100 rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition shadow-xl"
-                    />
-                    <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
+                    {/* Right Section - Icons */}
+                    <div className="flex items-center gap-2 md:gap-4 px-6 relative">
+                        {/* Search bar - Hidden on mobile */}
+                        <div className="hidden md:block relative">
+                            <input
+                                type="text"
+                                placeholder="Cari . . . ."
+                                className="pl-14 py-3 w-[300px] lg:w-[420px] h-[42px] bg-gray-100 rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition shadow-xl"
+                            />
+                            <Search className="ml-2 w-5 h-5 text-[#ACA0A0] absolute left-3 top-1/2 -translate-y-1/2" />
+                        </div>
 
                         {/* Search Icon - Mobile Only */}
                         <button
