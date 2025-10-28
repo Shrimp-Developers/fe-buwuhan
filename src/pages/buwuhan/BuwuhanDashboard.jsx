@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Card from '../../components/Card.jsx';
+import CardProfile from '../../components/CardProfile.jsx';
 
 export default function BuwuhanDashboard() {
     const [data] = useState({
