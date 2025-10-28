@@ -81,8 +81,8 @@ export default function BuwuhanDashboard() {
                 {/* Mobile/Tablet Layout (1 column) */}
                 <div className="lg:hidden space-y-3">
                     {/* Total Data Card */}
-                    <Card className="bg-purple-200 flex flex-col items-center justify-center" height="h-auto">
-                        <p className="text-xs font-medium mb-2">Total data</p>
+                    <Card className="bg-purple-200 flex flex-col items-center justify-center" height="h-60">
+                        <p className="text-lg font-bold mb-2">Total data</p>
                         <p className="text-4xl font-bold">{data.total}</p>
                     </Card>
 
