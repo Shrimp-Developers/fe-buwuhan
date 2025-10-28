@@ -33,6 +33,7 @@ export default function BuwuhanDashboard() {
                             Lihat semua data
                         </button>
                     </div>
+
                     <div className="flex items-center justify-center mt-4 lg:mt-0">
                         <img
                             src="/icon-book.png"
