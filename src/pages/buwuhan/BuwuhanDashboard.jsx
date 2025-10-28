@@ -93,7 +93,7 @@ export default function BuwuhanDashboard() {
                             className={`${category.bgColor}`}
                             height="h-auto"
                         >
-                            <p className="text-xs font-bold text-center mb-3">
+                            <p className="text-lg font-bold text-center mb-3">
                                 Total data<br />{category.title}
                             </p>
                             <div className="flex gap-2">
