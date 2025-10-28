@@ -37,7 +37,7 @@ export default function BuwuhanCreate() {
     };
 
     return (
-        <div className="w-full mx-auto px-6 md:px-6">
+        <div className="w-full mx-auto px-6 md:px-5">
             {/* Judul untuk mobile */}
             <h1 className="text-lg font-semibold text-gray-900 mb-6 md:hidden" >
                 Tambah Data
