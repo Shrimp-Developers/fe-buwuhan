@@ -18,6 +18,19 @@ export default function Navbar({ onMenuClick }) {
         return null;
     })();
 
+    // Close profile popup when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (profileRef.current && !profileRef.current.contains(event.target)) {
+                setIsProfileOpen(false);
+            }
+        }
+        if (isProfileOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isProfileOpen]);
+
     return (
         <header className="py-6 px-6 md:px-14 flex items-center justify-between sticky top-0 z-40 ">
             {/* Hamburger Menu - Mobile Only */}
