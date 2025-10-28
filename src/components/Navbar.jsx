@@ -64,10 +64,11 @@ export default function Navbar({ onMenuClick }) {
                             />
                         </button>
 
-            {/* Judul kiri */}
-            <h1 className="hidden md:block text-xl font-semibold text-[#000000]">
-                {title}
-            </h1>
+                        {/* Judul - Desktop Only */}
+                        <h1 className="hidden md:block text-2xl font-bold text-[#000000]">
+                            {title}
+                        </h1>
+                    </div>
 
                     {/* Right Section - Icons */}
                     <div className="flex items-center gap-2 md:gap-4 px-6 relative">
