@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function BuwuhanForm() {
+export default function BuwuhanCreate() {
     const [formData, setFormData] = useState({
         namaLaki: '',
         namaPerempuan: '',
@@ -37,7 +37,7 @@ export default function BuwuhanForm() {
     };
 
     return (
-        <div className="w-full mx-auto p-6">
+        <div className="w-full mx-auto px-6 md:px-6">
             {/* Judul untuk mobile */}
             <h1 className="text-lg font-semibold text-gray-900 mb-6 md:hidden" >
                 Tambah Data
@@ -144,7 +144,7 @@ export default function BuwuhanForm() {
                             value={formData.keterangan}
                             onChange={handleChange}
                             rows="5"
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            className="w-full px-4 py-12 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                         ></textarea>
                     </div>
                 </div>
