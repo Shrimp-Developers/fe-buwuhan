@@ -57,10 +57,20 @@ export default function Navbar({ onMenuClick }) {
                     <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 </div>
 
-                {/* Search Icon - Mobile Only */}
-                <button className="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <Search className="w-6 h-6 text-gray-700" />
-                </button>
+                        {/* Search Icon - Mobile Only */}
+                        <button
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                setIsSearchOpen(true);
+                            }}
+                            className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]"
+                        >
+                            <img
+                                src="/icon-search.png"
+                                alt="deskripsi icon-search"
+                                className="w-6 h-6"
+                            />
+                        </button>
 
                         {/* Tombol Mode (Dark/Light) */}
                         <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]">
