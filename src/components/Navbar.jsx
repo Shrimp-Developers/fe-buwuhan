@@ -32,14 +32,37 @@ export default function Navbar({ onMenuClick }) {
     }, [isProfileOpen]);
 
     return (
-        <header className="py-6 px-6 md:px-14 flex items-center justify-between sticky top-0 z-40 ">
-            {/* Hamburger Menu - Mobile Only */}
-            <button
-                className="md:hidden w-10 h-10 flex items-center justify-center"
-                onClick={onMenuClick}
-            >
-                <Menu className="w-6 h-6 text-gray-700" />
-            </button>
+        <>
+            {/* Mobile Search - Muncul menggantikan navbar */}
+            {isSearchOpen ? (
+                <div className="md:hidden px-8 py-4">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Cari . . . ."
+                            autoFocus
+                            onBlur={() => setIsSearchOpen(false)}
+                            className="pl-6 pr-12 py-3 w-full h-[48px] bg-white rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none shadow-lg border border-gray-200"
+                        />
+                        <Search className="w-5 h-5 text-gray-400 absolute right-5 top-1/2 -translate-y-1/2" />
+                    </div>
+                </div>
+            ) : (
+                /* Normal Navbar */
+                <header className="py-7 px-8 md:px-10 flex items-center justify-between z-40 relative">
+                    {/* Left Section - Hamburger on mobile, Title on desktop */}
+                    <div className="flex items-center">
+                        {/* Hamburger Menu - Mobile Only */}
+                        <button
+                            className="md:hidden w-10 h-10 flex items-center justify-center"
+                            onClick={onMenuClick}
+                        >
+                            <img
+                                src="/icon-hamburger.png"
+                                alt="deskripsi icon-hamburger"
+                                className="w-6 h-6"
+                            />
+                        </button>
 
             {/* Judul kiri */}
             <h1 className="hidden md:block text-xl font-semibold text-[#000000]">
