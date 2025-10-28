@@ -71,15 +71,75 @@ export default function Navbar({ onMenuClick }) {
                     />
                 </button>
 
-                {/* Profil */}
-                <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition">
-                    <img
-                        src="/icon-user.png"
-                        alt="deskripsi icon-user"
-                        className="w-9 h-9 text-gray-700"
-                    />
-                </button>
-            </div>
-        </header>
+                        {/* Profil */}
+                        <div className="relative" ref={profileRef}>
+                            <button
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition bg-[#E8E9EE]"
+                            >
+                                <img
+                                    src="/icon-user.png"
+                                    alt="deskripsi icon-user"
+                                    className="w-8 h-8"
+                                />
+                            </button>
+
+                            {/* Profile Popup */}
+                            {isProfileOpen && (
+                                <div className="absolute right-0 mt-4 w-[350px] bg-white rounded-2xl shadow-2xl p-6 z-50">
+                                    {/* Close Button */}
+                                    <button
+                                        onClick={() => setIsProfileOpen(false)}
+                                        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition"
+                                    >
+                                        <X className="w-5 h-5 text-[#000000]" />
+                                    </button>
+
+                                    {/* Profile Image */}
+                                    <div className="flex justify-center mb-4">
+                                        <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-[#C2BFF8]">
+                                            <img
+                                                src="/image-dino.png"
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Profile Info */}
+                                    <div className="space-y-3">
+                                        <div>
+                                            <div className="text-xs text-gray-600 mb-1">Nama lengkap</div>
+                                            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50">
+                                                Haris gunawan romadhon
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div className="text-xs text-gray-600 mb-1">Nama pengguna</div>
+                                            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50">
+                                                harismoon23
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div className="text-xs text-gray-600 mb-1">Email</div>
+                                            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50">
+                                                harisg@gmail.com
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Update Button */}
+                                    <button className="mt-4 py-2 bg-[#8A86D5] hover:bg-blue-400 text-white rounded-full text-sm font-medium transition flex justify-center items-center mx-auto px-8">
+                                        Ubah profile
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </header>
+            )}
+        </>
     );
 }
