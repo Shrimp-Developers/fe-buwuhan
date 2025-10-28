@@ -21,7 +21,7 @@ export default function BuwuhanDashboard() {
     return (
             <div className="w-full mx-auto px-6 md:px-5">
                 {/* Judul untuk mobile */}
-                <h1 className="text-lg font-semibold text-[#000000] mb-6 md:hidden" >
+                <h1 className="text-lg font-bold text-[#000000] mb-6 md:hidden" >
                     Ringkasan
                 </h1>
                 {/*  Card Profile */}
