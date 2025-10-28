@@ -65,9 +65,9 @@ export default function BuwuhanDashboard() {
                                 Total data<br />{category.title}
                             </p>
                             <div className="flex gap-4 justify-center">
-                                <div className="bg-white rounded-xl p-4 flex-1 text-center border-2 border-black">
-                                    <p className="text-xs text-gray-600 mb-2">Lunas</p>
-                                    <p className="text-3xl font-bold">{category.data.lunas}</p>
+                                <div className="bg-white rounded-xl p-4 flex-1 text-center border border-black">
+                                    <p className="text-base text-gray-600 mb-2">Lunas</p>
+                                    <p className="text-2xl font-bold">{category.data.lunas}</p>
                                 </div>
                                 <div className="bg-white rounded-xl p-4 flex-1 text-center border-2 border-black">
                                     <p className="text-xs text-gray-600 mb-2">Belum</p>
