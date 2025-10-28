@@ -1,5 +1,5 @@
-import { LayoutGrid, PlusCircle, BarChart3, Settings, LogOut, User } from 'lucide-react';
-import {Link, useNavigate} from "react-router";
+import { PlusCircle, LogOut, X } from 'lucide-react';
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
     return (
