@@ -12,7 +12,7 @@ export default function Navbar({ onMenuClick }) {
         const path = location.pathname.replace(/\/+$/, "");
         if (path === "/dashboard") return "Ringkasan";
         if (path === "/dashboard/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
-        if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "List Data";
+        if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "Lihat Semua Data";
         if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Detail Data";
         return "Dashboard";
     })();
