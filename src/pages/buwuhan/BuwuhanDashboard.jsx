@@ -101,7 +101,7 @@ export default function BuwuhanDashboard() {
                                     <p className="text-sm text-gray-600 mb-1">Lunas</p>
                                     <p className="text-2xl font-bold">{category.data.lunas}</p>
                                 </div>
-                                <div className="bg-white rounded-lg p-3 flex-1 text-center border-1 border-black">
+                                <div className="bg-white rounded-lg px-3 py-8 flex-1 text-center border border-black">
                                     <p className="text-sm text-gray-600 mb-1">Belum</p>
                                     <p className="text-2xl font-bold">{category.data.belum}</p>
                                 </div>
