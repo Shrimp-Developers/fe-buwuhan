@@ -38,7 +38,7 @@ export default function BuwuhanDashboard() {
                         <img
                             src="/icon-book.png"
                             alt="deskripsi icon-book"
-                            className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] lg:w-[150px] lg:h-[150px] object-contain"
+                            className="w-[120px] h-[120px] sm:w-[120px] sm:h-[120px] lg:w-[120px] lg:h-[120px] object-contain"
                         />
                     </div>
                 </Card>
