@@ -40,7 +40,7 @@ export default function BuwuhanEditData() {
         <div className="w-full mx-auto px-6 md:px-5">
             {/* Judul untuk mobile */}
             <h1 className="text-lg font-semibold text-gray-900 mb-6 md:hidden" >
-                Tambah Data
+                Edit Data
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
