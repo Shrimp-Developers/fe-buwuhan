@@ -69,9 +69,9 @@ export default function BuwuhanDashboard() {
                                     <p className="text-base text-gray-600 mb-2">Lunas</p>
                                     <p className="text-2xl font-bold">{category.data.lunas}</p>
                                 </div>
-                                <div className="bg-white rounded-xl p-4 flex-1 text-center border-2 border-black">
-                                    <p className="text-xs text-gray-600 mb-2">Belum</p>
-                                    <p className="text-3xl font-bold">{category.data.belum}</p>
+                                <div className="bg-white rounded-xl p-4 flex-1 text-center border border-black">
+                                    <p className="text-base text-gray-600 mb-2">Belum</p>
+                                    <p className="text-2xl font-bold">{category.data.belum}</p>
                                 </div>
                             </div>
                         </Card>
