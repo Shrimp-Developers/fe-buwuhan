@@ -3,6 +3,10 @@ import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function Navbar({ onMenuClick }) {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileRef = useRef(null);
+
     const location = useLocation();
     const title = (() => {
         const path = location.pathname.replace(/\/+$/, "");
