@@ -47,7 +47,8 @@ export default function BuwuhanDashboard() {
                             className="w-[120px] h-[120px] sm:w-[120px] sm:h-[120px] lg:w-[120px] lg:h-[120px] object-contain"
                         />
                     </div>
-                </Card>
+                </CardProfile>
+
 
                 {/* Data Section Title */}
                 <h4 className="font-bold text-xl lg:text-2xl m-3 lg:m-4">Data</h4>
