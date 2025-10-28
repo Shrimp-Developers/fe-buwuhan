@@ -1,4 +1,5 @@
-import { Search, Menu } from 'lucide-react';
+import { Search, X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function Navbar({ onMenuClick }) {
