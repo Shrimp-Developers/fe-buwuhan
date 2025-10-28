@@ -24,12 +24,18 @@ export default function BuwuhanDashboard() {
                 <h1 className="text-lg font-bold text-[#000000] mb-6 md:hidden" >
                     Ringkasan
                 </h1>
-                {/*  Card Profile */}
-                <Card className="bg-[#C2BFF8] mb-4 lg:mb-6 flex flex-col-reverse lg:flex-row items-center justify-between p-5 lg:p-10" height="h-auto">
-                    <div className="text-center lg:text-left mt-4 lg:mt-0">
-                        <h2 className="font-bold text-base lg:text-lg mb-1">Halo, Haris Gunawan Romadhon</h2>
-                        <p className="text-sm lg:text-sm text-gray-700 mb-2 lg:mb-3">Mau edit apa hari ini?</p>
-                        <button className="bg-gray-900 text-white text-xs px-3 py-3 lg:px-4 lg:py-3 rounded-full hover:bg-gray-800 transition">
+                <CardProfile
+                    className="bg-[#C2BFF8]"
+                    height="h-auto"
+                >
+                    <div className="text-left lg:text-left m-4">
+                        <h2 className="font-bold lg:text-lg text-lg mb-1">
+                            Halo, Haris Gunawan Romadon
+                        </h2>
+                        <p className="text-sm lg:text-base text-gray-700 mb-3">
+                            Mau edit apa hari ini?
+                        </p>
+                        <button className="bg-[#000000] text-white text-xs px-3 py-3 lg:px-4 lg:py-3 rounded-full hover:bg-gray-800 transition">
                             Lihat semua data
                         </button>
                     </div>
