@@ -14,7 +14,8 @@ export default function Navbar({ onMenuClick }) {
         if (path === "/dashboard/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
         if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "Lihat Semua Data";
         if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Detail Data";
-        return "Dashboard";
+        if (path === "/setting" || path.startsWith("/dashboard/setting/")) return "Pengaturan";
+        return null;
     })();
 
     return (
