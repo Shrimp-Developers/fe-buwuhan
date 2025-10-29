@@ -74,13 +74,9 @@ export default function Sidebar({ isOpen, onClose }) {
                         <span>Lihat Semua Data</span>
                     </Link>
 
-                    <Link to="/settings" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
-                        <img
-                            src="/icon-settings.png"
-                            alt="Deskripsi icon-settings"
-                            className="w-6 h-6 flex-shrink-0"
-                        />
-                        <span className="text-left">Pengaturan</span>
+                    <Link to="/setting" className={menuClasses("/setting")}>
+                        <img src="/icon-settings.png" className="w-7 h-7" />
+                        <span>Pengaturan</span>
                     </Link>
                 </nav>
 
