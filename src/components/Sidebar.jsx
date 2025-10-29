@@ -83,9 +83,9 @@ export default function Sidebar({ isOpen, onClose }) {
 
                 {/* Logout */}
                 <div className="p-6 border-gray-300">
-                    <Link to="/login" className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-300 rounded-lg text-sm transition-all duration-200">
-                        <LogOut className="w-6 h-6 flex-shrink-0" />
-                        <span>Log Out</span>
+                    <Link to="/login" className="w-full flex items-center gap-6 px-4 py-3 text-[#000000] hover:bg-gray-300 rounded-lg text-sm transition-all duration-200">
+                        <LogOut className="w-7 h-7" />
+                        <span>Keluar</span>
                     </Link>
                 </div>
             </aside>
