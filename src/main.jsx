@@ -37,6 +37,7 @@ createRoot(document.getElementById("root")).render(
                     <Route index element={<BuwuhanDashboard />} />
                     <Route path="create" element={<BuwuhanCreate />} />
                     <Route path="list" element={<BuwuhanList />} />
+                </Route>
 
                 </Route>
 
