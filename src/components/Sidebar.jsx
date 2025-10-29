@@ -34,16 +34,26 @@ export default function Sidebar({ isOpen, onClose }) {
                 transform transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
-                {/* Profile Section */}
-                <div className="p-6 flex items-center gap-2">
-                    <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
-                        <img
-                            src="/logo.png"
-                            alt="Deskripsi icon-logo"
-                            className="w-14 h-14"
-                        />
+                {/* Profile */}
+                <div className="py-5 px-6 flex items-center justify-start">
+                    <div className="flex items-center gap-2">
+                        <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
+                            <img
+                                src="/logo.png"
+                                alt="Deskripsi icon-logo"
+                                className="w-14 h-14"
+                            />
+                        </div>
+                        <span className="font-semibold text-lg ">BUWUHAN</span>
                     </div>
-                    <span className="font-semibold text-xl ml-2">BUWUHAN</span>
+
+                    {/* Close Button - Mobile Only */}
+                    <button
+                        onClick={onClose}
+                        className="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
+                    >
+                        <X className="w-6 h-6 text-gray-700" />
+                    </button>
                 </div>
 
                 {/* Menu Items */}
