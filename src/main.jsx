@@ -14,7 +14,7 @@ import DashboardLayout from "./DashboardLayout.jsx";
 
 // Buwuhan Pages
 import BuwuhanDashboard from "./pages/buwuhan/BuwuhanDashboard.jsx";
-import BuwuhanForm from "./pages/buwuhan/BuwuhanForm.jsx";
+import BuwuhanCreate from "./pages/buwuhan/BuwuhanCreate.jsx";
 import BuwuhanList from "./pages/buwuhan/BuwuhanList.jsx";
 
 // Settings Pages
