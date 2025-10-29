@@ -78,7 +78,6 @@ export default function Sidebar({ isOpen, onClose }) {
                         <img src="/icon-settings.png" className="w-7 h-7" />
                         <span>Pengaturan</span>
                     </Link>
-
                 </nav>
 
                 {/* Logout */}
