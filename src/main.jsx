@@ -17,6 +17,10 @@ import BuwuhanDashboard from "./pages/buwuhan/BuwuhanDashboard.jsx";
 import BuwuhanForm from "./pages/buwuhan/BuwuhanForm.jsx";
 import BuwuhanList from "./pages/buwuhan/BuwuhanList.jsx";
 
+// Settings Pages
+import EditPassword from "./pages/user/EditPassword.jsx";
+import SettingsUser from "./pages/user/SettingsUser.jsx";
+
 createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
