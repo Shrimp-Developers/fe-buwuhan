@@ -59,9 +59,14 @@ export default function Sidebar({ isOpen, onClose }) {
                 {/* Menu Items */}
                 <nav className="flex-1 px-7 py-1 overflow-y-auto">
 
-                    <Link to="/dashboard/create" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
-                        <PlusCircle className="w-7 h-7 flex-shrink-0" />
-                        <span className="text-left">Tambah Data</span>
+                    <Link to="/dashboard" className={menuClasses("/dashboard")}>
+                        <img src="/icon-dashboard.png" className="w-7 h-7" />
+                        <span>Dashboard</span>
+                    </Link>
+
+                    <Link to="/dashboard/create" className={menuClasses("/dashboard/create")}>
+                        <PlusCircle className="w-7 h-7" />
+                        <span>Tambah Data</span>
                     </Link>
 
                     <Link to="/dashboard/list" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
