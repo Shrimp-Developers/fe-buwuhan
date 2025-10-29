@@ -15,8 +15,16 @@ export default function Login() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Cek password minimal ada huruf besar + angka
-        if (!/[A-Z]/.test(password) && !/[0-9]/.test(password)) {
+        // Cek email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            await alertError("Invalid email format", "Validation Error", "imageUrl");
+            setIsLoading(false);
+            return;
+        }
+
+        // Validasi password minimal satu huruf besar dan satu angka
+        if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
             await alertError("Password must contain at least one uppercase letter and one number", "Validation Error");
             setIsLoading(false);
             return;
@@ -30,41 +38,35 @@ export default function Login() {
                 const token = body?.data?.accessToken;
                 const user = body?.data?.user;
 
-                if (typeof token === "string" && token.trim()) {
-                    await alertSuccess("Selamat datang di Buwuhan", "Login berhasil", "imageUrl");
-                    navigate("/dashboard/", {
-                        state: {
-                            token: token.trim(),
-                            user: user
-                        }
-                    });
-                } else {
-                    await alertError("Username atau password salah.", "Login Gagal", "imageUrl");
-                }
+                await alertSuccess("User logged in succesfully", "Login Succes", "imageUrl");
+                navigate("/dashboard/", {
+                    state: {
+                        token,
+                        user
+                    }
+                });
+
             } else if (res.status === 400) {
-                // Handle validation errors
+                //  error validasi dari backend
                 const errors = body?.errors;
                 if (errors && Array.isArray(errors)) {
-                    const errorMessages = errors.map(err =>
-                        `${err.field}: ${err.messages.join(', ')}`
-                    ).join('\n');
-                    await alertError(errorMessages, "Validasi Gagal");
+                    for (const err of errors) {
+                        await alertError(err.messages, `Error pada ${err.field}`, "imageUrl");
+                    }
                 } else {
-                    await alertError(body?.message || "Data tidak valid", "Validasi Gagal");
+                    await alertError(body?.message || "Account not found", "Validation Error", "imageUrl");
                 }
+
             } else if (res.status === 401) {
-                const errorMsg = body?.message || body?.error || "Email atau password salah";
-                await alertError(errorMsg, "Login Gagal");
+                // Email atau password salah
+                await alertError(body?.message || "Invalid email or password", "Unauthorized", "imageUrl");
+
             } else {
-                const msg = body?.message || `Login gagal (status ${res.status})`;
-                await alertError(msg, "Login Gagal");
+                await alertError(body?.message || `Login failed (status ${res.status})`, "Unauthorized", "imageUrl");
             }
         } catch (err) {
             console.error("Login error:", err);
-            await alertError(
-                err?.message || "Terjadi masalah jaringan. Silakan coba lagi.",
-                "Login Gagal"
-            );
+            await alertError("A network error occurred. Please try again", "Login Failed", "imageUrl");
         } finally {
             setIsLoading(false);
         }
@@ -93,7 +95,7 @@ export default function Login() {
                                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
                                 <input
                                     required
-                                    type="email"
+                                    type="text"
                                     name="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
