@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
                 {/* Profile */}
-                <div className="py-5 px-6 flex items-center justify-start">
+                <div className="py-5 px-6 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
                             <img
@@ -60,7 +60,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 <nav className="flex-1 px-7 py-1 overflow-y-auto">
 
                     <Link to="/dashboard" className={menuClasses("/dashboard")}>
-                        <img src="/icon-dashboard.png" className="w-7 h-7" />
+                        <img alt="icon-dashboard" src="/icon-dashboard.png" className="w-7 h-7" />
                         <span>Dashboard</span>
                     </Link>
 
@@ -70,12 +70,12 @@ export default function Sidebar({ isOpen, onClose }) {
                     </Link>
 
                     <Link to="/dashboard/list" className={menuClasses("/dashboard/list")}>
-                        <img src="/icon-list-data.png" className="w-7 h-7" />
+                        <img alt="icon-list" src="/icon-list-data.png" className="w-7 h-7" />
                         <span>Lihat Semua Data</span>
                     </Link>
 
                     <Link to="/setting" className={menuClasses("/setting")}>
-                        <img src="/icon-settings.png" className="w-7 h-7" />
+                        <img alt="icon-setting" src="/icon-settings.png" className="w-7 h-7" />
                         <span>Pengaturan</span>
                     </Link>
                 </nav>
