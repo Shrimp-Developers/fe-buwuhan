@@ -39,6 +39,11 @@ createRoot(document.getElementById("root")).render(
                     <Route path="list" element={<BuwuhanList />} />
                 </Route>
 
+                {/*Settings*/}
+                <Route path="/setting" element={<DashboardLayout />}>
+                    {/* Halaman di dalam dashboard */}
+                    <Route index element={<SettingsUser />} />
+                    <Route path="edit-password" element={<EditPassword />} />
                 </Route>
 
                 {/* Fallback jika route tidak ditemukan */}
