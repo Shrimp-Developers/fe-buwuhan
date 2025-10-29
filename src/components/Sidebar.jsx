@@ -69,13 +69,9 @@ export default function Sidebar({ isOpen, onClose }) {
                         <span>Tambah Data</span>
                     </Link>
 
-                    <Link to="/dashboard/list" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
-                        <img
-                            src="/icon-list-data.png"
-                            alt="Deskripsi icon-list-data"
-                            className="w-6 h-6 flex-shrink-0"
-                        />
-                        <span className="text-left">Lihat Semua Data</span>
+                    <Link to="/dashboard/list" className={menuClasses("/dashboard/list")}>
+                        <img src="/icon-list-data.png" className="w-7 h-7" />
+                        <span>Lihat Semua Data</span>
                     </Link>
 
                     <Link to="/settings" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
