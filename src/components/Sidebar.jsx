@@ -26,8 +26,8 @@ export default function Sidebar({ isOpen, onClose }) {
             <aside className={`
                 fixed md:static
                 top-0 left-0
-                w-[280px] md:w-[280px]
-                bg-gray-200 
+                w-[300px] md:w-[300px]
+                bg-[#FFFFFF]
                 flex flex-col 
                 h-screen 
                 z-50
