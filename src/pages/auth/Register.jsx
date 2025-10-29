@@ -21,7 +21,7 @@ export default function Register() {
         // Client-side validation
         // Cek fullName kosong
         if (!fullName || fullName.trim() === "") {
-            await alertError("Full name is required", "Validation Error");
+            await alertError("Full name is required", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
@@ -29,35 +29,35 @@ export default function Register() {
         // Cek email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
-            await alertError("Invalid email format", "Validation Error");
+            await alertError("Invalid email format", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
 
         // Cek password tidak kosong
         if (!password || password.trim() === "") {
-            await alertError("Password is required", "Validation Error");
+            await alertError("Password is required", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
 
         // Cek password minimal 8 karakter dan ada huruf besar + angka
         if (password.length < 8) {
-            await alertError("Password must be at least 8 characters", "Validation Error");
+            await alertError("Password must be at least 8 characters", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
 
         // Cek password minimal ada huruf besar + angka
-        if (!/[A-Z]/.test(password) && !/[0-9]/.test(password)) {
-            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error");
+        if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
 
         // Cek password dan confirm password sama
         if (password !== confirmPassword) {
-            await alertError("Password and confirm password do not match", "Validation Error");
+            await alertError("Password and confirm password do not match", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
@@ -67,11 +67,7 @@ export default function Register() {
             const body = await res.json().catch(() => ({}));
 
             if (res.ok) {
-                await alertSuccess(
-                    "Registrasi berhasil",
-                    "Silakan login.",
-                    "imageUrl"
-                );
+                await alertSuccess("Registrasi berhasil",  "Silakan login.", "imageUrl");
                 navigate("/login");
             } else if (res.status === 400) {
                 // Handle validation errors dari server
@@ -79,25 +75,22 @@ export default function Register() {
                 if (errors && Array.isArray(errors)) {
                     // Tampilkan alert untuk setiap error field dari server
                     for (const err of errors) {
-                        await alertError(err.messages, "Validation Error");
+                        await alertError(err.messages, "Validation Error", "imageUrl");
                     }
                 } else {
-                    await alertError(body?.message || "Data tidak valid", "Validation Error");
+                    await alertError(body?.message || "Data tidak valid", "Validation Error", "imageUrl");
                 }
             } else if (res.status === 409) {
                 // Handle conflict (email already registered)
                 const errorMsg = body?.message || body?.error || "Email already registered";
-                await alertError(errorMsg, "Registered Error");
+                await alertError(errorMsg, "Registered Error", "imageUrl");
             } else {
-                const msg = body?.message || `Registered Erro (status ${res.status})`;
-                await alertError(msg, "Registered Erro");
+                const msg = body?.message || `Registered Error (status ${res.status})`;
+                await alertError(msg, "Registered Error", "imageUrl");
             }
         } catch (err) {
-            console.error("Registration error:", err);
-            await alertError(
-                err?.message || "Terjadi masalah jaringan. Silakan coba lagi.",
-                "Registered Erro"
-            );
+            console.error("Registered error:", err);
+            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Registered Error", "imageUrl");
         } finally {
             setIsLoading(false);
         }
