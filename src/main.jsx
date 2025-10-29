@@ -35,7 +35,7 @@ createRoot(document.getElementById("root")).render(
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     {/* Halaman di dalam dashboard */}
                     <Route index element={<BuwuhanDashboard />} />
-                    <Route path="create" element={<BuwuhanForm />} />
+                    <Route path="create" element={<BuwuhanCreate />} />
                     <Route path="list" element={<BuwuhanList />} />
 
                 </Route>
