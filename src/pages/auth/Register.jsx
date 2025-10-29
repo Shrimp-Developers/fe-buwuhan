@@ -79,24 +79,24 @@ export default function Register() {
                 if (errors && Array.isArray(errors)) {
                     // Tampilkan alert untuk setiap error field dari server
                     for (const err of errors) {
-                        await alertError(err.messages, "Validasi Gagal");
+                        await alertError(err.messages, "Validation Error");
                     }
                 } else {
-                    await alertError(body?.message || "Data tidak valid", "Validasi Gagal");
+                    await alertError(body?.message || "Data tidak valid", "Validation Error");
                 }
             } else if (res.status === 409) {
                 // Handle conflict (email already registered)
                 const errorMsg = body?.message || body?.error || "Email already registered";
-                await alertError(errorMsg, "Registrasi Gagal");
+                await alertError(errorMsg, "Registered Error");
             } else {
-                const msg = body?.message || `Registrasi gagal (status ${res.status})`;
-                await alertError(msg, "Registrasi Gagal");
+                const msg = body?.message || `Registered Erro (status ${res.status})`;
+                await alertError(msg, "Registered Erro");
             }
         } catch (err) {
             console.error("Registration error:", err);
             await alertError(
                 err?.message || "Terjadi masalah jaringan. Silakan coba lagi.",
-                "Registrasi Gagal"
+                "Registered Erro"
             );
         } finally {
             setIsLoading(false);
