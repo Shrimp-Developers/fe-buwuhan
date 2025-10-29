@@ -35,7 +35,7 @@ export default function BuwuhanDashboard() {
                         <p className="text-sm lg:text-base text-gray-700 mb-3">
                             Mau edit apa hari ini?
                         </p>
-                        <button className="bg-[#000000] text-white text-xs px-3 py-3 lg:px-4 lg:py-3 rounded-full hover:bg-gray-800 transition">
+                        <button className="bg-[#000000] text-white text-xs px-3 py-2 lg:px-5 lg:py-3 rounded-full hover:bg-gray-800 transition">
                             Lihat semua data
                         </button>
                     </div>
