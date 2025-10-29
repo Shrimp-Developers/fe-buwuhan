@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+.my-alert-popup {
+    border-radius: 30px !important;
+    width: 350px !important;
+    height: 350px !important;
+}
+
+.my-alert-title {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #8D8D9B !important;
+}
+
+.my-alert-text {
+    font-size: 14px !important;
+    color: #7A7A7A !important;
+}
+
+.my-confirm-btn {
+    color: #ffffff !important;
+    background-color: #8A86D5 !important;
+    border-radius: 25px !important;
+    padding: 8px 30px !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+
