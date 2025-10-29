@@ -57,15 +57,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 </div>
 
                 {/* Menu Items */}
-                <nav className="flex-1 px-4 py-2 overflow-y-auto">
-                    <button className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm bg-white text-gray-900 font-medium shadow-sm transition-all duration-200">
-                        <img
-                            src="/icon-dashboard.png"
-                            alt="Deskripsi icon-dashboard"
-                            className="w-6 h-6 flex-shrink-0"
-                        />
-                        <span className="text-left">Dashboard</span>
-                    </button>
+                <nav className="flex-1 px-7 py-1 overflow-y-auto">
 
                     <Link to="/dashboard/create" className="w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300 transition-all duration-200">
                         <PlusCircle className="w-7 h-7 flex-shrink-0" />
