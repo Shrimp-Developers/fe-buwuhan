@@ -8,9 +8,7 @@ export default function Register() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -19,13 +17,6 @@ export default function Register() {
         setIsLoading(true);
 
         // Client-side validation
-        // Cek fullName kosong
-        if (!fullName || fullName.trim() === "") {
-            await alertError("Full name is required", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
-        }
-
         // Cek email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
@@ -34,15 +25,8 @@ export default function Register() {
             return;
         }
 
-        // Cek password tidak kosong
-        if (!password || password.trim() === "") {
-            await alertError("Password is required", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
-        }
-
-        // Cek password minimal 8 karakter dan ada huruf besar + angka
-        if (password.length < 8) {
+        // Cek password minimal 8 karakter
+        if (password.length < 8 || password.length > 100) {
             await alertError("Password must be at least 8 characters", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
@@ -51,13 +35,6 @@ export default function Register() {
         // Cek password minimal ada huruf besar + angka
         if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
             await alertError("Password must contain at least one uppercase letter and one number", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
-        }
-
-        // Cek password dan confirm password sama
-        if (password !== confirmPassword) {
-            await alertError("Password and confirm password do not match", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
@@ -120,6 +97,7 @@ export default function Register() {
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
                                 <input
+                                    required
                                     type="text"
                                     name="fullName"
                                     value={fullName}
@@ -152,6 +130,7 @@ export default function Register() {
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
                                 <input
+                                    required
                                     type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={password}
@@ -167,37 +146,9 @@ export default function Register() {
                                     disabled={isLoading}
                                 >
                                     {showPassword ? (
-                                        <EyeOff className="h-5 w-5 text-[#ACA0A0]" />
-                                    ) : (
                                         <Eye className="h-5 w-5 text-[#ACA0A0]" />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Confirm Password */}
-                        <div>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
-                                <input
-                                    type={showConfirmPassword ? "text" : "password"}
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    placeholder="Konfirmasi Kata Sandi"
-                                    disabled={isLoading}
-                                    className="w-full pl-12 pr-12 py-3 bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8A86D5] transition disabled:opacity-50 disabled:cursor-not-allowed"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition"
-                                    disabled={isLoading}
-                                >
-                                    {showConfirmPassword ? (
-                                        <EyeOff className="h-5 w-5 text-[#ACA0A0]" />
                                     ) : (
-                                        <Eye className="h-5 w-5 text-[#ACA0A0]" />
+                                        <EyeOff className="h-5 w-5 text-[#ACA0A0]" />
                                     )}
                                 </button>
                             </div>
@@ -207,7 +158,7 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-blue-400 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                         >
                             {isLoading ? (
                                 <>
