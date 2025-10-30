@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userLogin } from "../../services/authService.js";
+import { UserAuthGoogle } from "../../services/authService.js"
 import { alertError, alertSuccess } from "../../services/alert.js";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
@@ -15,7 +16,7 @@ export default function Login() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Cek email format
+        // Basic email format validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
             await alertError("Invalid email format", "Validation Error", "imageUrl");
@@ -23,9 +24,9 @@ export default function Login() {
             return;
         }
 
-        // Validasi password minimal satu huruf besar dan satu angka
+        // Cek password minimal ada huruf besar + angka
         if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error");
+            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
@@ -38,7 +39,18 @@ export default function Login() {
                 const token = body?.data?.accessToken;
                 const user = body?.data?.user;
 
-                await alertSuccess("User logged in succesfully", "Login Succes", "imageUrl");
+                // Store token in localStorage for persistence
+                if (token) {
+                    localStorage.setItem('accessToken', token);
+                }
+
+                // Store user data
+                if (user) {
+                    localStorage.setItem('user', JSON.stringify(user));
+                }
+                await alertSuccess("User logged in successfully", "Login Success", "imageUrl");
+
+                // Navigate to dashboard
                 navigate("/dashboard/", {
                     state: {
                         token,
@@ -47,26 +59,47 @@ export default function Login() {
                 });
 
             } else if (res.status === 400) {
-                //  error validasi dari backend
+                // Validation error from backend
                 const errors = body?.errors;
                 if (errors && Array.isArray(errors)) {
+                    // Show all validation errors
                     for (const err of errors) {
-                        await alertError(err.messages, `Error pada ${err.field}`, "imageUrl");
+                        await alertError(err.messages || err.message, `Error on ${err.field}`, "imageUrl");
                     }
                 } else {
-                    await alertError(body?.message || "Account not found", "Validation Error", "imageUrl");
+                    await alertError(body?.message || "Invalid request", "Validation Error", "imageUrl");
                 }
 
             } else if (res.status === 401) {
-                // Email atau password salah
-                await alertError(body?.message || "Invalid email or password", "Unauthorized", "imageUrl");
+                // Handle different 401 scenarios
+                const message = body?.message || "Invalid email or password";
+                const error = body?.error || "Unauthorized";
+
+                // Provide specific guidance based on error type
+                if (message.toLowerCase().includes('inactive')) {
+                    await alertError(
+                        "Your account is inactive. Please contact support or check your email for activation instructions.",
+                        "Account Inactive",
+                        "imageUrl"
+                    );
+                } else if (message.toLowerCase().includes('google')) {
+                    await alertError(
+                        "This email is registered with Google. Please use Google sign-in instead.",
+                        "Google Account",
+                        "imageUrl"
+                    );
+                } else {
+                    // Invalid credentials
+                    await alertError(message, error, "imageUrl");
+                }
 
             } else {
-                await alertError(body?.message || `Login failed (status ${res.status})`, "Unauthorized", "imageUrl");
+                // Other errors
+                await alertError(body?.message || `Login failed (status ${res.status})`, "Login Failed", "imageUrl");
             }
         } catch (err) {
             console.error("Login error:", err);
-            await alertError("A network error occurred. Please try again", "Login Failed", "imageUrl");
+            await alertError("A network error occurred. Please try again", "Connection Error", "imageUrl");
         } finally {
             setIsLoading(false);
         }
@@ -126,7 +159,7 @@ export default function Login() {
                                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition"
                                     disabled={isLoading}
                                 >
-                                    {showPassword ? (
+                                    {!showPassword ? (
                                         <EyeOff className="h-5 w-5 text-[#ACA0A0]" />
                                     ) : (
                                         <Eye className="h-5 w-5 text-[#ACA0A0]" />
@@ -137,20 +170,20 @@ export default function Login() {
 
                         {/* Forgot Password */}
                         <div className="text-right">
-                            <button
-                                type="button"
-                                className="text-sm text-[#000000] hover:underline disabled:opacity-50"
-                                disabled={isLoading}
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-[#000000] disabled:opacity-50 underline"
+                                onClick={(e) => isLoading && e.preventDefault()}
                             >
                                 Lupa kata sandi?
-                            </button>
+                            </Link>
                         </div>
 
                         {/* Login Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-blue-400 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                         >
                             {isLoading ? (
                                 <>
@@ -179,6 +212,7 @@ export default function Login() {
                     {/* Social Login Buttons */}
                     <div className="flex justify-center gap-4">
                         <button
+                            onClick={UserAuthGoogle}
                             type="button"
                             className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
                             aria-label="Login with Google"
@@ -219,7 +253,7 @@ export default function Login() {
                     {/* Sign Up Link */}
                     <div className="text-center mt-6">
                         <p className="text-sm text-gray-600">
-                            Tidak punya akun?{' '}
+                            Belum punya akun{' '}
                             <Link
                                 to="/register"
                                 className="text-[#8A86D5] font-semibold hover:underline"
