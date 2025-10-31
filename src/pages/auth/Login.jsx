@@ -16,41 +16,32 @@ export default function Login() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Basic email format validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-            await alertError("Invalid email format", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
-        }
-
-        // Cek password minimal ada huruf besar + angka
-        if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error", "imageUrl");
+        // Cek password minimal 8 karakter
+        if (password.length < 8 || password.length > 100) {
+            await alertError("Kata sandi harus minimal 8 karakter", "Gagal Masuk!", "imageUrl");
             setIsLoading(false);
             return;
         }
 
         try {
-            const res = await userLogin({ email, password });
-            const body = await res.json().catch(() => ({}));
+            const response = await userLogin({ email, password });
+            const body = await response.json().catch(() => ({}));
 
-            if (res.ok) {
+            if (response.ok) {
                 const token = body?.data?.accessToken;
                 const user = body?.data?.user;
 
-                // Store token in localStorage for persistence
+                //cek penyimpanan token apakah sudah registrasi atau data sudah ada
                 if (token) {
                     localStorage.setItem('accessToken', token);
                 }
 
-                // Store user data
+                // cek penyimpanan user apakah sudah registrasi atau data sudah ada
                 if (user) {
                     localStorage.setItem('user', JSON.stringify(user));
                 }
-                await alertSuccess("User logged in successfully", "Login Success", "imageUrl");
-
-                // Navigate to dashboard
+                await alertSuccess("Selamat datang di pengelolaan buwuhan", "Berhasil Masuk!", "imageUrl");
+                // kalo data akun sudah ada bisa langsung ke dashboard
                 navigate("/dashboard/", {
                     state: {
                         token,
@@ -58,48 +49,43 @@ export default function Login() {
                     }
                 });
 
-            } else if (res.status === 400) {
-                // Validation error from backend
-                const errors = body?.errors;
-                if (errors && Array.isArray(errors)) {
-                    // Show all validation errors
-                    for (const err of errors) {
-                        await alertError(err.messages || err.message, `Error on ${err.field}`, "imageUrl");
-                    }
+            } else if (response.status === 400) {
+                // cek email sesuai format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email || !emailRegex.test(email)) {
+                    await alertError("Format email tidak valid", "Gagal Masuk!", "imageUrl");
                 } else {
-                    await alertError(body?.message || "Invalid request", "Validation Error", "imageUrl");
+                    if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                        await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Masuk!", "imageUrl");
+                        setIsLoading(false);
+                    }
                 }
 
-            } else if (res.status === 401) {
-                // Handle different 401 scenarios
-                const message = body?.message || "Invalid email or password";
-                const error = body?.error || "Unauthorized";
-
-                // Provide specific guidance based on error type
+            } else if (response.status === 401) {
+                // mengatasi ketika error status 401
+                const message = body?.message;
+                // akun belum aktif/ belum diverifikasi
                 if (message.toLowerCase().includes('inactive')) {
                     await alertError(
-                        "Your account is inactive. Please contact support or check your email for activation instructions.",
-                        "Account Inactive",
+                        "Akun Anda tidak aktif. Silakan hubungi dukungan atau periksa email Anda untuk petunjuk aktivasi.",
+                        "Gagal Masuk!",
                         "imageUrl"
                     );
                 } else if (message.toLowerCase().includes('google')) {
                     await alertError(
-                        "This email is registered with Google. Please use Google sign-in instead.",
-                        "Google Account",
+                        "Email ini terdaftar di Google. Silakan gunakan fitur masuk Google.",
+                        "Gagal Masuk!",
                         "imageUrl"
                     );
                 } else {
                     // Invalid credentials
-                    await alertError(message, error, "imageUrl");
+                    await alertError("Email atau kata sandi salah", "Gagal Masuk!", "imageUrl");
                 }
-
-            } else {
-                // Other errors
-                await alertError(body?.message || `Login failed (status ${res.status})`, "Login Failed", "imageUrl");
             }
+            // Kalo server error
         } catch (err) {
             console.error("Login error:", err);
-            await alertError("A network error occurred. Please try again", "Connection Error", "imageUrl");
+            await alertError("Terjadi kesalahan jaringan. Silakan coba lagi.", "Gagal Masuk!", "imageUrl");
         } finally {
             setIsLoading(false);
         }
