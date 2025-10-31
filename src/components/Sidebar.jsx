@@ -1,9 +1,16 @@
 import { PlusCircle, LogOut, X } from 'lucide-react';
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/useAuth.js";
 
 export default function Sidebar({ isOpen, onClose }) {
 
     const { pathname } = useLocation();
+    const { logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        onClose();
+    };
 
     const menuClasses = (path) =>
         `w-full flex items-center gap-6 px-4 py-3 mb-2 rounded-lg text-sm font-medium transition-all duration-200
@@ -14,7 +21,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
     return (
         <>
-            {/* Mobile Overlay */}
+            {/* Mobile  */}
             {isOpen && (
                 <div
                     className="fixed z-40 md:hidden"
@@ -82,10 +89,10 @@ export default function Sidebar({ isOpen, onClose }) {
 
                 {/* Logout */}
                 <div className="p-6 border-gray-300">
-                    <Link to="/login" className="w-full flex items-center gap-6 px-4 py-3 text-[#000000] hover:bg-gray-300 rounded-lg text-sm transition-all duration-200">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-6 px-4 py-3 text-[#000000] hover:bg-gray-300 rounded-lg text-sm transition-all duration-200">
                         <LogOut className="w-7 h-7" />
                         <span>Keluar</span>
-                    </Link>
+                    </button>
                 </div>
             </aside>
         </>
