@@ -16,58 +16,46 @@ export default function Register() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Client-side validation
-        // Cek email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-            await alertError("Invalid email format", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
+        // cek fullNqme minimal 3 maksimal 100
+        if (fullName.length < 3 || fullName.length > 100) {
+            await alertError("Full name must be at least 3 characters", "Validation Error", "imageUrl");
         }
 
-        // Cek password minimal 8 karakter
+        // Cek password minimal 8 karakter maksimal 100
         if (password.length < 8 || password.length > 100) {
             await alertError("Password must be at least 8 characters", "Validation Error", "imageUrl");
             setIsLoading(false);
             return;
         }
 
-        // Cek password minimal ada huruf besar + angka
-        if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-            await alertError("Password must contain at least one uppercase letter and one number", "Validation Error", "imageUrl");
-            setIsLoading(false);
-            return;
-        }
-
         try {
-            const res = await userRegister({ fullName, email, password });
-            const body = await res.json().catch(() => ({}));
-
-            if (res.ok) {
-                await alertSuccess("Registrasi berhasil",  "Silakan login.", "imageUrl");
+            const response = await userRegister({ fullName, email, password });
+            // cek jika berhasil
+            if (response.ok || response.status === 200) {
+                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu",  "Daftar Berhasil!.", "imageUrl");
                 navigate("/login");
-            } else if (res.status === 400) {
-                // Handle validation errors dari server
-                const errors = body?.errors;
-                if (errors && Array.isArray(errors)) {
-                    // Tampilkan alert untuk setiap error field dari server
-                    for (const err of errors) {
-                        await alertError(err.messages, "Validation Error", "imageUrl");
-                    }
-                } else {
-                    await alertError(body?.message || "Data tidak valid", "Validation Error", "imageUrl");
+            } else if (response.status === 400) {
+                // cek full name harus diisi
+                if (!fullName) {
+                    await alertError("Nama lengkap tidak boleh kosong", "Gagal Daftar!", "imageUrl")
                 }
-            } else if (res.status === 409) {
-                // Handle conflict (email already registered)
-                const errorMsg = body?.message || body?.error || "Email already registered";
-                await alertError(errorMsg, "Registered Error", "imageUrl");
-            } else {
-                const msg = body?.message || `Registered Error (status ${res.status})`;
-                await alertError(msg, "Registered Error", "imageUrl");
+                // cek email sesuai format atau tidak
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email || !emailRegex.test(email)) {
+                    await alertError("Format email tidak valid", "Gagal Daftar!", "imageUrl");
+                }
+                // Cek password minimal ada huruf besar + angka
+                if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                    await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Daftar!", "imageUrl");
+                }
+            } else if (response.status === 409) {
+                // mengatasi konflik
+                await alertError("Email sudah terdaftar", "Gagal Daftar!", "imageUrl");
             }
         } catch (err) {
+            // jika server error
             console.error("Registered error:", err);
-            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Registered Error", "imageUrl");
+            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Gagal Daftar!", "imageUrl");
         } finally {
             setIsLoading(false);
         }
