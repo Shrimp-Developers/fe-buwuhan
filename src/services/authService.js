@@ -25,16 +25,6 @@ export const userRegister = async ({fullName, email, password}) => {
     });
 };
 
-export const UserAuthGoggle = ({email, password}) =>
-    fetch(`${API_PATH}/auth/google/login`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({email, password}),
-    });
-
 export const UserAuthGoogle = () => {
     window.location.href = `${API_PATH}/auth/google/login`; //  Redirect browser ke endpoint Google OAuth
 };
