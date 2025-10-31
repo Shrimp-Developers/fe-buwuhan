@@ -1,7 +1,7 @@
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { userRegister } from "../../services/authService.js";
+import {UserAuthGoogle, userRegister} from "../../services/authService.js";
 import { alertError, alertSuccess } from "../../services/alert.js";
 
 export default function Register() {
@@ -160,6 +160,57 @@ export default function Register() {
                                 'Daftar'
                             )}
                         </button>
+
+                        {/* Divider */}
+                        <div className="relative my-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-[#000000]"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-4 bg-white text-[#000000]">Atau masuk dengan</span>
+                            </div>
+                        </div>
+
+                        {/* Social Login Buttons */}
+                        <div className="flex justify-center gap-4">
+                            <button
+                                onClick={UserAuthGoogle}
+                                type="button"
+                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
+                                aria-label="Login with Google"
+                                disabled={isLoading}
+                            >
+                                <img
+                                    src="/icon-google.png"
+                                    alt="deskripsi icon-google"
+                                    className="w-6 h-6 object-contain"
+                                />
+                            </button>
+                            <button
+                                type="button"
+                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
+                                aria-label="Login with Facebook"
+                                disabled={isLoading}
+                            >
+                                <img
+                                    src="/icon-facebook.png"
+                                    alt="Deskripsi Icon-Buwuhan"
+                                    className="w-7 h-7 object-contain"
+                                />
+                            </button>
+                            <button
+                                type="button"
+                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
+                                aria-label="Login with apple"
+                                disabled={isLoading}
+                            >
+                                <img
+                                    src="/icon-apple.png"
+                                    alt="Deskripsi icon-apple"
+                                    className="w-6 h-6 object-contain"
+                                />
+                            </button>
+                        </div>
 
                         {/* Sign In Link */}
                         <div className="text-center">
