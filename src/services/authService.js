@@ -1,7 +1,7 @@
 import {API_PATH} from './api.js';
 
-export const userLogin = ({email, password}) =>
-    fetch(`${API_PATH}/auth/login`, {
+export const userLogin = async ({email, password}) => {
+    return await fetch(`${API_PATH}/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
