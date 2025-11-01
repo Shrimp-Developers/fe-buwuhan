@@ -1,5 +1,7 @@
+import {API_PATH} from './api.js';
+
 export const userLogin = async ({email, password}) => {
-    return await fetch(`${import.meta.env.VITE_API_PATH}/auth/login`, {
+    return await fetch(`${API_PATH}/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
