@@ -39,7 +39,7 @@ Aplikasi ini memiliki dua modul utama: **User Management** dan **Buwuhan Book Ma
 git clone https://github.com/Shrimp-Developers/fe-buwuhan.git
 
 # Masuk folder project
-cd Buwuhan-App
+cd fe-buwuhan
 
 # Install dependencies
 npm install
