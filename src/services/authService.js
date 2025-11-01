@@ -30,5 +30,5 @@ export const userRegister = async ({fullName, email, password}) => {
 };
 
 export const UserAuthGoogle = () => {
-    window.location.href = `${API_PATH}/auth/google/login`; //  Redirect browser ke endpoint Google OAuth
+    window.location.href = `${import.meta.env.VITE_API_PATH}/auth/google/login`; //  Redirect browser ke endpoint Google OAuth
 };
