@@ -42,12 +42,7 @@ export default function Login() {
                 }
                 await alertSuccess("Selamat datang di pengelolaan buwuhan", "Berhasil Masuk!", "imageUrl");
                 // kalo data akun sudah ada bisa langsung ke dashboard
-                navigate("/dashboard/", {
-                    state: {
-                        token,
-                        user
-                    }
-                });
+                navigate("/dashboard/")
 
             } else if (response.status === 400) {
                 // cek email sesuai format
