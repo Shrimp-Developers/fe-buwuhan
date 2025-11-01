@@ -5,6 +5,7 @@ import  AuthProvider  from "../src/context/AuthContext.jsx";
 import { ProtectedRoute } from "./context/ProtectedRoute";
 import { PublicRoute } from "./context/PublicRoute";
 import "./index.css";
+import GoogleCallback from "./pages/auth/GoogleCallback.jsx";
 
 // Auth Pages
 import Register from "./pages/auth/Register.jsx";
@@ -33,6 +34,8 @@ createRoot(document.getElementById("root")).render(
                                 <Login />
                             </PublicRoute>
                         }/>
+
+                    <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
                     <Route path="/register" element={
                             <PublicRoute>
