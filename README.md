@@ -35,7 +35,7 @@ Aplikasi ini memiliki dua modul utama: **User Management** dan **Buwuhan Book Ma
 
 ## ⚙️ Cara Menjalankan
 ```bash
-# Clone repository // Mengambil repo
+# Clone repository
 git clone https://github.com/Shrimp-Developers/fe-buwuhan.git
 
 # Masuk folder project
