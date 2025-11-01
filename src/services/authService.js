@@ -12,6 +12,7 @@ export const userLogin = async ({email, password}) => {
             password
         }),
     });
+};
 
 export const userRegister = async ({fullName, email, password}) => {
     return await fetch(`${API_PATH}/auth/register`, {
