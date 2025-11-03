@@ -38,12 +38,12 @@ export default function AuthProvider({ children }) {
         checkAuth();
     }, [checkAuth]);
 
-    const login = (userData, userToken) => {
+    const login = useCallback((userData, userToken) => {
         setUser(userData);
         setToken(userToken);
         localStorage.setItem('accessToken', userToken);
         localStorage.setItem('user', JSON.stringify(userData));
-    };
+    }, []);
 
     const value = {
         user,
@@ -56,4 +56,4 @@ export default function AuthProvider({ children }) {
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
