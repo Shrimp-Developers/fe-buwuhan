@@ -1,7 +1,7 @@
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {UserAuthGoogle, userRegister} from "../../services/authService.js";
+import {loginWithGoogle, userRegister} from "../../services/authService.js";
 import { alertError, alertSuccess } from "../../services/alert.js";
 
 export default function Register() {
@@ -11,6 +11,10 @@ export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const handleGoogleLogin = () => {
+        loginWithGoogle();
+    };
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -174,7 +178,7 @@ export default function Register() {
                         {/* Social Login Buttons */}
                         <div className="flex justify-center gap-4">
                             <button
-                                onClick={UserAuthGoogle}
+                                onClick={handleGoogleLogin}
                                 type="button"
                                 className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
                                 aria-label="Login with Google"
