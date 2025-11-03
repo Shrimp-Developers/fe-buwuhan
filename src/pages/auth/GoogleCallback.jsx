@@ -6,13 +6,12 @@ import { getCurrentUser } from '../../services/authService';
 export default function GoogleCallback() {
     const navigate = useNavigate();
     const { login } = useAuth();
-    const [status, setStatus] = useState('Memproses...');
+    const [status, setStatus] = useState('Memproses autentikasi...');
 
     useEffect(() => {
         const verifyGoogleAuth = async () => {
             try {
-                setStatus('Memverifikasi autentikasi Google...');
-                console.log('=== Google Callback Started ===');
+                setStatus('Memverifikasi akun Google...');
 
                 // Tunggu sebentar untuk cookie di-set
                 await new Promise(resolve => setTimeout(resolve, 500));
@@ -21,8 +20,7 @@ export default function GoogleCallback() {
                 const userData = await getCurrentUser();
 
                 if (userData) {
-                    console.log('✅ User data:', userData);
-                    setStatus('Login berhasil! Redirect ke dashboard...');
+                    setStatus('Login berhasil! Mengalihkan...');
 
                     // Generate dummy token untuk localStorage
                     const dummyToken = `google_auth_${Date.now()}`;
@@ -38,8 +36,8 @@ export default function GoogleCallback() {
                     throw new Error('User data tidak ditemukan');
                 }
             } catch (error) {
-                console.error('❌ Error:', error);
-                setStatus('Autentikasi gagal. Redirect ke login...');
+                console.error('Google auth error:', error);
+                setStatus('Login gagal. Mengalihkan ke halaman login...');
 
                 setTimeout(() => {
                     navigate('/login?error=auth_failed', { replace: true });
