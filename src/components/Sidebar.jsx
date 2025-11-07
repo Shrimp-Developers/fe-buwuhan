@@ -24,7 +24,7 @@ export default function Sidebar({ isOpen, onClose }) {
             {/* Mobile  */}
             {isOpen && (
                 <div
-                    className="fixed z-40 md:hidden h-full"
+                    className="fixed z-40 md:hidden h-screen"
                     onClick={onClose}
                 />
             )}
