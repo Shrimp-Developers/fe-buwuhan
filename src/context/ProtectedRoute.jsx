@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth.js';
+
 export const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
