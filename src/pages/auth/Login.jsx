@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {loginWithGoogle, userLogin} from "../../services/authService.js";
-import { alertError, alertSuccess } from "../../services/alert.js";
+import {loginWithGoogle, userLogin} from "../../api/authService.js";
+import { alertError, alertSuccess } from "../../api/alert.js";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 export default function Login() {
