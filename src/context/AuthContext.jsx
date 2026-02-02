@@ -1,59 +1,50 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext(null);
 
-export default function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
-
-    const logout = useCallback(() => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        navigate('/login');
-    }, [navigate]);
-
-    const checkAuth = useCallback(() => {
-        try {
-            const storedToken = localStorage.getItem('accessToken');
-            const storedUser = localStorage.getItem('user');
-
-            if (storedToken && storedUser) {
-                setToken(storedToken);
-                setUser(JSON.parse(storedUser));
-            }
-        } catch (error) {
-            console.error('Error checking auth:', error);
-            logout();
-        } finally {
-            setIsLoading(false);
-        }
-    }, [logout]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+        const storedUser = localStorage.getItem('user');
+        const storedToken = localStorage.getItem('token');
 
-    const login = useCallback((userData, userToken) => {
-        setUser(userData);
-        setToken(userToken);
-        localStorage.setItem('accessToken', userToken);
-        localStorage.setItem('user', JSON.stringify(userData));
+        if (storedUser && storedToken) {
+            setUser(JSON.parse(storedUser));
+            setToken(storedToken);
+        }
+
+        setLoading(false);
     }, []);
 
-    const value = {
-        user,
-        token,
-        isLoading,
-        isAuthenticated: !!token,
-        login,
-        logout,
-        checkAuth
+    const login = (userData, tokenValue) => {
+        setUser(userData);
+        setToken(tokenValue);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', tokenValue);
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+    };
+
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                token,
+                isAuthenticated: !!token,
+                login,
+                logout,
+                loading,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
+};

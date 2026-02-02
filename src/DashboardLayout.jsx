@@ -1,16 +1,26 @@
-// DashboardLayout.jsx
 import { useState, useEffect } from 'react';
-import { Outlet } from "react-router";
+import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "../src/context/useAuth.js";
 import Navbar from "../src/components/Navbar.jsx";
 import Sidebar from "../src/components/Sidebar.jsx";
 
 export default function DashboardLayout() {
+    const { user, loading } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    if (loading) {
+        return <div className="h-screen flex items-center justify-center">Loading...</div>;
+    }
+
+    // Kalau belum login → tendang ke login
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
     // Auto close sidebar saat resize ke desktop
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 768) { // md breakpoint
+            if (window.innerWidth >= 768) {
                 setIsSidebarOpen(false);
             }
         };
@@ -21,18 +31,14 @@ export default function DashboardLayout() {
 
     return (
         <div className="flex h-screen bg-[#F5F6FA]">
-            {/* Sidebar */}
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
             />
 
-            {/* Konten utama di kanan */}
             <div className="flex flex-col flex-1 overflow-hidden">
-                {/* Navbar */}
                 <Navbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-                {/* Isi halaman atau (Outlet) */}
                 <main className="flex-1 overflow-auto p-4 lg:p-6">
                     <Outlet />
                 </main>
