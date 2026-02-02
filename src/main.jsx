@@ -1,23 +1,14 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AuthProvider from "../src/context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import "./index.css";
-import GoogleCallback from "./pages/auth/GoogleCallback.jsx";
-
-// Auth Pages
 import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
-
-// Buwuhan Layout
 import DashboardLayout from "./DashboardLayout.jsx";
-
-// Buwuhan Pages
 import BuwuhanDashboard from "./pages/buwuhan/BuwuhanDashboard.jsx";
 import BuwuhanCreate from "./pages/buwuhan/BuwuhanCreate.jsx";
 import BuwuhanList from "./pages/buwuhan/BuwuhanList.jsx";
-
-// Settings Pages
 import EditPassword from "./pages/user/EditPassword.jsx";
 import SettingsUser from "./pages/user/SettingsUser.jsx";
 
@@ -27,28 +18,28 @@ createRoot(document.getElementById("root")).render(
             <AuthProvider>
                 <Routes>
 
-                    {/* Halaman Login & Register tetap biasa */}
+                    {/* ===== PUBLIC ROUTES ===== */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
-                    {/* Dashboard & Pages dalam Layout */}
-                    <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route index element={<BuwuhanDashboard />} />
-                        <Route path="create" element={<BuwuhanCreate />} />
-                        <Route path="list" element={<BuwuhanList />} />
+                    {/* ===== PROTECTED ROUTES (DashboardLayout handle auth) ===== */}
+                    <Route element={<DashboardLayout />}>
+                        <Route path="/dashboard">
+                            <Route index element={<BuwuhanDashboard />} />
+                            <Route path="create" element={<BuwuhanCreate />} />
+                            <Route path="list" element={<BuwuhanList />} />
+                        </Route>
+
+                        <Route path="/settings">
+                            <Route index element={<SettingsUser />} />
+                            <Route path="edit-password" element={<EditPassword />} />
+                        </Route>
                     </Route>
 
-                    {/* Settings */}
-                    <Route path="/settings" element={<DashboardLayout />}>
-                        <Route index element={<SettingsUser />} />
-                        <Route path="edit-password" element={<EditPassword />} />
-                    </Route>
-
-                    {/* Redirect default */}
+                    {/* Default redirect */}
                     <Route path="/" element={<Navigate to="/login" replace />} />
 
-                    {/* 404 Not Found */}
+                    {/* 404 */}
                     <Route
                         path="*"
                         element={
@@ -58,13 +49,15 @@ createRoot(document.getElementById("root")).render(
                                     <p className="text-xl text-gray-600 mb-8">Page Not Found</p>
                                     <a
                                         href="/login"
-                                        className="bg-[#8A86D5] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a76c5] transition-all duration-200 inline-block">
+                                        className="bg-[#8A86D5] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a76c5] transition-all duration-200 inline-block"
+                                    >
                                         Kembali Ke Halaman
                                     </a>
                                 </div>
                             </div>
                         }
                     />
+
                 </Routes>
             </AuthProvider>
         </BrowserRouter>
