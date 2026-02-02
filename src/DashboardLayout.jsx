@@ -8,15 +8,6 @@ export default function DashboardLayout() {
     const { user, loading } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    if (loading) {
-        return <div className="h-screen flex items-center justify-center">Loading...</div>;
-    }
-
-    // Kalau belum login → tendang ke login
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-
     // Auto close sidebar saat resize ke desktop
     useEffect(() => {
         const handleResize = () => {
@@ -28,6 +19,16 @@ export default function DashboardLayout() {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Tunggu auth selesai dicek
+    if (loading) {
+        return <div className="h-screen flex items-center justify-center">Loading...</div>;
+    }
+
+    // Kalau belum login → tendang ke login
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
     return (
         <div className="flex h-screen bg-[#F5F6FA]">

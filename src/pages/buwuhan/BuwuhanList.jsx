@@ -9,7 +9,6 @@ export default function BuwuhanList() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const kategoriRef = useRef(null);
     const statusRef = useRef(null);
 
@@ -28,6 +27,19 @@ export default function BuwuhanList() {
         { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
     ];
 
+    // Simulasi ambil data
+    useEffect(() => {
+        setTimeout(() => {
+            try {
+                setData(dummyData);
+            } catch{
+                setError("Gagal memuat data");
+            } finally {
+                setLoading(false);
+            }
+        }, 800);
+    }, []);
+
     // Tutup dropdown jika klik di luar
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -36,19 +48,6 @@ export default function BuwuhanList() {
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    // Simulasi ambil data
-    useEffect(() => {
-        setTimeout(() => {
-            try {
-                setData(dummyData);
-            } catch (err) {
-                setError("Gagal memuat data");
-            } finally {
-                setLoading(false);
-            }
-        }, 800);
     }, []);
 
     // Opsi dropdown

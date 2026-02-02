@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthProvider.jsx";
 import "./index.css";
 import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
@@ -18,11 +18,11 @@ createRoot(document.getElementById("root")).render(
             <AuthProvider>
                 <Routes>
 
-                    {/* ===== PUBLIC ROUTES ===== */}
+                    {/* PUBLIC ROUTES */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* ===== PROTECTED ROUTES (DashboardLayout handle auth) ===== */}
+                    {/* PROTECTED ROUTES  */}
                     <Route element={<DashboardLayout />}>
                         <Route path="/dashboard">
                             <Route index element={<BuwuhanDashboard />} />
