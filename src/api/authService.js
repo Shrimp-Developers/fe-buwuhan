@@ -30,10 +30,7 @@ export const userRegister = async ({fullName, email, password}) => {
 };
 
 export const loginWithGoogle = () => {
-    // Simpan URL  untuk redirect setelah login
     sessionStorage.setItem('preAuthUrl', window.location.pathname);
-
-    // Redirect ke  Google OAuth
     window.location.href = `${API_PATH}/api/auth/google/login`;
 };
 
