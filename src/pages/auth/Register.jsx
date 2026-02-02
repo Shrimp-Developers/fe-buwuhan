@@ -1,8 +1,8 @@
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {loginWithGoogle, userRegister} from "../../services/authService.js";
-import { alertError, alertSuccess } from "../../services/alert.js";
+import {loginWithGoogle, userRegister} from "../../api/authService.js";
+import { alertError, alertSuccess } from "../../api/alert.js";
 
 export default function Register() {
     const [fullName, setFullName] = useState("");
