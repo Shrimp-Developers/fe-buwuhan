@@ -5,7 +5,11 @@ import { useAuth } from "../context/useAuth.js";
 export default function Sidebar({ isOpen, onClose }) {
 
     const { pathname } = useLocation();
-    const { logout } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
+
+    if (!isAuthenticated) {
+        return null;
+    }
 
     const handleLogout = () => {
         logout();
