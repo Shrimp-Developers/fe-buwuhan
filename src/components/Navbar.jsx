@@ -36,51 +36,51 @@ export default function Navbar({ onMenuClick }) {
         <>
             {/* Mobile Search - Muncul menggantikan navbar */}
             {isSearchOpen ? (
-                <div className="md:hidden px-8 py-4">
+                <div className="md:hidden px-6 py-3">
                     <div className="relative">
                         <input
                             type="text"
                             placeholder="Cari . . . ."
                             autoFocus
                             onBlur={() => setIsSearchOpen(false)}
-                            className="pl-6 pr-12 py-3 w-full h-[48px] bg-white rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none shadow-lg border border-gray-200"
+                            className="pl-5 pr-10 py-2 w-full h-[40px] bg-white rounded-full text-xs text-gray-800 placeholder-gray-400 focus:outline-none shadow-lg border border-gray-200"
                         />
-                        <Search className="w-5 h-5 text-gray-400 absolute right-5 top-1/2 -translate-y-1/2" />
+                        <Search className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" />
                     </div>
                 </div>
             ) : (
                 /* Normal Navbar */
-                <header className="py-7 px-8 md:px-10 flex items-center justify-between z-40 relative">
+                <header className="py-5 px-6 md:px-12 flex items-center justify-between z-40 relative">
                     {/* Left Section - Hamburger on mobile, Title on desktop */}
                     <div className="flex items-center">
                         {/* Hamburger Menu - Mobile Only */}
                         <button
-                            className="md:hidden w-10 h-10 flex items-center justify-center"
+                            className="md:hidden w-8 h-8 flex items-center justify-center"
                             onClick={onMenuClick}
                         >
                             <img
                                 src="/icon-hamburger.png"
                                 alt="deskripsi icon-hamburger"
-                                className="w-6 h-6"
+                                className="w-5 h-5"
                             />
                         </button>
 
                         {/* Judul - Desktop Only */}
-                        <h1 className="hidden md:block text-2xl font-bold text-[#000000]">
+                        <h1 className="hidden md:block text-lg font-bold text-[#000000]">
                             {title}
                         </h1>
                     </div>
 
                     {/* Right Section - Icons */}
-                    <div className="flex items-center gap-2 md:gap-4 px-6 relative">
+                    <div className="flex items-center gap-2 md:gap-3 px-4 relative">
                         {/* Search bar - Hidden on mobile */}
                         <div className="hidden md:block relative">
                             <input
                                 type="text"
                                 placeholder="Cari . . . ."
-                                className="pl-14 py-3 w-[300px] lg:w-[420px] h-[42px] bg-gray-100 rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition shadow-xl"
+                                className="pl-10 py-2 w-[250px] lg:w-[350px] h-[36px] bg-gray-100 rounded-full text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition shadow-xl"
                             />
-                            <Search className="ml-2 w-5 h-5 text-[#ACA0A0] absolute left-3 top-1/2 -translate-y-1/2" />
+                            <Search className="ml-2 w-4 h-4 text-[#ACA0A0] absolute left-3 top-1/2 -translate-y-1/2" />
                         </div>
 
                         {/* Search Icon - Mobile Only */}
@@ -89,44 +89,44 @@ export default function Navbar({ onMenuClick }) {
                                 e.preventDefault();
                                 setIsSearchOpen(true);
                             }}
-                            className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]"
+                            className="md:hidden w-7 h-7 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]"
                         >
                             <img
                                 src="/icon-search.png"
                                 alt="deskripsi icon-search"
-                                className="w-6 h-6"
+                                className="w-5 h-5"
                             />
                         </button>
 
                         {/* Tombol Mode (Dark/Light) */}
-                        <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]">
+                        <button className="w-7 h-7 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]">
                             <img
                                 src="/icon-moon.png"
                                 alt="deskripsi icon-moon"
-                                className="w-6 h-6"
+                                className="w-5 h-5"
                             />
                         </button>
 
-                            {/* Profile Popup */}
-                                    {/* Profile Image */}
-                                    <div className="relative" ref={profileRef}>
-                                        <button
-                                            onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition bg-[#E8E9EE]"
-                                        >
-                                            <img
-                                                src="/icon-user.png"
-                                                alt="deskripsi icon-user"
-                                                className="w-8 h-8"
-                                            />
-                                        </button>
+                        {/* Profile Popup */}
+                        {/* Profile Image */}
+                        <div className="relative" ref={profileRef}>
+                            <button
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200 transition bg-[#E8E9EE]"
+                            >
+                                <img
+                                    src="/icon-user.png"
+                                    alt="deskripsi icon-user"
+                                    className="w-7 h-7"
+                                />
+                            </button>
 
-                                        <DetailProfile
-                                            isOpen={isProfileOpen}
-                                            onClose={() => setIsProfileOpen(false)}
-                                        />
-                                    </div>
-                                </div>
+                            <DetailProfile
+                                isOpen={isProfileOpen}
+                                onClose={() => setIsProfileOpen(false)}
+                            />
+                        </div>
+                    </div>
                 </header>
             )}
         </>

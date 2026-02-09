@@ -1,65 +1,10 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider.jsx";
-import "./index.css";
-import Register from "./pages/auth/Register.jsx";
-import Login from "./pages/auth/Login.jsx";
-import DashboardLayout from "./DashboardLayout.jsx";
-import BuwuhanDashboard from "./pages/buwuhan/BuwuhanDashboard.jsx";
-import BuwuhanCreate from "./pages/buwuhan/BuwuhanCreate.jsx";
-import BuwuhanList from "./pages/buwuhan/BuwuhanList.jsx";
-import EditPassword from "./pages/user/EditPassword.jsx";
-import SettingsUser from "./pages/user/SettingsUser.jsx";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './app.jsx'
+import './index.css'
 
-createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <AuthProvider>
-                <Routes>
-
-                    {/* PUBLIC ROUTES */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-
-                    {/* PROTECTED ROUTES  */}
-                    <Route element={<DashboardLayout />}>
-                        <Route path="/dashboard">
-                            <Route index element={<BuwuhanDashboard />} />
-                            <Route path="create" element={<BuwuhanCreate />} />
-                            <Route path="list" element={<BuwuhanList />} />
-                        </Route>
-
-                        <Route path="/settings">
-                            <Route index element={<SettingsUser />} />
-                            <Route path="edit-password" element={<EditPassword />} />
-                        </Route>
-                    </Route>
-
-                    {/* Default redirect */}
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-
-                    {/* 404 */}
-                    <Route
-                        path="*"
-                        element={
-                            <div className="min-h-screen flex items-center justify-center bg-white">
-                                <div className="text-center">
-                                    <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
-                                    <p className="text-xl text-gray-600 mb-8">Page Not Found</p>
-                                    <a
-                                        href="/login"
-                                        className="bg-[#8A86D5] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a76c5] transition-all duration-200 inline-block"
-                                    >
-                                        Kembali Ke Halaman
-                                    </a>
-                                </div>
-                            </div>
-                        }
-                    />
-
-                </Routes>
-            </AuthProvider>
-        </BrowserRouter>
-    </React.StrictMode>
-);
+        <App />
+    </React.StrictMode>,
+)

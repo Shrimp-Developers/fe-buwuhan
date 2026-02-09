@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "../src/context/useAuth.js";
-import Navbar from "../src/components/Navbar.jsx";
-import Sidebar from "../src/components/Sidebar.jsx";
+import { useAuth } from "./context/AuthContext.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Sidebar from "./components/Sidebar.jsx";
 
 export default function DashboardLayout() {
-    const { user, loading } = useAuth();
+    const { loading } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Auto close sidebar saat resize ke desktop
@@ -23,11 +23,6 @@ export default function DashboardLayout() {
     // Tunggu auth selesai dicek
     if (loading) {
         return <div className="h-screen flex items-center justify-center">Loading...</div>;
-    }
-
-    // Kalau belum login → tendang ke login
-    if (!user) {
-        return <Navigate to="/login" replace />;
     }
 
     return (

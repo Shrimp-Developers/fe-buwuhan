@@ -1,36 +1,61 @@
 import { X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function DetailProfile({ isOpen, onClose }) {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        username: '',
+        email: ''
+    });
+    const [previewImage, setPreviewImage] = useState('/image-dino.png');
+
     if (!isOpen) return null;
 
+    const handleImageChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Form submitted:', formData);
+    };
+
     return (
-        <div className="fixed inset-0 z-50 flex items-start justify-end lg:items-start lg:end lg:px-20 lg:py-24 px-5 py-6 sm:items-center">
-            <div className="relative w-full max-w-[300px] lg:max-w-[350px] bg-white rounded-2xl shadow-xl p-4 sm:p-6">
+        <div className="absolute z-50 top-12 right-3">
+            <div className="relative bg-white border border-gray-200 rounded-xl shadow-xl w-64 p-4">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center hover:bg-gray-100 rounded-full transition"
+                    className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Close"
                 >
-                    <X className="w-6 h-6 text-black" />
+                    <X className="w-5 h-5 text-gray-600" />
                 </button>
 
                 {/* Form */}
-                <form className="space-y-3">
-                    {/* Profile Image with Choose File */}
-                    <div className="flex flex-col items-center mb-2 relative">
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#C2BFF8] mb-2 relative">
+                <form className="space-y-3 mt-2" onSubmit={handleSubmit}>
+                    {/* Profile Image */}
+                    <div className="flex flex-col items-center">
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#C2BFF8] relative group">
                             <img
-                                src="/image-dino.png"
+                                src={previewImage}
                                 alt="Profile"
                                 className="w-full h-full object-cover"
                             />
-                            {/* Overlay Choose File */}
-                            <label className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs cursor-pointer opacity-0 hover:opacity-100 transition rounded-full">
-                                Choose File
+                            <label className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-[10px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                Ubah
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    onChange={handleImageChange}
+                                    className="hidden"
                                 />
                             </label>
                         </div>
@@ -38,38 +63,50 @@ export default function DetailProfile({ isOpen, onClose }) {
 
                     {/* Form Fields */}
                     <div>
-                        <label className="text-[10px] text-gray-600 mb-1 block">Nama lengkap</label>
+                        <label className="text-[10px] text-gray-600 mb-0.5 block">
+                            Nama Lengkap
+                        </label>
                         <input
                             type="text"
-                            placeholder="Haris Gunawan Romadhon"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-gray-50"
+                            placeholder="Full Name"
+                            value={formData.fullName}
+                            onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                            className="w-full px-2 py-1.5 border border-gray-300 rounded text-[11px] focus:outline-none focus:ring-1 focus:ring-[#8A86D5] focus:border-[#8A86D5]"
                         />
                     </div>
 
                     <div>
-                        <label className="text-[10px] text-gray-600 mb-1 block">Nama pengguna</label>
+                        <label className="text-[10px] text-gray-600 mb-0.5 block">
+                            Nama Pengguna
+                        </label>
                         <input
                             type="text"
-                            placeholder="harismoon23"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-gray-50"
+                            placeholder="Username"
+                            value={formData.username}
+                            onChange={(e) => setFormData({...formData, username: e.target.value})}
+                            className="w-full px-2 py-1.5 border border-gray-300 rounded text-[11px] focus:outline-none focus:ring-1 focus:ring-[#8A86D5] focus:border-[#8A86D5]"
                         />
                     </div>
 
                     <div>
-                        <label className="text-[10px] text-gray-600 mb-1 block">Email</label>
+                        <label className="text-[10px] text-gray-600 mb-0.5 block">
+                            Email
+                        </label>
                         <input
                             type="email"
-                            placeholder="harisg@gmail.com"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-gray-50"
+                            placeholder="example@gmail.com"
+                            value={formData.email}
+                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            className="w-full px-2 py-1.5 border border-gray-300 rounded text-[11px] focus:outline-none focus:ring-1 focus:ring-[#8A86D5] focus:border-[#8A86D5]"
                         />
                     </div>
 
                     {/* Update Button */}
                     <button
-                        type="button"
-                        className="mt-2 py-3 px-3 bg-[#8A86D5] hover:bg-blue-400 text-white rounded-full text-xs font-medium mx-auto lg:px-5 flex items-center transition"
+                        type="submit"
+                        className="w-full py-2 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-lg text-[11px] font-medium transition-colors"
                     >
-                        Ubah profile
+                        Ubah Profile
                     </button>
                 </form>
             </div>
