@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {loginWithGoogle, userLogin} from "../../api/authService.js";
-import { alertError, alertSuccess } from "../../api/alert.js";
+import { userLogin, loginWithGoogle } from "../services/authService.js";
+import { alertError, alertSuccess } from "../alert.js";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 export default function Login() {
@@ -11,7 +11,9 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Handle Google Login (redirect ke backend)
     const handleGoogleLogin = () => {
+        if (isLoading) return;
         loginWithGoogle();
     };
 
@@ -195,16 +197,17 @@ export default function Login() {
 
                     {/* Social Login Buttons */}
                     <div className="flex justify-center gap-4">
+                        {/* Google Sign-In Button */}
                         <button
-                            onClick={handleGoogleLogin}
                             type="button"
-                            className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
+                            onClick={handleGoogleLogin}
+                            className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
                             aria-label="Login with Google"
                             disabled={isLoading}
                         >
                             <img
                                 src="/icon-google.png"
-                                alt="deskripsi icon-google"
+                                alt="Google"
                                 className="w-6 h-6 object-contain"
                             />
                         </button>

@@ -1,8 +1,8 @@
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {loginWithGoogle, userRegister} from "../../api/authService.js";
-import { alertError, alertSuccess } from "../../api/alert.js";
+import { userRegister, loginWithGoogle } from "../services/authService.js";
+import { alertError, alertSuccess } from "../alert.js";
 
 export default function Register() {
     const [fullName, setFullName] = useState("");
@@ -12,7 +12,9 @@ export default function Register() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Handle Google Login (redirect ke backend)
     const handleGoogleLogin = () => {
+        if (isLoading) return;
         loginWithGoogle();
     };
 
@@ -36,7 +38,7 @@ export default function Register() {
             const response = await userRegister({ fullName, email, password });
             // cek jika berhasil
             if (response.ok || response.status === 200) {
-                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu",  "Daftar Berhasil!.", "imageUrl");
+                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu", "Daftar Berhasil!.", "imageUrl");
                 navigate("/login");
             } else if (response.status === 400) {
                 // cek full name harus diisi
@@ -177,16 +179,17 @@ export default function Register() {
 
                         {/* Social Login Buttons */}
                         <div className="flex justify-center gap-4">
+                            {/* Google Sign-In Button */}
                             <button
-                                onClick={handleGoogleLogin}
                                 type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
-                                aria-label="Login with Google"
+                                onClick={handleGoogleLogin}
+                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
+                                aria-label="Register with Google"
                                 disabled={isLoading}
                             >
                                 <img
                                     src="/icon-google.png"
-                                    alt="deskripsi icon-google"
+                                    alt="Google"
                                     className="w-6 h-6 object-contain"
                                 />
                             </button>

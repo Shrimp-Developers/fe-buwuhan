@@ -37,17 +37,17 @@ export default function BuwuhanCreate() {
     };
 
     return (
-        <div className="w-full mx-auto px-6 md:px-5">
+        <div className="w-full mx-auto px-4 md:px-5">
             {/* Judul untuk mobile */}
-            <h1 className="text-lg font-semibold text-gray-900 mb-6 md:hidden" >
+            <h1 className="text-base font-semibold text-gray-900 mb-4 md:hidden">
                 Tambah Data
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                 {/* Kolom Kiri */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Nama laki-laki
                         </label>
                         <input
@@ -55,12 +55,12 @@ export default function BuwuhanCreate() {
                             name="namaLaki"
                             value={formData.namaLaki}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Nama Perempuan
                         </label>
                         <input
@@ -68,19 +68,19 @@ export default function BuwuhanCreate() {
                             name="namaPerempuan"
                             value={formData.namaPerempuan}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Kategori
                         </label>
                         <select
                             name="kategori"
                             value={formData.kategori}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                         >
                             <option value="">Pilih kategori</option>
                             <option value="uang">Uang</option>
@@ -91,7 +91,7 @@ export default function BuwuhanCreate() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Pemberian
                         </label>
                         <input
@@ -99,19 +99,19 @@ export default function BuwuhanCreate() {
                             name="pemberian"
                             value={formData.pemberian}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Status
                         </label>
                         <select
                             name="status"
                             value={formData.status}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                         >
                             <option value="">Pilih status</option>
                             <option value="belum-kawin">Lunas</option>
@@ -121,45 +121,45 @@ export default function BuwuhanCreate() {
                 </div>
 
                 {/* Kolom Kanan */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Alamat
                         </label>
                         <textarea
                             name="alamat"
                             value={formData.alamat}
                             onChange={handleChange}
-                            rows="5"
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            rows="4"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                         ></textarea>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-medium mb-1.5">
                             Keterangan
                         </label>
                         <textarea
                             name="keterangan"
                             value={formData.keterangan}
                             onChange={handleChange}
-                            rows="5"
-                            className="w-full px-4 py-12 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            rows="4"
+                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                         ></textarea>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-row sm:flex-row gap-4 mt-8 justify-between ">
+            <div className="flex flex-row sm:flex-row gap-4 mt-6 justify-between">
                 <button
                     onClick={handleReset}
-                    className="px-8 py-3 bg-red-600 text-white text-sm font-medium rounded-full hover:bg-red-700 transition shadow-md"
+                    className="px-6 py-2.5 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md"
                 >
                     Reset Data
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-8 py-3 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition shadow-md"
+                    className="px-6 py-2.5 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md"
                 >
                     Tambah Data
                 </button>
