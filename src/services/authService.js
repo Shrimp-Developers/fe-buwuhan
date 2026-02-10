@@ -72,24 +72,41 @@ export const updateUserProfile = async ({ fullName, avatarFile = null }) => {
     });
 };
 
-// update user password
-export const updateUserPassword = async ({ password }) => {
+// user update password
+export const userUpdatePassword = async ({ oldPassword, newPassword }) => {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+        throw new Error('No authentication token found');
+    }
     return fetch(`${API_BASE}/api/auth/password`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ oldPassword, newPassword })
     });
 };
 
-// Delete user profile avatar
+// user Delete profile avatar
 export const deleteUserProfileAvatar = async () => {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+        throw new Error('Failed to delete avatar');
+    }
     return fetch(`${API_BASE}/api/auth/profile/avatar`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
     });
 };
 
-// forgot password
+// forgot password 
 export const forgotPassword = async ({ email }) => {
     return fetch(`${API_BASE}/api/auth/forgot-password`, {
         method: 'POST',
