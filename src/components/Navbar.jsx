@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import DetailProfile from './DetailProfile';
+import DetailUser from './DetailUser';
 
 export default function Navbar({ onMenuClick }) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -11,7 +11,7 @@ export default function Navbar({ onMenuClick }) {
     const location = useLocation();
     const title = (() => {
         const path = location.pathname.replace(/\/+$/, "");
-        if (path === "/dashboard") return "Ringkasan";
+        if (path === "/dashboard") return "Dashboard";
         if (path === "/dashboard/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
         if (path === "/dashboard/list" || path.startsWith("/dashboard/list/")) return "Lihat Semua Data";
         if (path === "/dashboard/detail" || path.startsWith("/dashboard/detail/")) return "Detail Data";
@@ -121,7 +121,7 @@ export default function Navbar({ onMenuClick }) {
                                 />
                             </button>
 
-                            <DetailProfile
+                            <DetailUser
                                 isOpen={isProfileOpen}
                                 onClose={() => setIsProfileOpen(false)}
                             />
