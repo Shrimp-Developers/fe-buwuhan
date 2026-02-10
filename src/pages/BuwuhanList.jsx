@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getListBuwuhan, deleteBuwuhan } from "../services/buwuhanService.js";
+import Swal from 'sweetalert2';
 
 export default function BuwuhanList() {
+    const navigate = useNavigate();
     const [kategori, setKategori] = useState("Kategori");
     const [status, setStatus] = useState("Status");
     const [showKategori, setShowKategori] = useState(false);
@@ -9,30 +13,84 @@ export default function BuwuhanList() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        limit: 11,
+        totalPages: 1,
+        totalItems: 0
+    });
     const kategoriRef = useRef(null);
     const statusRef = useRef(null);
 
-    // Data dummy
-    const dummyData = [
-        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
-        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
-        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
-        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
-        { namaLaki: "Rachman", namaPerempuan: "Yasmine", kategori: "Uang", status: "Belum lunas" },
-    ];
-
-    // Simulasi ambil data
+    // Fetch data dari API
     useEffect(() => {
-        setTimeout(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+
             try {
-                setData(dummyData);
-            } catch{
-                setError("Gagal memuat data");
+                // Map kategori untuk API
+                const categoryParam = kategori !== "Kategori" ? kategori : '';
+
+                // Map status untuk API
+                let statusParam = '';
+                if (status === "Lunas") statusParam = 'true';
+                else if (status === "Belum Lunas") statusParam = 'false';
+
+                const response = await getListBuwuhan({
+                    category: categoryParam,
+                    status: statusParam,
+                    page: pagination.currentPage,
+                    limit: pagination.limit
+                });
+
+                const body = await response.json();
+
+                if (response.ok && body.data) {
+                    // Map categoryId ke nama kategori
+                    const categoryMap = {
+                        1: 'Barang',
+                        2: 'Beras',
+                        3: 'Uang',
+                        4: 'Lainnya'
+                    };
+
+                    const mappedData = body.data.map(item => ({
+                        ...item,
+                        kategori: categoryMap[item.categoryId] || 'Lainnya',
+                        statusText: item.status ? 'Lunas' : 'Belum Lunas'
+                    }));
+
+                    setData(mappedData);
+
+                    // Update pagination
+                    if (body.pagination) {
+                        setPagination(prev => ({
+                            ...prev,
+                            totalPages: body.pagination.totalPages || 1,
+                            totalItems: body.pagination.totalItems || mappedData.length
+                        }));
+                    } else {
+                        setPagination(prev => ({
+                            ...prev,
+                            totalItems: mappedData.length
+                        }));
+                    }
+                } else {
+                    setError(body.message || 'Gagal memuat data');
+                    setData([]);
+                }
+            } catch (err) {
+                console.error('Error fetching buwuhan list:', err);
+                setError('Terjadi kesalahan saat memuat data');
+                setData([]);
             } finally {
                 setLoading(false);
             }
-        }, 800);
-    }, []);
+        };
+
+        fetchData();
+    }, [kategori, status, pagination.currentPage, pagination.limit]);
 
     // Tutup dropdown jika klik di luar
     useEffect(() => {
@@ -45,8 +103,82 @@ export default function BuwuhanList() {
     }, []);
 
     // Opsi dropdown
-    const kategoriOptions = ["Uang", "Beras", "Barang", "Lainnya"];
+    const kategoriOptions = ["Barang", "Beras", "Uang", "Lainnya"];
     const statusOptions = ["Lunas", "Belum Lunas"];
+
+    // Handle filter reset
+    const handleKategoriChange = (opt) => {
+        setKategori(opt);
+        setShowKategori(false);
+        setPagination(prev => ({ ...prev, currentPage: 1 })); // Reset to page 1
+    };
+
+    const handleStatusChange = (opt) => {
+        setStatus(opt);
+        setShowStatus(false);
+        setPagination(prev => ({ ...prev, currentPage: 1 })); // Reset to page 1
+    };
+
+    // Pagination handlers
+    const handlePrevPage = () => {
+        if (pagination.currentPage > 1) {
+            setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }));
+        }
+    };
+
+    const handleNextPage = () => {
+        if (pagination.currentPage < pagination.totalPages) {
+            setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }));
+        }
+    };
+
+    // Delete handler dengan konfirmasi
+    const handleDelete = async (id, nameMan, nameWoman) => {
+        const result = await Swal.fire({
+            title: 'Hapus Data Buwuhan?',
+            html: `Apakah Anda yakin ingin menghapus data:<br/><strong>${nameMan} & ${nameWoman}</strong>?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#AB1111',
+            cancelButtonColor: '#6B7280',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await deleteBuwuhan(id);
+                const body = await response.json();
+
+                if (response.ok) {
+                    await Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data buwuhan berhasil dihapus',
+                        icon: 'success',
+                        confirmButtonColor: '#000000'
+                    });
+
+                    // Refresh data by resetting to page 1
+                    setPagination(prev => ({ ...prev, currentPage: 1 }));
+                } else {
+                    await Swal.fire({
+                        title: 'Gagal!',
+                        text: body.message || 'Gagal menghapus data',
+                        icon: 'error',
+                        confirmButtonColor: '#AB1111'
+                    });
+                }
+            } catch (error) {
+                console.error('Error deleting buwuhan:', error);
+                await Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat menghapus data',
+                    icon: 'error',
+                    confirmButtonColor: '#AB1111'
+                });
+            }
+        }
+    };
 
     return (
         <div className="w-full mx-auto p-4 md:px-5">
@@ -71,14 +203,17 @@ export default function BuwuhanList() {
 
                     {showKategori && (
                         <div className="absolute mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
+                            <button
+                                onClick={() => handleKategoriChange("Kategori")}
+                                className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 first:rounded-t-xl"
+                            >
+                                Semua Kategori
+                            </button>
                             {kategoriOptions.map((opt) => (
                                 <button
                                     key={opt}
-                                    onClick={() => {
-                                        setKategori(opt);
-                                        setShowKategori(false);
-                                    }}
-                                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 first:rounded-t-xl last:rounded-b-xl"
+                                    onClick={() => handleKategoriChange(opt)}
+                                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 last:rounded-b-xl"
                                 >
                                     {opt}
                                 </button>
@@ -101,14 +236,17 @@ export default function BuwuhanList() {
 
                     {showStatus && (
                         <div className="absolute mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
+                            <button
+                                onClick={() => handleStatusChange("Status")}
+                                className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 first:rounded-t-xl"
+                            >
+                                Semua Status
+                            </button>
                             {statusOptions.map((opt) => (
                                 <button
                                     key={opt}
-                                    onClick={() => {
-                                        setStatus(opt);
-                                        setShowStatus(false);
-                                    }}
-                                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 first:rounded-t-xl last:rounded-b-xl"
+                                    onClick={() => handleStatusChange(opt)}
+                                    className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 text-gray-700 last:rounded-b-xl"
                                 >
                                     {opt}
                                 </button>
@@ -133,95 +271,126 @@ export default function BuwuhanList() {
             {/* Table */}
             {!loading && !error && (
                 <>
-                    {/* Desktop Table */}
-                    <div className="hidden md:block border-2 border-black rounded-3xl overflow-hidden px-6 py-2">
-                        <table className="w-full text-xs">
-                            <thead>
-                            <tr>
-                                <th className="p-1.5 text-left font-semibold">Nama Laki-laki</th>
-                                <th className="p-1.5 text-left font-semibold">Nama Perempuan</th>
-                                <th className="p-1.5 text-left font-semibold">Kategori</th>
-                                <th className="p-1.5 text-left font-semibold">Status</th>
-                                <th className="p-1.5 text-center font-semibold">Aksi</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {data.map((row, index) => (
-                                <tr key={index} className="border-b border-black last:border-b-0">
-                                    <td className="p-1.5">{row.namaLaki}</td>
-                                    <td className="p-1.5">{row.namaPerempuan}</td>
-                                    <td className="p-1.5">{row.kategori}</td>
-                                    <td className="p-1.5">{row.status}</td>
-                                    <td className="p-1.5">
-                                        <div className="flex justify-center gap-2">
-                                            <button className="px-3 py-1 text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium">
+                    {data.length === 0 ? (
+                        <div className="text-center py-10 text-xs text-gray-500">
+                            Tidak ada data yang ditemukan
+                        </div>
+                    ) : (
+                        <>
+                            {/* Desktop Table */}
+                            <div className="hidden md:block border-2 border-black rounded-3xl overflow-hidden px-6 py-2">
+                                <table className="w-full text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th className="p-1.5 text-left font-semibold">Nama Laki-laki</th>
+                                            <th className="p-1.5 text-left font-semibold">Nama Perempuan</th>
+                                            <th className="p-1.5 text-left font-semibold">Kategori</th>
+                                            <th className="p-1.5 text-left font-semibold">Status</th>
+                                            <th className="p-1.5 text-center font-semibold">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.map((row, index) => (
+                                            <tr key={row.id || index} className="border-b border-black last:border-b-0">
+                                                <td className="p-1.5">{row.nameMan}</td>
+                                                <td className="p-1.5">{row.nameWoman}</td>
+                                                <td className="p-1.5">{row.kategori}</td>
+                                                <td className="p-1.5">{row.statusText}</td>
+                                                <td className="p-1.5">
+                                                    <div className="flex justify-center gap-2">
+                                                        <button
+                                                            onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
+                                                            className="px-3 py-1 text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium">
+                                                            Detail
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
+                                                            className="px-3 py-1 text-xs bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium"
+                                                        >
+                                                            Hapus
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Mobile Card */}
+                            <div className="block md:hidden border-2 border-black rounded-3xl overflow-hidden bg-white">
+                                {/* Header */}
+                                <div className="grid grid-cols-4 gap-2 p-2 bg-white border-b-2 border-gray-200">
+                                    <div className="font-semibold text-xs">Nama<br />Laki-laki</div>
+                                    <div className="font-semibold text-xs">Nama<br />Perempuan</div>
+                                    <div className="font-semibold text-xs">Status</div>
+                                    <div></div>
+                                </div>
+
+                                {/* Rows */}
+                                {data.map((row, index) => (
+                                    <div
+                                        key={row.id || index}
+                                        className="grid grid-cols-4 gap-2 p-3 border-b border-gray-200 last:border-b-0 items-center"
+                                    >
+                                        <div className="text-xs">{row.nameMan}</div>
+                                        <div className="text-xs">{row.nameWoman}</div>
+                                        <div className="text-xs text-gray-700">{row.statusText}</div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
+                                                className="px-3 py-1 text-[10px] border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] font-medium"
+                                            >
                                                 Edit
                                             </button>
-                                            <button className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium">
-                                                Detail
-                                            </button>
-                                            <button className="px-3 py-1 text-xs bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium">
-                                                Hapus
-                                            </button>
                                         </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Mobile Card */}
-                    <div className="block md:hidden border-2 border-black rounded-3xl overflow-hidden bg-white">
-                        {/* Header */}
-                        <div className="grid grid-cols-4 gap-2 p-2 bg-white border-b-2 border-gray-200">
-                            <div className="font-semibold text-xs">Nama<br/>Laki-laki</div>
-                            <div className="font-semibold text-xs">Nama<br/>Perempuan</div>
-                            <div className="font-semibold text-xs">Status</div>
-                            <div></div>
-                        </div>
-
-                        {/* Rows */}
-                        {data.map((row, index) => (
-                            <div
-                                key={index}
-                                className="grid grid-cols-4 gap-2 p-3 border-b border-gray-200 last:border-b-0 items-center"
-                            >
-                                <div className="text-xs">{row.namaLaki}</div>
-                                <div className="text-xs">{row.namaPerempuan}</div>
-                                <div className="text-xs text-gray-700">{row.status}</div>
-                                <div className="flex justify-end">
-                                    <button className="px-3 py-1 text-[10px] border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] font-medium">
-                                        Edit
-                                    </button>
-                                </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    )}
                 </>
             )}
 
             {/* Pagination */}
-            <div className="mt-4 flex flex-col md:flex-row justify-between items-center gap-3">
-                <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-700">Baris per halaman</span>
-                    <button className="px-2.5 py-1 border-2 border-gray-300 rounded-full text-xs flex items-center gap-1">
-                        11 <ChevronDown size={14} />
-                    </button>
-                </div>
+            {!loading && !error && data.length > 0 && (
+                <div className="mt-4 flex flex-col md:flex-row justify-between items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-700">Baris per halaman</span>
+                        <span className="px-2.5 py-1 border-2 border-gray-300 rounded-full text-xs">
+                            {pagination.limit}
+                        </span>
+                    </div>
 
-                <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-500">Sebelumnya</span>
-                    <button className="w-7 h-7 flex items-center justify-center bg-[#8A86D5] text-white rounded-lg font-medium text-xs">
-                        1
-                    </button>
-                    <span className="text-xs text-gray-500">Selanjutnya</span>
-                </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handlePrevPage}
+                            disabled={pagination.currentPage === 1}
+                            className="text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Sebelumnya
+                        </button>
+                        <button className="w-7 h-7 flex items-center justify-center bg-[#8A86D5] text-white rounded-lg font-medium text-xs">
+                            {pagination.currentPage}
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            disabled={pagination.currentPage >= pagination.totalPages}
+                            className="text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Selanjutnya
+                        </button>
+                    </div>
 
-                <div className="text-xs font-semibold">
-                    Total: <span className="text-black">139</span>
+                    <div className="text-xs font-semibold">
+                        Total: <span className="text-black">{pagination.totalItems}</span>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
