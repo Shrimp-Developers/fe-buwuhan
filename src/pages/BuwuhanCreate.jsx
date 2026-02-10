@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createBuwuhan } from '../services/buwuhanService.js';
+import { alertSuccess, alertError } from '../alert.js';
 
 export default function BuwuhanCreate() {
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         namaLaki: '',
         namaPerempuan: '',
@@ -31,9 +36,65 @@ export default function BuwuhanCreate() {
         });
     };
 
-    const handleSubmit = () => {
-        console.log('Form Data:', formData);
-        alert('Data berhasil ditambahkan!');
+    const handleSubmit = async () => {
+        // Validasi form
+        if (!formData.namaLaki.trim()) {
+            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal');
+            return;
+        }
+        if (!formData.namaPerempuan.trim()) {
+            await alertError('Nama perempuan harus diisi', 'Validasi Gagal');
+            return;
+        }
+        if (!formData.kategori) {
+            await alertError('Kategori harus dipilih', 'Validasi Gagal');
+            return;
+        }
+        if (!formData.pemberian.trim()) {
+            await alertError('Pemberian harus diisi', 'Validasi Gagal');
+            return;
+        }
+        if (!formData.status) {
+            await alertError('Status harus dipilih', 'Validasi Gagal');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            // Map kategori ke categoryId (1=Barang, 2=Beras, 3=Uang, 4=Lainnya)
+            const categoryMap = {
+                'barang': 1,
+                'beras': 2,
+                'uang': 3,
+                'lainnya': 4
+            };
+
+            const response = await createBuwuhan({
+                nameMan: formData.namaLaki,
+                nameWoman: formData.namaPerempuan,
+                categoryId: categoryMap[formData.kategori],
+                gift: formData.pemberian,
+                status: formData.status === 'lunas',
+                address: formData.alamat || '',
+                information: formData.keterangan || ''
+            });
+
+            const body = await response.json();
+
+            if (response.ok) {
+                await alertSuccess('Data buwuhan berhasil ditambahkan!', 'Berhasil');
+                // Redirect ke halaman list atau dashboard
+                navigate('/dashboard/buwuhan/list');
+            } else {
+                await alertError(body.message || 'Gagal menambahkan data', 'Gagal');
+            }
+        } catch (error) {
+            console.error('Error creating buwuhan:', error);
+            await alertError('Terjadi kesalahan saat menambahkan data', 'Error');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -56,6 +117,8 @@ export default function BuwuhanCreate() {
                             value={formData.namaLaki}
                             onChange={handleChange}
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            disabled={isLoading}
+                            required
                         />
                     </div>
 
@@ -69,6 +132,8 @@ export default function BuwuhanCreate() {
                             value={formData.namaPerempuan}
                             onChange={handleChange}
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            disabled={isLoading}
+                            required
                         />
                     </div>
 
@@ -81,11 +146,13 @@ export default function BuwuhanCreate() {
                             value={formData.kategori}
                             onChange={handleChange}
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            disabled={isLoading}
+                            required
                         >
                             <option value="">Pilih kategori</option>
-                            <option value="uang">Uang</option>
-                            <option value="beras">Beras</option>
                             <option value="barang">Barang</option>
+                            <option value="beras">Beras</option>
+                            <option value="uang">Uang</option>
                             <option value="lainnya">Lainnya</option>
                         </select>
                     </div>
@@ -100,6 +167,9 @@ export default function BuwuhanCreate() {
                             value={formData.pemberian}
                             onChange={handleChange}
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            placeholder="Contoh: Rp 500.000 atau 10 kg"
+                            disabled={isLoading}
+                            required
                         />
                     </div>
 
@@ -112,10 +182,12 @@ export default function BuwuhanCreate() {
                             value={formData.status}
                             onChange={handleChange}
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            disabled={isLoading}
+                            required
                         >
                             <option value="">Pilih status</option>
-                            <option value="belum-kawin">Lunas</option>
-                            <option value="sudah-kawin">Belum Lunas</option>
+                            <option value="lunas">Lunas</option>
+                            <option value="belum-lunas">Belum Lunas</option>
                         </select>
                     </div>
                 </div>
@@ -132,6 +204,7 @@ export default function BuwuhanCreate() {
                             onChange={handleChange}
                             rows="4"
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            disabled={isLoading}
                         ></textarea>
                     </div>
 
@@ -145,6 +218,7 @@ export default function BuwuhanCreate() {
                             onChange={handleChange}
                             rows="4"
                             className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            disabled={isLoading}
                         ></textarea>
                     </div>
                 </div>
@@ -153,15 +227,17 @@ export default function BuwuhanCreate() {
             <div className="flex flex-row sm:flex-row gap-4 mt-6 justify-between">
                 <button
                     onClick={handleReset}
-                    className="px-6 py-2.5 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md"
+                    className="px-6 py-2.5 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoading}
                 >
                     Reset Data
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-6 py-2.5 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md"
+                    className="px-6 py-2.5 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoading}
                 >
-                    Tambah Data
+                    {isLoading ? 'Menambahkan...' : 'Tambah Data'}
                 </button>
             </div>
         </div>
