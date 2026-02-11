@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDetailBuwuhan, updateDataBuwuhan } from '../services/buwuhanService.js';
-import { alertSuccess, alertError } from '../alert.js';
+import { alertSuccess, alertError, alertConfirm } from '../alert.js';
 
 export default function BuwuhanEditData() {
     const { id } = useParams();
@@ -47,12 +47,12 @@ export default function BuwuhanEditData() {
                         keterangan: data.information || ''
                     });
                 } else {
-                    await alertError(body.message || 'Gagal memuat data', 'Error');
+                    await alertError(body.message || 'Gagal memuat data', 'Error', '/icon-alert-error.png');
                     navigate('/buwuhan/list');
                 }
             } catch (error) {
                 console.error('Error fetching buwuhan:', error);
-                await alertError('Terjadi kesalahan saat memuat data', 'Error');
+                await alertError('Terjadi kesalahan saat memuat data', 'Error', '/icon-alert-error.png');
                 navigate('/buwuhan/list');
             } finally {
                 setIsFetching(false);
@@ -73,7 +73,6 @@ export default function BuwuhanEditData() {
     };
 
     const handleReset = () => {
-        // Reset to original fetched data
         navigate(`/buwuhan/edit/${id}`);
         window.location.reload();
     };
@@ -81,23 +80,33 @@ export default function BuwuhanEditData() {
     const handleSubmit = async () => {
         // Validasi
         if (!formData.namaLaki.trim()) {
-            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal');
+            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.namaPerempuan.trim()) {
-            await alertError('Nama perempuan harus diisi', 'Validasi Gagal');
+            await alertError('Nama perempuan harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.kategori) {
-            await alertError('Kategori harus dipilih', 'Validasi Gagal');
+            await alertError('Kategori harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.pemberian.trim()) {
-            await alertError('Pemberian harus diisi', 'Validasi Gagal');
+            await alertError('Pemberian harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.status) {
-            await alertError('Status harus dipilih', 'Validasi Gagal');
+            await alertError('Status harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
+            return;
+        }
+
+        const result = await alertConfirm(
+            'Apakah Anda yakin ingin mengubah data ini?',
+            'Konfirmasi Update',
+            '/icon-alert-confirm.png'
+        );
+
+        if (!result.isConfirmed) {
             return;
         }
 
@@ -125,14 +134,14 @@ export default function BuwuhanEditData() {
             const body = await response.json();
 
             if (response.ok) {
-                await alertSuccess('Data buwuhan berhasil diupdate!', 'Berhasil');
+                await alertSuccess('Data berhasil diupdate!', 'Berhasil', '/icon-alert-update.png');
                 navigate('/buwuhan/list');
             } else {
-                await alertError(body.message || 'Gagal mengupdate data', 'Gagal');
+                await alertError(body.message || 'Gagal mengupdate data', 'Gagal', '/icon-alert-error.png');
             }
         } catch (error) {
             console.error('Error updating buwuhan:', error);
-            await alertError('Terjadi kesalahan saat mengupdate data', 'Error');
+            await alertError('Terjadi kesalahan saat mengupdate data', 'Error', '/icon-alert-error.png');
         } finally {
             setIsLoading(false);
         }
@@ -158,7 +167,7 @@ export default function BuwuhanEditData() {
                 <div className="space-y-4">
                     <div>
                         <label className="block text-xs font-medium mb-1.5">
-                            Nama laki-laki *
+                            Nama laki-laki
                         </label>
                         <input
                             type="text"
@@ -173,7 +182,7 @@ export default function BuwuhanEditData() {
 
                     <div>
                         <label className="block text-xs font-medium mb-1.5">
-                            Nama Perempuan *
+                            Nama Perempuan
                         </label>
                         <input
                             type="text"
@@ -188,7 +197,7 @@ export default function BuwuhanEditData() {
 
                     <div>
                         <label className="block text-xs font-medium mb-1.5">
-                            Kategori *
+                            Kategori
                         </label>
                         <select
                             name="kategori"
@@ -208,7 +217,7 @@ export default function BuwuhanEditData() {
 
                     <div>
                         <label className="block text-xs font-medium mb-1.5">
-                            Pemberian *
+                            Pemberian
                         </label>
                         <input
                             type="text"
@@ -224,7 +233,7 @@ export default function BuwuhanEditData() {
 
                     <div>
                         <label className="block text-xs font-medium mb-1.5">
-                            Status *
+                            Status
                         </label>
                         <select
                             name="status"
