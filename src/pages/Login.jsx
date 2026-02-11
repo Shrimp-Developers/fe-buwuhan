@@ -23,7 +23,7 @@ export default function Login() {
 
         // Cek password minimal 8 karakter
         if (password.length < 8 || password.length > 100) {
-            await alertError("Kata sandi harus minimal 8 karakter", "Gagal Masuk!", "imageUrl");
+            await alertError("Kata sandi harus minimal 8 karakter", "Gagal Masuk!", "/icon-alert-error.png");
             setIsLoading(false);
             return;
         }
@@ -45,7 +45,7 @@ export default function Login() {
                 if (user) {
                     localStorage.setItem('user', JSON.stringify(user));
                 }
-                await alertSuccess("Selamat datang di pengelolaan buwuhan", "Berhasil Masuk!", "imageUrl");
+                await alertSuccess("Login berhasil!", "Selamat Datang!", "/icon-alert-success.png");
                 // kalo data akun sudah ada bisa langsung ke dashboard
                 navigate("/dashboard/")
 
@@ -53,10 +53,10 @@ export default function Login() {
                 // cek email sesuai format
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!email || !emailRegex.test(email)) {
-                    await alertError("Format email tidak valid", "Gagal Masuk!", "imageUrl");
+                    await alertError("Format email tidak valid", "Gagal Masuk!", "/icon-alert-error.png");
                 } else {
                     if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-                        await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Masuk!", "imageUrl");
+                        await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Masuk!", "/icon-alert-error.png");
                         setIsLoading(false);
                     }
                 }
@@ -69,23 +69,23 @@ export default function Login() {
                     await alertError(
                         "Akun Anda tidak aktif. Silakan hubungi dukungan atau periksa email Anda untuk petunjuk aktivasi.",
                         "Gagal Masuk!",
-                        "imageUrl"
+                        "/icon-alert-error.png"
                     );
                 } else if (message.toLowerCase().includes('google')) {
                     await alertError(
                         "Email ini terdaftar di Google. Silakan gunakan fitur masuk Google.",
                         "Gagal Masuk!",
-                        "imageUrl"
+                        "/icon-alert-error.png"
                     );
                 } else {
                     // Invalid credentials
-                    await alertError("Email atau kata sandi salah", "Gagal Masuk!", "imageUrl");
+                    await alertError("Email atau kata sandi salah", "Gagal Masuk!", "/icon-alert-error.png");
                 }
             }
             // Kalo server error
         } catch (err) {
             console.error("Login error:", err);
-            await alertError("Terjadi kesalahan jaringan. Silakan coba lagi.", "Gagal Masuk!", "imageUrl");
+            await alertError("Terjadi kesalahan jaringan. Silakan coba lagi.", "Gagal Masuk!", "/icon-alert-error.png");
         } finally {
             setIsLoading(false);
         }

@@ -24,12 +24,13 @@ export default function Register() {
 
         // cek fullNqme minimal 3 maksimal 100
         if (fullName.length < 3 || fullName.length > 100) {
-            await alertError("Full name must be at least 3 characters", "Validation Error", "imageUrl");
+            await alertError("Nama lengkap minimal harus terdiri dari 3 karakter", "Validation Error", "/icon-alert-error.png");
         }
-
-        // Cek password minimal 8 karakter maksimal 100
-        if (password.length < 8 || password.length > 100) {
-            await alertError("Password must be at least 8 characters", "Validation Error", "imageUrl");
+        
+        // Cek email sesuai format atau tidak
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            await alertError("Format email tidak valid", "Validation Error", "/icon-alert-error.png");
             setIsLoading(false);
             return;
         }
@@ -38,30 +39,30 @@ export default function Register() {
             const response = await userRegister({ fullName, email, password });
             // cek jika berhasil
             if (response.ok || response.status === 200) {
-                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu", "Daftar Berhasil!.", "imageUrl");
+                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu", "Daftar Berhasil!", "/icon-alert-success.png");
                 navigate("/login");
             } else if (response.status === 400) {
                 // cek full name harus diisi
                 if (!fullName) {
-                    await alertError("Nama lengkap tidak boleh kosong", "Gagal Daftar!", "imageUrl")
+                    await alertError("Nama lengkap tidak boleh kosong", "Gagal Daftar!", "/icon-alert-error.png");
                 }
                 // cek email sesuai format atau tidak
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!email || !emailRegex.test(email)) {
-                    await alertError("Format email tidak valid", "Gagal Daftar!", "imageUrl");
+                    await alertError("Format email tidak valid", "Gagal Daftar!", "/icon-alert-error.png");
                 }
                 // Cek password minimal ada huruf besar + angka
                 if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-                    await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Daftar!", "imageUrl");
+                    await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Daftar!", "/icon-alert-error.png");
                 }
             } else if (response.status === 409) {
                 // mengatasi konflik
-                await alertError("Email sudah terdaftar", "Gagal Daftar!", "imageUrl");
+                await alertError("Email sudah terdaftar", "Gagal Daftar!", "/icon-alert-error.png");
             }
         } catch (err) {
             // jika server error
             console.error("Registered error:", err);
-            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Gagal Daftar!", "imageUrl");
+            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Gagal Daftar!", "/icon-alert-error.png");
         } finally {
             setIsLoading(false);
         }

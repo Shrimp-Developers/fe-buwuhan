@@ -39,23 +39,23 @@ export default function BuwuhanCreate() {
     const handleSubmit = async () => {
         // Validasi form
         if (!formData.namaLaki.trim()) {
-            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal');
+            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.namaPerempuan.trim()) {
-            await alertError('Nama perempuan harus diisi', 'Validasi Gagal');
+            await alertError('Nama perempuan harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.kategori) {
-            await alertError('Kategori harus dipilih', 'Validasi Gagal');
+            await alertError('Kategori harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.pemberian.trim()) {
-            await alertError('Pemberian harus diisi', 'Validasi Gagal');
+            await alertError('Pemberian harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
         if (!formData.status) {
-            await alertError('Status harus dipilih', 'Validasi Gagal');
+            await alertError('Status harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
@@ -83,15 +83,14 @@ export default function BuwuhanCreate() {
             const body = await response.json();
 
             if (response.ok) {
-                await alertSuccess('Data buwuhan berhasil ditambahkan!', 'Berhasil');
-                // Redirect ke halaman list atau dashboard
+                await alertSuccess('Data berhasil ditambah!', 'Berhasil', '/icon-alert-add.png');
                 navigate('/dashboard/buwuhan/list');
             } else {
-                await alertError(body.message || 'Gagal menambahkan data', 'Gagal');
+                await alertError(body.message || 'Gagal menambahkan data', 'Gagal', '/icon-alert-error.png');
             }
         } catch (error) {
             console.error('Error creating buwuhan:', error);
-            await alertError('Terjadi kesalahan saat menambahkan data', 'Error');
+            await alertError('Terjadi kesalahan saat menambahkan data', 'Error', '/icon-alert-error.png');
         } finally {
             setIsLoading(false);
         }

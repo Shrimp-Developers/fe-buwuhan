@@ -25,27 +25,27 @@ export default function EditPassword() {
 
         // Validasi
         if (!formData.oldPassword.trim()) {
-            await alertError('Kata sandi lama harus diisi', 'Validasi Gagal');
+            await alertError('Kata sandi lama harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
         if (!formData.newPassword.trim()) {
-            await alertError('Kata sandi baru harus diisi', 'Validasi Gagal');
+            await alertError('Kata sandi baru harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
         if (formData.newPassword.length < 6) {
-            await alertError('Kata sandi baru minimal 6 karakter', 'Validasi Gagal');
+            await alertError('Kata sandi baru minimal 6 karakter', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
         if (formData.newPassword !== formData.confirmPassword) {
-            await alertError('Konfirmasi kata sandi tidak cocok', 'Validasi Gagal');
+            await alertError('Konfirmasi kata sandi tidak cocok', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
         if (formData.oldPassword === formData.newPassword) {
-            await alertError('Kata sandi baru harus berbeda dari kata sandi lama', 'Validasi Gagal');
+            await alertError('Kata sandi baru harus berbeda dari kata sandi lama', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
 
@@ -60,7 +60,7 @@ export default function EditPassword() {
             const body = await response.json();
 
             if (response.ok) {
-                await alertSuccess('Kata sandi berhasil diubah!', 'Berhasil');
+                await alertSuccess('Kata sandi berhasil diubah!', 'Berhasil', '/icon-alert-update.png');
 
                 // Reset form
                 setFormData({
@@ -72,11 +72,11 @@ export default function EditPassword() {
                 // Optional: redirect ke settings
                 navigate('/settings');
             } else {
-                await alertError(body.message || 'Gagal mengubah kata sandi', 'Gagal');
+                await alertError(body.message || 'Gagal mengubah kata sandi', 'Gagal', '/icon-alert-error.png');
             }
         } catch (error) {
             console.error('Error updating password:', error);
-            await alertError('Terjadi kesalahan saat mengubah kata sandi', 'Error');
+            await alertError('Terjadi kesalahan saat mengubah kata sandi', 'Error', '/icon-alert-error.png');
         } finally {
             setIsLoading(false);
         }
