@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getListBuwuhan, deleteBuwuhan } from "../services/buwuhanService.js";
-import Swal from 'sweetalert2';
+import { alertError, alertSuccess, alertConfirm } from "../alert.js";
 
 export default function BuwuhanList() {
     const navigate = useNavigate();
@@ -134,48 +134,22 @@ export default function BuwuhanList() {
 
     // Delete handler dengan konfirmasi
     const handleDelete = async (id, nameMan, nameWoman) => {
-        const result = await Swal.fire({
-            title: 'Hapus Data Buwuhan?',
-            html: `Apakah Anda yakin ingin menghapus data:<br/><strong>${nameMan} & ${nameWoman}</strong>?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#AB1111',
-            cancelButtonColor: '#6B7280',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        });
+        const result = await alertConfirm('Hapus Data Buwuhan?', `Apakah Kamu yakin ingin menghapus data:<br/><strong>${nameMan} & ${nameWoman}</strong>?`, '/icon-alert-confirm.png');
 
         if (result.isConfirmed) {
             try {
                 const response = await deleteBuwuhan(id);
-                const body = await response.json();
-
                 if (response.ok) {
-                    await Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Data buwuhan berhasil dihapus',
-                        icon: 'success',
-                        confirmButtonColor: '#000000'
-                    });
+                    await alertSuccess('Data berhasil dihapus', 'Berhasil!', '/icon-alert-delete.png');
 
                     // Refresh data by resetting to page 1
                     setPagination(prev => ({ ...prev, currentPage: 1 }));
                 } else {
-                    await Swal.fire({
-                        title: 'Gagal!',
-                        text: body.message || 'Gagal menghapus data',
-                        icon: 'error',
-                        confirmButtonColor: '#AB1111'
-                    });
+                    await alertError('Gagal menghapus data', 'Gagal!', '/icon-alert-error.png');
                 }
             } catch (error) {
                 console.error('Error deleting buwuhan:', error);
-                await Swal.fire({
-                    title: 'Error!',
-                    text: 'Terjadi kesalahan saat menghapus data',
-                    icon: 'error',
-                    confirmButtonColor: '#AB1111'
-                });
+                await alertError('Terjadi kesalahan saat menghapus data', 'Error', '/icon-alert-error.png');
             }
         }
     };
