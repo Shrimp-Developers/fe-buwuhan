@@ -285,14 +285,14 @@ export default function BuwuhanEditData() {
             <div className="flex flex-row sm:flex-row gap-4 mt-6 justify-between">
                 <button
                     onClick={handleReset}
-                    className="px-6 py-2.5 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                 >
                     Reset Data
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-6 py-2.5 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Mengupdate...' : 'Update Data'}

@@ -94,24 +94,24 @@ export default function Login() {
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#8A86D5]">
             {/* Left Side - Image Section */}
-            <div className="flex items-center justify-center bg-[#8A86D5] w-full lg:w-1/2 h-72 lg:h-auto">
+            <div className="flex items-center justify-center bg-[#8A86D5] w-full lg:w-1/2 h-56 sm:h-64 md:h-72 lg:h-auto">
                 <img
                     src="/logo.png"
                     alt="Deskripsi icon-buwuhan"
-                    className="w-56 h-56 lg:w-[350px] lg:h-[350px] object-contain"
+                    className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-[350px] lg:h-[350px] object-contain"
                 />
             </div>
 
             {/* Right Side - Login Form */}
-            <div className="flex items-center justify-center flex-1 px-6 py-12 lg:px-12 bg-white rounded-t-[50px] lg:rounded-l-[50px] lg:rounded-t-none shadow-lg">
+            <div className="flex items-center justify-center flex-1 px-5 sm:px-6 py-8 sm:py-10 lg:px-12 lg:py-12 bg-white rounded-t-[40px] sm:rounded-t-[50px] lg:rounded-l-[50px] lg:rounded-t-none shadow-lg">
                 <div className="w-full max-w-sm">
-                    <h1 className="text-3xl lg:text-4xl font-bold text-center mb-8">Masuk</h1>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-8">Masuk</h1>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                         {/* Email Input */}
                         <div>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
+                                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-4 h-4 sm:w-5 sm:h-5" />
                                 <input
                                     required
                                     type="text"
@@ -120,7 +120,7 @@ export default function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Email"
                                     disabled={isLoading}
-                                    className="w-full pl-12 pr-4 py-3 bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8A86D5] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8A86D5] transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
                             </div>
                         </div>
@@ -128,7 +128,7 @@ export default function Login() {
                         {/* Password Input */}
                         <div>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
+                                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-4 h-4 sm:w-5 sm:h-5" />
                                 <input
                                     required
                                     value={password}
@@ -137,18 +137,18 @@ export default function Login() {
                                     name="password"
                                     placeholder="Kata Sandi"
                                     disabled={isLoading}
-                                    className="w-full pl-12 pr-12 py-3 bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8A86D5] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2.5 sm:py-3 text-sm sm:text-base bg-[#F5F5F5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8A86D5] transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition"
+                                    className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 transition"
                                     disabled={isLoading}
                                 >
                                     {!showPassword ? (
-                                        <EyeOff className="h-5 w-5 text-[#ACA0A0]" />
+                                        <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
                                     ) : (
-                                        <Eye className="h-5 w-5 text-[#ACA0A0]" />
+                                        <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
                                     )}
                                 </button>
                             </div>
@@ -169,7 +169,7 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                            className="w-full bg-[#000000] text-white py-3 rounded-full font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                         >
                             {isLoading ? (
                                 <>
@@ -195,13 +195,12 @@ export default function Login() {
                         </div>
                     </div>
 
-                    {/* Social Login Buttons */}
-                    <div className="flex justify-center gap-4">
-                        {/* Google Sign-In Button */}
+                    {/* Login Google */}
+                    <div className="flex justify-center">
                         <button
                             type="button"
                             onClick={handleGoogleLogin}
-                            className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
+                            className="w-auto px-6 py-3 bg-gray-200 font-medium sm:text-sm text-sm rounded-full gap-3 hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
                             aria-label="Login with Google"
                             disabled={isLoading}
                         >
@@ -210,35 +209,11 @@ export default function Login() {
                                 alt="Google"
                                 className="w-6 h-6 object-contain"
                             />
-                        </button>
-                        <button
-                            type="button"
-                            className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
-                            aria-label="Login with Facebook"
-                            disabled={isLoading}
-                        >
-                            <img
-                                src="/icon-facebook.png"
-                                alt="Deskripsi Icon-Buwuhan"
-                                className="w-7 h-7 object-contain"
-                            />
-                        </button>
-                        <button
-                            type="button"
-                            className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
-                            aria-label="Login with apple"
-                            disabled={isLoading}
-                        >
-                            <img
-                                src="/icon-apple.png"
-                                alt="Deskripsi icon-apple"
-                                className="w-6 h-6 object-contain"
-                            />
-                        </button>
+                       Masuk dengan Google </button>
                     </div>
 
                     {/* Sign Up Link */}
-                    <div className="text-center mt-6">
+                    <div className="text-center mt-4">
                         <p className="text-sm text-gray-600">
                             Belum punya akun{' '}
                             <Link

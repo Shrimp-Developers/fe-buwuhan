@@ -153,7 +153,7 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-[#000000] text-white py-3 rounded-xl font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                            className="w-full bg-[#000000] text-white py-3 rounded-full font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                         >
                             {isLoading ? (
                                 <>
@@ -178,50 +178,25 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Social Login Buttons */}
-                        <div className="flex justify-center gap-4">
-                            {/* Google Sign-In Button */}
+                        {/* Login Google */}
+                        <div className="flex justify-center">
                             <button
-                                type="button"
-                                onClick={handleGoogleLogin}
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
-                                aria-label="Register with Google"
-                                disabled={isLoading}
-                            >
-                                <img
-                                    src="/icon-google.png"
-                                    alt="Google"
-                                    className="w-6 h-6 object-contain"
-                                />
-                            </button>
-                            <button
-                                type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
-                                aria-label="Login with Facebook"
-                                disabled={isLoading}
-                            >
-                                <img
-                                    src="/icon-facebook.png"
-                                    alt="Deskripsi Icon-Buwuhan"
-                                    className="w-7 h-7 object-contain"
-                                />
-                            </button>
-                            <button
-                                type="button"
-                                className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50"
-                                aria-label="Login with apple"
-                                disabled={isLoading}
-                            >
-                                <img
-                                    src="/icon-apple.png"
-                                    alt="Deskripsi icon-apple"
-                                    className="w-6 h-6 object-contain"
-                                />
-                            </button>
+                            type="button"
+                            onClick={handleGoogleLogin}
+                            className="w-auto px-6 py-3 bg-gray-200 font-medium sm:text-sm text-sm rounded-full gap-3 hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
+                            aria-label="Login with Google"
+                            disabled={isLoading}
+                        >
+                            <img
+                                src="/icon-google.png"
+                                alt="Google"
+                                className="w-6 h-6 object-contain"
+                            />
+                            Daftar dengan Google </button>
                         </div>
 
                         {/* Sign In Link */}
-                        <div className="text-center">
+                        <div className="text-center mt-4">
                             <p className="text-sm text-gray-600">
                                 Sudah punya akun?{' '}
                                 <Link

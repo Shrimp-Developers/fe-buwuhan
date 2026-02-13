@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import "./index.css";
 
 import Register from "./pages/Register.jsx";
@@ -13,42 +13,17 @@ import BuwuhanList from "./pages/BuwuhanList.jsx";
 import EditPassword from "./pages/EditPassword.jsx";
 import SettingsUser from "./pages/SettingsUser.jsx";
 
-const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, loading } = useAuth();
-
-    if (loading) {
-        return (
-            <div className="loading-screen">
-                <div className="loading-spinner"></div>
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
-
-    return children;
-};
-
 function AppRoutes() {
-    const { isAuthenticated } = useAuth();
-
     return (
         <Routes>
 
-            {/* Public routes */}
-            <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />} />
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
+            {/* Public */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/activation" element={<Activation />} />
 
-            {/* Protected routes */}
-            <Route path="/" element={
-                <ProtectedRoute>
-                    <DashboardLayout />
-                </ProtectedRoute>
-            }
-            >
+            {/* Dashboard layout */}
+            <Route path="/" element={<DashboardLayout />}>
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<BuwuhanDashboard />} />
                 <Route path="buwuhan" element={<BuwuhanList />} />
@@ -57,12 +32,8 @@ function AppRoutes() {
                 <Route path="change-password" element={<EditPassword />} />
             </Route>
 
-            <Route path="*" element={
-                isAuthenticated
-                    ? <Navigate to="/dashboard" replace />
-                    : <Navigate to="/login" replace />
-            }
-            />
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
     );
 }

@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getUserProfile, updateUserProfile, deleteUserProfileAvatar } from '../services/authService.js';
-import { alertSuccess, alertError } from '../alert.js';
+import { alertSuccess, alertError, alertConfirm } from '../alert.js';
 import Swal from 'sweetalert2';
 
 export default function DetailUser({ isOpen, onClose }) {
@@ -71,54 +71,28 @@ export default function DetailUser({ isOpen, onClose }) {
     };
 
     const handleDeleteAvatar = async () => {
-        const result = await Swal.fire({
-            title: 'Hapus Foto Profile?',
-            text: 'Apakah Anda yakin ingin menghapus foto profile?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#AB1111',
-            cancelButtonColor: '#6B7280',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        });
+        const result = await alertConfirm('', 'Apakah Anda yakin ingin menghapus foto profile?', '/icon-alert-confirm.png');
 
         if (result.isConfirmed) {
             setIsDeleting(true);
 
             try {
                 const response = await deleteUserProfileAvatar();
-                const body = await response.json();
 
                 if (response.ok) {
-                    await Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Foto profile berhasil dihapus',
-                        icon: 'success',
-                        confirmButtonColor: '#000000'
-                    });
+                    await alertSuccess('', 'Foto profile berhasil dihapus!', '/icon-alert-success.png');
 
-                    // Reset preview ke null untuk menampilkan initial
                     setPreviewImage(null);
                     setAvatarFile(null);
 
                     // Refresh untuk update UI
                     window.location.reload();
                 } else {
-                    await Swal.fire({
-                        title: 'Gagal!',
-                        text: body.message || 'Gagal menghapus foto profile',
-                        icon: 'error',
-                        confirmButtonColor: '#AB1111'
-                    });
+                    await alertError('', 'Gagal menghapus foto profile', '/icon-alert-error.png');
                 }
             } catch (error) {
                 console.error('Error deleting avatar:', error);
-                await Swal.fire({
-                    title: 'Error!',
-                    text: 'Terjadi kesalahan saat menghapus foto profile',
-                    icon: 'error',
-                    confirmButtonColor: '#AB1111'
-                });
+                await alertError('', 'Terjadi kesalahan saat menghapus foto profile', '/icon-alert-error.png');
             } finally {
                 setIsDeleting(false);
             }
@@ -141,19 +115,17 @@ export default function DetailUser({ isOpen, onClose }) {
                 avatarFile: avatarFile
             });
 
-            const body = await response.json();
-
             if (response.ok) {
-                await alertSuccess('Profile berhasil diupdate!', 'Berhasil');
+                await alertSuccess('', 'Profile berhasil diupdate!', '/icon-alert-success.png');
 
                 // Refresh halaman atau update context
                 window.location.reload();
             } else {
-                await alertError(body.message || 'Gagal mengupdate profile', 'Gagal Update');
+                await alertError('', 'Gagal mengupdate profile', '/icon-alert-error.png');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            await alertError('Terjadi kesalahan saat mengupdate profile', 'Error');
+            await alertError('', 'Terjadi kesalahan saat mengupdate profile', '/icon-alert-error.png');
         } finally {
             setIsLoading(false);
         }
@@ -182,19 +154,21 @@ export default function DetailUser({ isOpen, onClose }) {
                     <form className="space-y-3 mt-2" onSubmit={handleSubmit}>
                         {/* Profile Image */}
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#C2BFF8] relative group">
-                                {previewImage ? (
+                            <div className="w-18 h-18 rounded-full border-2 border-[#8A86D5] flex items-center justify-center relative">
+                                <div className="w-16 h-16 rounded-full overflow-hidden">
+                                    {previewImage ? (
                                     <img
                                         src={previewImage}
                                         alt="Profile"
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full "
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-[#8A86D5] text-white text-2xl font-bold">
                                         {formData.fullName.charAt(0).toUpperCase() || 'U'}
                                     </div>
                                 )}
-                                <label className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-[10px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                </div>
+                                <label className="absolute inset-0 flex items-center justify-center bg-black text-white text-[10px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
                                     Ubah
                                     <input
                                         type="file"
@@ -210,7 +184,7 @@ export default function DetailUser({ isOpen, onClose }) {
                                 <button
                                     type="button"
                                     onClick={handleDeleteAvatar}
-                                    className="w-fit md:w-fit px-2 py-1 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-lg text-[8px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-fit md:w-fit px-2 py-2 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[8px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={isDeleting || isLoading}
                                 >
                                     {isDeleting ? 'Menghapus...' : 'Hapus Foto Profile'}
@@ -251,7 +225,7 @@ export default function DetailUser({ isOpen, onClose }) {
                             {/* Update Button */}
                             <button
                                 type="submit"
-                                className="w-fit md:w-fit px-4 py-1.5 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-lg text-[11px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-fit md:w-fit px-4 py-1.5 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[11px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={isLoading}
                             >
                                 {isLoading ? 'Mengupdate...' : 'Ubah Profile'}

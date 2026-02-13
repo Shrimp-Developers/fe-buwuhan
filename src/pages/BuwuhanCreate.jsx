@@ -97,17 +97,17 @@ export default function BuwuhanCreate() {
     };
 
     return (
-        <div className="w-full mx-auto px-4 md:px-5">
+        <div className="w-full mx-auto px-3 sm:px-4 md:px-5">
             {/* Judul untuk mobile */}
-            <h1 className="text-base font-semibold text-gray-900 mb-4 md:hidden">
+            <h1 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 md:hidden">
                 Tambah Data
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-10 lg:gap-x-12 gap-y-3 sm:gap-y-4">
                 {/* Kolom Kiri */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Nama laki-laki
                         </label>
                         <input
@@ -115,14 +115,14 @@ export default function BuwuhanCreate() {
                             name="namaLaki"
                             value={formData.namaLaki}
                             onChange={handleChange}
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             disabled={isLoading}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Nama Perempuan
                         </label>
                         <input
@@ -130,21 +130,21 @@ export default function BuwuhanCreate() {
                             name="namaPerempuan"
                             value={formData.namaPerempuan}
                             onChange={handleChange}
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             disabled={isLoading}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Kategori
                         </label>
                         <select
                             name="kategori"
                             value={formData.kategori}
                             onChange={handleChange}
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                             disabled={isLoading}
                             required
                         >
@@ -157,7 +157,7 @@ export default function BuwuhanCreate() {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Pemberian
                         </label>
                         <input
@@ -165,7 +165,7 @@ export default function BuwuhanCreate() {
                             name="pemberian"
                             value={formData.pemberian}
                             onChange={handleChange}
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             placeholder="Contoh: Rp 500.000 atau 10 kg"
                             disabled={isLoading}
                             required
@@ -173,14 +173,14 @@ export default function BuwuhanCreate() {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Status
                         </label>
                         <select
                             name="status"
                             value={formData.status}
                             onChange={handleChange}
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                             disabled={isLoading}
                             required
                         >
@@ -192,9 +192,9 @@ export default function BuwuhanCreate() {
                 </div>
 
                 {/* Kolom Kanan */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Alamat
                         </label>
                         <textarea
@@ -202,13 +202,13 @@ export default function BuwuhanCreate() {
                             value={formData.alamat}
                             onChange={handleChange}
                             rows="4"
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                             disabled={isLoading}
                         ></textarea>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium mb-1.5">
                             Keterangan
                         </label>
                         <textarea
@@ -216,24 +216,24 @@ export default function BuwuhanCreate() {
                             value={formData.keterangan}
                             onChange={handleChange}
                             rows="4"
-                            className="w-full px-3 py-1.5 text-xs border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                             disabled={isLoading}
                         ></textarea>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-row sm:flex-row gap-4 mt-6 justify-between">
+            <div className="flex flex-row sm:flex-row gap-3 sm:gap-4 mt-5 sm:mt-6 justify-between">
                 <button
                     onClick={handleReset}
-                    className="px-6 py-2.5 bg-red-600 text-white text-xs font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-red-600 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
                     disabled={isLoading}
                 >
                     Reset Data
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-6 py-2.5 bg-gray-900 text-white text-xs font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Menambahkan...' : 'Tambah Data'}
