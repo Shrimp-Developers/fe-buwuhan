@@ -78,7 +78,7 @@ export const getDetailBuwuhan = async (buwuhanId) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`
         },
     });
 };
