@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getListBuwuhan, deleteBuwuhan } from "../services/buwuhanService.js";
 import { alertError, alertSuccess, alertConfirm } from "../alert.js";
+import DetailBuwuhan from "../components/DetailBuwuhan.jsx";
 
 export default function BuwuhanList() {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function BuwuhanList() {
     });
     const kategoriRef = useRef(null);
     const statusRef = useRef(null);
+    const [detailModal, setDetailModal] = useState({ isOpen: false, buwuhanId: null });
 
     // Fetch data dari API
     useEffect(() => {
@@ -116,7 +118,7 @@ export default function BuwuhanList() {
     const handleStatusChange = (opt) => {
         setStatus(opt);
         setShowStatus(false);
-        setPagination(prev => ({ ...prev, currentPage: 1 })); 
+        setPagination(prev => ({ ...prev, currentPage: 1 }));
     };
 
     // Pagination handlers
@@ -278,7 +280,10 @@ export default function BuwuhanList() {
                                                         >
                                                             Edit
                                                         </button>
-                                                        <button className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium">
+                                                        <button
+                                                            onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
+                                                            className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium"
+                                                        >
                                                             Detail
                                                         </button>
                                                         <button
@@ -314,12 +319,18 @@ export default function BuwuhanList() {
                                         <div className="text-[10px] sm:text-xs truncate">{row.nameMan}</div>
                                         <div className="text-[10px] sm:text-xs truncate">{row.nameWoman}</div>
                                         <div className="text-[10px] sm:text-xs text-gray-700">{row.statusText}</div>
-                                        <div className="flex justify-end">
+                                        <div className="flex justify-end gap-1">
                                             <button
-                                                onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
-                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] font-medium"
+                                                onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
+                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] font-medium"
                                             >
-                                                Edit
+                                                Detail
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
+                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#AB1111] text-white rounded-full hover:bg-red-600 font-medium"
+                                            >
+                                                Hapus
                                             </button>
                                         </div>
                                     </div>
@@ -365,6 +376,13 @@ export default function BuwuhanList() {
                     </div>
                 </div>
             )}
+
+            {/* Detail Modal */}
+            <DetailBuwuhan
+                isOpen={detailModal.isOpen}
+                onClose={() => setDetailModal({ isOpen: false, buwuhanId: null })}
+                buwuhanId={detailModal.buwuhanId}
+            />
         </div>
     );
 }
