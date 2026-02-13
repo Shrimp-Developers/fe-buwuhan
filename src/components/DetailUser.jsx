@@ -2,7 +2,6 @@ import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getUserProfile, updateUserProfile, deleteUserProfileAvatar } from '../services/authService.js';
 import { alertSuccess, alertError, alertConfirm } from '../alert.js';
-import Swal from 'sweetalert2';
 
 export default function DetailUser({ isOpen, onClose }) {
     const [formData, setFormData] = useState({
@@ -15,7 +14,6 @@ export default function DetailUser({ isOpen, onClose }) {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
 
-    // Fetch user profile saat modal dibuka
     useEffect(() => {
         if (isOpen) {
             const fetchProfile = async () => {
@@ -134,20 +132,19 @@ export default function DetailUser({ isOpen, onClose }) {
     return (
         <div className="absolute z-50 top-12 right-3">
             <div className="relative bg-white border border-gray-200 rounded-xl shadow-xl w-64 p-4">
-                {/* Close Button */}
                 <button
                     onClick={onClose}
                     className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
                     aria-label="Close"
                     disabled={isLoading}
                 >
-                    <X className="w-5 h-5 text-gray-600" />
+                    <X className="w-5 h-5 text-black" />
                 </button>
 
                 {/* Loading State */}
                 {isFetching ? (
                     <div className="flex items-center justify-center py-8">
-                        <p className="text-sm text-gray-500">Loading...</p>
+                        <p className="text-sm text-black">Loading...</p>
                     </div>
                 ) : (
                     /* Form */
