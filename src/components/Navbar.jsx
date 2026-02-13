@@ -2,7 +2,6 @@ import { Search } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import DetailUser from './DetailUser';
-import DetailBuwuhan from './DetailBuwuhan';
 
 export default function Navbar({ onMenuClick }) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
