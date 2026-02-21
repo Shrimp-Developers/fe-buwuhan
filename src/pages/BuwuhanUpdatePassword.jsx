@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { userUpdatePassword } from "../services/authService.js";
 import { alertSuccess, alertError } from "../alert.js";
 
-export default function EditPassword() {
+export default function BuwuhanUpdatePassword() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -69,8 +69,7 @@ export default function EditPassword() {
                     confirmPassword: ''
                 });
 
-                // Optional: redirect ke settings
-                navigate('/settings');
+                navigate('/buwuhan/settings');
             } else {
                 await alertError(body.message || 'Gagal mengubah kata sandi', 'Gagal', '/icon-alert-error.png');
             }
@@ -83,12 +82,12 @@ export default function EditPassword() {
     };
 
     return (
-        <div className="bg-white">
-            <div className="w-full space-y-6 px-10 py-6">
+        <div className="bg-white sm:w-full rounded-2xl shadow-lg">
+            <div className="space-y-6 px-10 py-6">
 
                 {/* Header */}
                 <div className="flex items-center gap-2">
-                    <Link to="/settings" className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 rounded-full">
+                    <Link to="/buwuhan/settings" className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 rounded-full">
                         <img src="/icon-left.png" alt="Kembali" className="w-8 h-8" />
                     </Link>
                     <h2 className="text-xl font-semibold">Ganti password</h2>
@@ -96,7 +95,6 @@ export default function EditPassword() {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-
                     {/* Password lama */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
@@ -149,11 +147,11 @@ export default function EditPassword() {
                             />
                         </div>
                     </div>
-                    {/* Action */}
+
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-fit md:w-fit px-4 py-1.5 rounded-full bg-[#8A86D5] hover:bg-[#7975C9] text-white text-sm font-medium transition disabled:opacity-50"
+                        className="w-fit md:w-fit px-4 py-1.5 rounded-full bg-[#8A86D5] hover:bg-[#7975C9] text-white text-sm font-medium transition disabled:opacity-50 cursor-pointer"
                     >
                         {isLoading ? 'Menyimpan...' : 'Simpan'}
                     </button>

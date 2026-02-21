@@ -1,17 +1,17 @@
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getDetailBuwuhan } from '../services/buwuhanService';
+import { getDetailBuwuhan, CATEGORY_ID_TO_LABEL, STATUS_TO_LABEL } from '../services/buwuhanService';
 
 
 export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
     const [isLoading, setIsLoading] = useState(true);
     const [buwuhanData, setBuwuhanData] = useState({
-        namaLaki: '',
-        namaPerempuan: '',
-        kategori: '',
-        pemberian: '',
-        alamat: '',
-        keterangan: '',
+        nameMan: '',
+        nameWoman: '',
+        category: '',
+        gift: '',
+        address: '',
+        information: '',
         status: ''
     });
 
@@ -21,22 +21,17 @@ export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
         const fetchBuwuhanDetail = async () => {
             setIsLoading(true);
             try {
-                const response = await getDetailBuwuhan(buwuhanId);
-                const body = await response.json();
+                const body = await getDetailBuwuhan(buwuhanId);
 
-                if (response.ok && body.data) {
-                    setBuwuhanData({
-                        namaLaki: body.data.nameMan || '-',
-                        namaPerempuan: body.data.nameWoman || '-',
-                        kategori: body.data.categoryName || '-',
-                        pemberian: body.data.gift || '-',
-                        alamat: body.data.address || '-',
-                        keterangan: body.data.information || '-',
-                        status: body.data.status ? 'Lunas' : 'Belum Lunas'
-                    });
-                } else {
-                    console.error('Failed to fetch buwuhan detail:', body.message);
-                }
+                setBuwuhanData({
+                    nameMan: body.data.nameMan || '-',
+                    nameWoman: body.data.nameWoman || '-',
+                    category: CATEGORY_ID_TO_LABEL[body.data.categoryId] || '-',
+                    gift: body.data.gift || '-',
+                    address: body.data.address || '-',
+                    information: body.data.information || '-',
+                    status: STATUS_TO_LABEL[body.data.status] || body.data.status || '-',
+                });
             } catch (error) {
                 console.error('Error fetching buwuhan detail:', error);
             } finally {
@@ -51,14 +46,14 @@ export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="relative bg-white border border-none rounded-xl shadow-2xl w-[550px] p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-[600px] p-6 sm:p-8">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
+                    className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                     aria-label="Close"
                 >
-                    <X className="w-6 h-6 text-gray-600" />
+                    <X className="w-6 h-6 sm:w-6 sm:h-6 text-gray-600" />
                 </button>
 
                 {isLoading ? (
@@ -67,43 +62,46 @@ export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
                     </div>
                 ) : (
                     <>
-                        {/* Content Grid */}
-                        <div className="grid grid-cols-3 gap-6">
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Nama Laki-laki</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.namaLaki}</p>
+                        {/* Mobile: 1 kolom (urutan 1-7), Desktop: 3 kolom (urutan asli) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                            {/* Nama Laki-laki — mobile: 1, desktop: row1 col1 */}
+                            <div className="order-1 sm:order-1">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Nama Laki-laki</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.nameMan}</p>
                             </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Pemberian</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.pemberian}</p>
+                            {/* Pemberian — mobile: 4, desktop: row1 col2 */}
+                            <div className="order-4 sm:order-2">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Pemberian</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.gift}</p>
                             </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Status</h2>
-                                <span className="px-3 py-1 text-xs rounded-full border border-[#8A86D5] text-[#8A86D5]">
+                            {/* Status — mobile: 7, desktop: row1 col3 */}
+                            <div className="order-7 sm:order-3">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Status</h2>
+                                <span className="px-3 py-1 text-[10px] sm:text-xs rounded-full border border-[#8A86D5] text-[#8A86D5]">
                                     {buwuhanData.status}
                                 </span>
                             </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-6 my-6">
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Nama Perempuan</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.namaPerempuan}</p>
+                            {/* Nama Perempuan — mobile: 2, desktop: row2 col1 */}
+                            <div className="order-2 sm:order-4">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Nama Perempuan</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.nameWoman}</p>
                             </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Alamat</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.alamat}</p>
+                            {/* Alamat — mobile: 5, desktop: row2 col2 */}
+                            <div className="order-5 sm:order-5">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Alamat</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.address}</p>
                             </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-6">
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Kategori</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.kategori}</p>
+                            {/* Placeholder desktop row2 col3 */}
+                            <div className="hidden sm:block sm:order-6"></div>
+                            {/* Kategori — mobile: 3, desktop: row3 col1 */}
+                            <div className="order-3 sm:order-7">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Kategori</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.category}</p>
                             </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800 mb-2">Keterangan</h2>
-                                <p className="text-base text-gray-600">{buwuhanData.keterangan}</p>
+                            {/* Keterangan — mobile: 6, desktop: row3 col2 */}
+                            <div className="order-6 sm:order-8">
+                                <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Keterangan</h2>
+                                <p className="text-sm sm:text-base text-gray-600">{buwuhanData.information}</p>
                             </div>
                         </div>
                     </>

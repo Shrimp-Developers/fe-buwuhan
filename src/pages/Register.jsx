@@ -26,7 +26,7 @@ export default function Register() {
         if (fullName.length < 3 || fullName.length > 100) {
             await alertError("Nama lengkap minimal harus terdiri dari 3 karakter", "Validation Error", "/icon-alert-error.png");
         }
-        
+
         // Cek email sesuai format atau tidak
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
@@ -174,25 +174,25 @@ export default function Register() {
                                 <div className="w-full border-t border-[#000000]"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white text-[#000000]">Atau masuk dengan</span>
+                                <span className="px-4 bg-white text-[#000000]">Atau daftar dengan</span>
                             </div>
                         </div>
 
                         {/* Login Google */}
                         <div className="flex justify-center">
                             <button
-                            type="button"
-                            onClick={handleGoogleLogin}
-                            className="w-auto px-6 py-3 bg-gray-200 font-medium sm:text-sm text-sm rounded-full gap-3 hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
-                            aria-label="Login with Google"
-                            disabled={isLoading}
-                        >
-                            <img
-                                src="/icon-google.png"
-                                alt="Google"
-                                className="w-6 h-6 object-contain"
-                            />
-                            Daftar dengan Google </button>
+                                type="button"
+                                onClick={handleGoogleLogin}
+                                className="w-auto px-6 py-3 bg-gray-200 font-medium sm:text-sm text-sm rounded-full gap-3 hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
+                                aria-label="Login with Google"
+                                disabled={isLoading}
+                            >
+                                <img
+                                    src="/icon-google.png"
+                                    alt="Google"
+                                    className="w-6 h-6 object-contain"
+                                />
+                                Daftar dengan Google </button>
                         </div>
 
                         {/* Sign In Link */}

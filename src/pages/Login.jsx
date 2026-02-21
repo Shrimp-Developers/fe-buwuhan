@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { userLogin, loginWithGoogle } from "../services/authService.js";
+import { useAuth } from "../context/AuthContext";
+import { loginWithGoogle } from "../services/authService.js";
 import { alertError, alertSuccess } from "../alert.js";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
@@ -10,8 +11,8 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
-    // Handle Google Login (redirect ke backend)
     const handleGoogleLogin = () => {
         if (isLoading) return;
         loginWithGoogle();
@@ -21,7 +22,14 @@ export default function Login() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Cek password minimal 8 karakter
+        // Validasi sebelum kirim request
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            await alertError("Format email tidak valid", "Gagal Masuk!", "/icon-alert-error.png");
+            setIsLoading(false);
+            return;
+        }
+
         if (password.length < 8 || password.length > 100) {
             await alertError("Kata sandi harus minimal 8 karakter", "Gagal Masuk!", "/icon-alert-error.png");
             setIsLoading(false);
@@ -29,60 +37,32 @@ export default function Login() {
         }
 
         try {
-            const response = await userLogin({ email, password });
-            const body = await response.json().catch(() => ({}));
+            const result = await login(email, password);
 
-            if (response.ok) {
-                const token = body?.data?.accessToken;
-                const user = body?.data?.user;
-
-                //cek penyimpanan token apakah sudah registrasi atau data sudah ada
-                if (token) {
-                    localStorage.setItem('accessToken', token);
-                }
-
-                // cek penyimpanan user apakah sudah registrasi atau data sudah ada
-                if (user) {
-                    localStorage.setItem('user', JSON.stringify(user));
-                }
+            if (result.success) {
                 await alertSuccess("Login berhasil!", "Selamat Datang!", "/icon-alert-success.png");
-                // kalo data akun sudah ada bisa langsung ke dashboard
-                navigate("/dashboard/")
+                navigate("/buwuhan/dashboard");
+            } else {
+                // Tangani pesan error dari context
+                const msg = result.error?.toLowerCase() || "";
 
-            } else if (response.status === 400) {
-                // cek email sesuai format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!email || !emailRegex.test(email)) {
-                    await alertError("Format email tidak valid", "Gagal Masuk!", "/icon-alert-error.png");
-                } else {
-                    if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-                        await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Masuk!", "/icon-alert-error.png");
-                        setIsLoading(false);
-                    }
-                }
-
-            } else if (response.status === 401) {
-                // mengatasi ketika error status 401
-                const message = body?.message;
-                // akun belum aktif/ belum diverifikasi
-                if (message.toLowerCase().includes('inactive')) {
+                if (msg.includes('inactive')) {
                     await alertError(
-                        "Akun Anda tidak aktif. Silakan hubungi dukungan atau periksa email Anda untuk petunjuk aktivasi.",
-                        "Gagal Masuk!",
-                        "/icon-alert-error.png"
+                        "Akun Anda tidak aktif. Silakan periksa email untuk aktivasi.",
+                        "Gagal Masuk!", "/icon-alert-error.png"
                     );
-                } else if (message.toLowerCase().includes('google')) {
+                } else if (msg.includes('google')) {
                     await alertError(
-                        "Email ini terdaftar di Google. Silakan gunakan fitur masuk Google.",
-                        "Gagal Masuk!",
-                        "/icon-alert-error.png"
+                        "Email ini terdaftar via Google. Gunakan tombol masuk Google.",
+                        "Gagal Masuk!", "/icon-alert-error.png"
                     );
                 } else {
-                    // Invalid credentials
-                    await alertError("Email atau kata sandi salah", "Gagal Masuk!", "/icon-alert-error.png");
+                    await alertError(
+                        result.error || "Email atau kata sandi salah",
+                        "Gagal Masuk!", "/icon-alert-error.png"
+                    );
                 }
             }
-            // Kalo server error
         } catch (err) {
             console.error("Login error:", err);
             await alertError("Terjadi kesalahan jaringan. Silakan coba lagi.", "Gagal Masuk!", "/icon-alert-error.png");
@@ -159,7 +139,6 @@ export default function Login() {
                             <Link
                                 to="/forgot-password"
                                 className="text-sm text-[#000000] disabled:opacity-50 underline"
-                                onClick={(e) => isLoading && e.preventDefault()}
                             >
                                 Lupa kata sandi?
                             </Link>
@@ -209,7 +188,7 @@ export default function Login() {
                                 alt="Google"
                                 className="w-6 h-6 object-contain"
                             />
-                       Masuk dengan Google </button>
+                            Masuk dengan Google </button>
                     </div>
 
                     {/* Sign Up Link */}
@@ -219,7 +198,6 @@ export default function Login() {
                             <Link
                                 to="/register"
                                 className="text-[#8A86D5] font-semibold hover:underline"
-                                onClick={(e) => isLoading && e.preventDefault()}
                             >
                                 Buat Akun
                             </Link>

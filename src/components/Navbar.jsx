@@ -1,20 +1,27 @@
 import { Search } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailUser from './DetailUser';
 
 export default function Navbar({ onMenuClick }) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef(null);
-
+    const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const [searchValue, setSearchValue] = useState(searchParams.get('search') || '');
+
+    useEffect(() => {
+        setSearchValue(searchParams.get('search') || '');
+    }, [searchParams]);
+
     const title = (() => {
         const path = location.pathname.replace(/\/+$/, "");
-        if (path === "/dashboard") return "Dashboard";
-        if (path === "/buwuhan/create" || path.startsWith("/dashboard/create/")) return "Tambah Data";
-        if (path === "/buwuhan" || path.startsWith("/dashboard/list/")) return "Lihat Semua Data";
-        if (path === "/settings" || path.startsWith("/dashboard/setting/")) return "Pengaturan";
+        if (path === "/buwuhan/dashboard") return "Dashboard";
+        if (path === "/buwuhan/create" || path.startsWith("/buwuhan/create/")) return "Tambah Data";
+        if (path === "/buwuhan/list" || path.startsWith("/buwuhan/list/")) return "Lihat Semua Data";
+        if (path === "/buwuhan/settings" || path.startsWith("/buwuhan/settings/")) return "Pengaturan";
         return null;
     })();
 
@@ -31,6 +38,20 @@ export default function Navbar({ onMenuClick }) {
         }
     }, [isProfileOpen]);
 
+    // Handle search submit
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            const query = searchValue.trim();
+            if (query) {
+                navigate(`/buwuhan/list?search=${encodeURIComponent(query)}`);
+            } else {
+                // Jika kosong, navigasi ke list tanpa search param
+                navigate('/buwuhan/list');
+            }
+            setIsSearchOpen(false);
+        }
+    };
+
     return (
         <>
             {/* Mobile Search - Muncul menggantikan navbar */}
@@ -41,6 +62,9 @@ export default function Navbar({ onMenuClick }) {
                             type="text"
                             placeholder="Cari . . . ."
                             autoFocus
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            onKeyDown={handleSearch}
                             onBlur={() => setIsSearchOpen(false)}
                             className="pl-5 pr-10 py-2.5 w-full h-[40px] bg-white rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none shadow-lg border border-gray-200"
                         />
@@ -48,9 +72,9 @@ export default function Navbar({ onMenuClick }) {
                     </div>
                 </div>
             ) : (
-                /* Normal Navbar */
+                /* Desktop Navbar */
                 <header className="py-4 sm:py-5 px-4 sm:px-6 md:px-8 lg:px-12 flex items-center justify-between z-40 relative">
-                    {/* Left Section - Hamburger on mobile, Title on desktop */}
+                    {/* Left Section - Hamburger mobile, Title desktop */}
                     <div className="flex items-center">
                         {/* Hamburger Menu - Mobile/Tablet Only */}
                         <button
@@ -77,6 +101,9 @@ export default function Navbar({ onMenuClick }) {
                             <input
                                 type="text"
                                 placeholder="Cari . . . ."
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                onKeyDown={handleSearch}
                                 className="pl-10 py-2 w-[200px] md:w-[250px] lg:w-[350px] h-[36px] md:h-[38px] bg-gray-100 rounded-full text-xs md:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition shadow-lg"
                             />
                             <Search className="w-4 h-4 text-[#ACA0A0] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -98,7 +125,7 @@ export default function Navbar({ onMenuClick }) {
                         </button>
 
                         {/* Tombol Mode (Dark/Light) */}
-                        <button className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]">
+                        <button className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000] cursor-pointer">
                             <img
                                 src="/icon-moon.png"
                                 alt="deskripsi icon-moon"
@@ -111,7 +138,7 @@ export default function Navbar({ onMenuClick }) {
                         <div className="relative" ref={profileRef}>
                             <button
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                className="w-8 h-8 sm:w-8 sm:h-8 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
+                                className="w-8 h-8 sm:w-8 sm:h-8 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition cursor-pointer"
                             >
                                 <img
                                     src="/icon-user.png"

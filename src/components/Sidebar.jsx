@@ -1,15 +1,22 @@
 import { PlusCircle, LogOut, X, LayoutDashboard, Settings, List } from 'lucide-react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { alertSuccess, alertConfirm } from "../alert.js";
 
 export default function Sidebar({ isOpen, onClose }) {
 
     const { pathname } = useLocation();
+    const navigate = useNavigate();
     const { logout } = useAuth();
 
-    const handleLogout = () => {
-        logout();
-        onClose();
+    const handleLogout = async () => {
+        const result = await alertConfirm("Apakah Kamu ingin keluar?", "Konfirmasi Logout", "/icon-alert-confirm.png");
+        if (result.isConfirmed) {
+            await alertSuccess("Sampai jumpa lagi!", "Logout Berhasil", "/icon-alert-logout.png");
+
+            logout();
+            navigate("/login");
+        }
     };
 
     const menuClasses = (path) =>
@@ -64,9 +71,9 @@ export default function Sidebar({ isOpen, onClose }) {
                 </div>
 
                 {/* Menu Items */}
-                <nav className="flex-1 px-4 sm:px-6 md:px-5 lg:px-7 py-3 sm:py-4 md:py-2 overflow-y-auto">
+                <nav className="flex-1 px-4 sm:px-6 md:px-5 lg:px-7 py-3 sm:py-4 md:py-2">
 
-                    <Link to="/dashboard" className={menuClasses("/dashboard")}>
+                    <Link to="/buwuhan/dashboard" className={menuClasses("/buwuhan/dashboard")}>
                         <LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6" />
                         <span>Dashboard</span>
                     </Link>
@@ -76,17 +83,17 @@ export default function Sidebar({ isOpen, onClose }) {
                         <span>Tambah Data</span>
                     </Link>
 
-                    <Link to="/buwuhan" className={menuClasses("/buwuhan")}>
+                    <Link to="/buwuhan/list" className={menuClasses("/buwuhan/list")}>
                         <List className="w-5 h-5 sm:w-6 sm:h-6" />
                         <span>Lihat Semua Data</span>
                     </Link>
 
-                    <Link to="/settings" className={menuClasses("/settings")}>
+                    <Link to="/buwuhan/settings" className={menuClasses("/buwuhan/settings")}>
                         <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
                         <span>Pengaturan</span>
                     </Link>
 
-                    <button className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 mt-2" onClick={handleLogout}>
+                    <button className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 mt-2 cursor-pointer" onClick={handleLogout}>
                         <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
                         <span>Keluar</span>
                     </button>

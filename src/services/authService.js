@@ -1,6 +1,6 @@
 import { API_BASE } from '../api/api.js';
 
-// Login user dengan email dan password
+// Login 
 export const userLogin = async ({ email, password }) => {
     return fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
@@ -9,7 +9,7 @@ export const userLogin = async ({ email, password }) => {
     });
 };
 
-// Register user baru
+// Register 
 export const userRegister = async ({ fullName, email, password }) => {
     return fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
@@ -108,19 +108,18 @@ export const deleteUserProfileAvatar = async () => {
 
 // forgot password 
 export const forgotPassword = async ({ email }) => {
-    return fetch(`${API_BASE}/api/auth/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+    return fetch(`${API_BASE}/api/auth/forgot-password?email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
     });
 };
 
 // reset password
-export const resetPassword = async ({ password, token }) => {
-    return fetch(`${API_BASE}/api/auth/reset-password`, {
+export const resetPassword = async ({ newPassword, token }) => {
+    return fetch(`${API_BASE}/api/auth/reset-password?token=${encodeURIComponent(token)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, token })
+        body: JSON.stringify({ newPassword })
     });
 };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from "react-router-dom";
 
 export default function SettingsUser() {
@@ -11,7 +10,7 @@ export default function SettingsUser() {
 
             <div className="space-y-2.5 sm:space-y-3">
                 {/* Item 1 */}
-                <button className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition">
+                <button className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-2 sm:gap-2.5">
                         <img
                             src="/icon-language.png"
@@ -28,7 +27,7 @@ export default function SettingsUser() {
                 </button>
 
                 {/* Item 2 */}
-                <button className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition">
+                <button className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-2 sm:gap-2.5">
                         <img
                             src="/icon-teks.png"
@@ -45,7 +44,7 @@ export default function SettingsUser() {
                 </button>
 
                 {/* Item 3 */}
-                <Link to="/change-password" className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition">
+                <Link to="/buwuhan/settings/update-password" className="w-full flex items-center justify-between px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#000000] rounded-full bg-white hover:bg-gray-50 transition">
                     <div className="flex items-center gap-2 sm:gap-2.5">
                         <img
                             src="/icon-key.png"

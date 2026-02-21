@@ -1,90 +1,92 @@
 import { useEffect, useState, useRef } from "react";
 import { ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { getListBuwuhan, deleteBuwuhan } from "../services/buwuhanService.js";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+    getListBuwuhan,
+    deleteBuwuhan,
+    CATEGORY_OPTIONS,
+    STATUS_OPTIONS,
+    CATEGORY_NAME_TO_LABEL,
+    STATUS_TO_LABEL,
+} from "../services/buwuhanService.js";
 import { alertError, alertSuccess, alertConfirm } from "../alert.js";
 import DetailBuwuhan from "../components/DetailBuwuhan.jsx";
 
 export default function BuwuhanList() {
     const navigate = useNavigate();
-    const [kategori, setKategori] = useState("Kategori");
-    const [status, setStatus] = useState("Status");
-    const [showKategori, setShowKategori] = useState(false);
+    const [searchParams] = useSearchParams();
+    const searchQuery = searchParams.get('search') || '';
+    const [category, setCategory] = useState("");
+    const [status, setStatus] = useState("");
+    const [showCategory, setShowCategory] = useState(false);
     const [showStatus, setShowStatus] = useState(false);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({
         currentPage: 1,
-        limit: 11,
-        totalPages: 1,
-        totalItems: 0
+        currentSize: 10,
+        totalPage: 1,
+        totalData: 0
     });
-    const kategoriRef = useRef(null);
+    const categoryRef = useRef(null);
     const statusRef = useRef(null);
     const [detailModal, setDetailModal] = useState({ isOpen: false, buwuhanId: null });
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    // Fetch data dari API
+    // Helper
+    const getCategoryLabel = (val) => CATEGORY_OPTIONS.find(o => o.value === val)?.label || val;
+    const getStatusLabel = (val) => STATUS_OPTIONS.find(o => o.value === val)?.label || val;
+
+    // Fetch data
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
 
             try {
-                // Map kategori untuk API
-                const categoryParam = kategori !== "Kategori" ? kategori : '';
+                const params = {
+                    category: category || undefined,
+                    status: status || undefined,
+                };
 
-                // Map status untuk API
-                let statusParam = '';
-                if (status === "Lunas") statusParam = 'true';
-                else if (status === "Belum Lunas") statusParam = 'false';
+                // Hanya kirim pagination params saat bukan halaman pertama
+                if (pagination.currentPage > 1) {
+                    params.page = pagination.currentPage;
+                    params.size = pagination.currentSize;
+                }
 
-                const response = await getListBuwuhan({
-                    category: categoryParam,
-                    status: statusParam,
-                    page: pagination.currentPage,
-                    limit: pagination.limit
-                });
+                const body = await getListBuwuhan(params);
 
-                const body = await response.json();
+                // Filter client-side agar bisa cari di nameMan dan nameWoman
+                let results = body.data || [];
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    results = results.filter(item =>
+                        (item.nameMan && item.nameMan.toLowerCase().includes(query)) ||
+                        (item.nameWoman && item.nameWoman.toLowerCase().includes(query))
+                    );
+                }
 
-                if (response.ok && body.data) {
-                    // Map categoryId ke nama kategori
-                    const categoryMap = {
-                        1: 'Barang',
-                        2: 'Beras',
-                        3: 'Uang',
-                        4: 'Lainnya'
-                    };
+                setData(results);
 
-                    const mappedData = body.data.map(item => ({
-                        ...item,
-                        kategori: categoryMap[item.categoryId] || 'Lainnya',
-                        statusText: item.status ? 'Lunas' : 'Belum Lunas'
+                // Update pagination
+                if (body.paging) {
+                    setPagination(prev => ({
+                        ...prev,
+                        totalPage: body.paging.totalPage || 1,
+                        totalData: body.paging.totalData
                     }));
-
-                    setData(mappedData);
-
-                    // Update pagination
-                    if (body.pagination) {
-                        setPagination(prev => ({
-                            ...prev,
-                            totalPages: body.pagination.totalPages || 1,
-                            totalItems: body.pagination.totalItems || mappedData.length
-                        }));
-                    } else {
-                        setPagination(prev => ({
-                            ...prev,
-                            totalItems: mappedData.length
-                        }));
-                    }
                 } else {
-                    setError(body.message || 'Gagal memuat data');
-                    setData([]);
+                    setPagination(prev => ({
+                        ...prev,
+                        totalData: (body.data || []).length
+                    }));
                 }
             } catch (err) {
                 console.error('Error fetching buwuhan list:', err);
-                setError('Terjadi kesalahan saat memuat data');
+                if (err.body) console.error('API error details:', JSON.stringify(err.body));
+                setError(err.message || 'Terjadi kesalahan saat memuat data');
                 setData([]);
             } finally {
                 setLoading(false);
@@ -92,26 +94,22 @@ export default function BuwuhanList() {
         };
 
         fetchData();
-    }, [kategori, status, pagination.currentPage, pagination.limit]);
+    }, [searchQuery, category, status, pagination.currentPage, refreshKey]);
 
-    // Tutup dropdown jika klik di luar
+    // Tutup dropdown
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (kategoriRef.current && !kategoriRef.current.contains(e.target)) setShowKategori(false);
+            if (categoryRef.current && !categoryRef.current.contains(e.target)) setShowCategory(false);
             if (statusRef.current && !statusRef.current.contains(e.target)) setShowStatus(false);
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // Opsi dropdown
-    const kategoriOptions = ["Barang", "Beras", "Uang", "Lainnya"];
-    const statusOptions = ["Lunas", "Belum Lunas"];
-
     // Handle filter reset
-    const handleKategoriChange = (opt) => {
-        setKategori(opt);
-        setShowKategori(false);
+    const handleCategoryChange = (opt) => {
+        setCategory(opt);
+        setShowCategory(false);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
     };
 
@@ -129,29 +127,26 @@ export default function BuwuhanList() {
     };
 
     const handleNextPage = () => {
-        if (pagination.currentPage < pagination.totalPages) {
+        if (pagination.currentPage < pagination.totalPage) {
             setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }));
         }
     };
 
-    // Delete handler dengan konfirmasi
+    // Delete handler
     const handleDelete = async (id, nameMan, nameWoman) => {
-        const result = await alertConfirm('Hapus Data Buwuhan?', `Apakah Kamu yakin ingin menghapus data:<br/><strong>${nameMan} & ${nameWoman}</strong>?`, '/icon-alert-confirm.png');
+        const result = await alertConfirm('Hapus Data Buwuhan?', `Apakah Kamu yakin ingin menghapus data ini?`, '/icon-alert-confirm.png');
 
         if (result.isConfirmed) {
             try {
-                const response = await deleteBuwuhan(id);
-                if (response.ok) {
-                    await alertSuccess('Data berhasil dihapus', 'Berhasil!', '/icon-alert-delete.png');
+                await deleteBuwuhan(id);
+                await alertSuccess('Data berhasil dihapus', 'Berhasil!', '/icon-alert-delete.png');
 
-                    // Refresh data by resetting to page 1
-                    setPagination(prev => ({ ...prev, currentPage: 1 }));
-                } else {
-                    await alertError('Gagal menghapus data', 'Gagal!', '/icon-alert-error.png');
-                }
+                // Refresh data
+                setRefreshKey(prev => prev + 1);
+                setPagination(prev => ({ ...prev, currentPage: 1 }));
             } catch (error) {
                 console.error('Error deleting buwuhan:', error);
-                await alertError('Terjadi kesalahan saat menghapus data', 'Error', '/icon-alert-error.png');
+                await alertError('Gagal menghapus data', 'Gagal!', '/icon-alert-error.png');
             }
         }
     };
@@ -166,32 +161,32 @@ export default function BuwuhanList() {
             {/* Filter Bar */}
             <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-3 sm:mb-4">
                 {/* Dropdown Kategori */}
-                <div className="relative" ref={kategoriRef}>
+                <div className="relative" ref={categoryRef}>
                     <button
                         onClick={() => {
-                            setShowKategori(!showKategori);
+                            setShowCategory(!showCategory);
                             setShowStatus(false);
                         }}
                         className="flex items-center gap-1.5 sm:gap-2 bg-black text-white px-3 sm:px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-xs font-medium"
                     >
-                        {kategori} <ChevronDown size={16} className="w-4 h-4" />
+                        {category ? getCategoryLabel(category) : 'Kategori'} <ChevronDown size={16} className="w-4 h-4" />
                     </button>
 
-                    {showKategori && (
+                    {showCategory && (
                         <div className="absolute mt-2 w-36 sm:w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
                             <button
-                                onClick={() => handleKategoriChange("Kategori")}
+                                onClick={() => handleCategoryChange("")}
                                 className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 first:rounded-t-xl"
                             >
                                 Semua Kategori
                             </button>
-                            {kategoriOptions.map((opt) => (
+                            {CATEGORY_OPTIONS.map((opt) => (
                                 <button
-                                    key={opt}
-                                    onClick={() => handleKategoriChange(opt)}
-                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl"
+                                    key={opt.value}
+                                    onClick={() => handleCategoryChange(opt.value)}
+                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl cursor-pointer"
                                 >
-                                    {opt}
+                                    {opt.label}
                                 </button>
                             ))}
                         </div>
@@ -203,28 +198,28 @@ export default function BuwuhanList() {
                     <button
                         onClick={() => {
                             setShowStatus(!showStatus);
-                            setShowKategori(false);
+                            setShowCategory(false);
                         }}
-                        className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-gray-300 px-3 sm:px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-xs font-medium shadow-lg"
+                        className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-gray-300 px-3 sm:px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-xs font-medium shadow-lg cursor-pointer"
                     >
-                        {status} <ChevronDown size={16} className="w-4 h-4" />
+                        {status ? getStatusLabel(status) : 'Status'} <ChevronDown size={16} className="w-4 h-4" />
                     </button>
 
                     {showStatus && (
                         <div className="absolute mt-2 w-36 sm:w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
                             <button
-                                onClick={() => handleStatusChange("Status")}
-                                className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 first:rounded-t-xl"
+                                onClick={() => handleStatusChange("")}
+                                className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 first:rounded-t-xl cursor-pointer"
                             >
                                 Semua Status
                             </button>
-                            {statusOptions.map((opt) => (
+                            {STATUS_OPTIONS.map((opt) => (
                                 <button
-                                    key={opt}
-                                    onClick={() => handleStatusChange(opt)}
-                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl"
+                                    key={opt.value}
+                                    onClick={() => handleStatusChange(opt.value)}
+                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl cursor-pointer"
                                 >
-                                    {opt}
+                                    {opt.label}
                                 </button>
                             ))}
                         </div>
@@ -270,25 +265,25 @@ export default function BuwuhanList() {
                                             <tr key={row.id || index} className="border-b border-black last:border-b-0">
                                                 <td className="p-1.5 md:p-2">{row.nameMan}</td>
                                                 <td className="p-1.5 md:p-2">{row.nameWoman}</td>
-                                                <td className="p-1.5 md:p-2">{row.kategori}</td>
-                                                <td className="p-1.5 md:p-2">{row.statusText}</td>
+                                                <td className="p-1.5 md:p-2">{CATEGORY_NAME_TO_LABEL[row.categoryName] || row.categoryName}</td>
+                                                <td className="p-1.5 md:p-2">{STATUS_TO_LABEL[row.status] || row.status}</td>
                                                 <td className="p-1.5 md:p-2">
                                                     <div className="flex justify-center gap-1.5 md:gap-2">
                                                         <button
                                                             onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
-                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium"
+                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium cursor-pointer"
                                                         >
                                                             Edit
                                                         </button>
                                                         <button
                                                             onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
-                                                            className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium"
+                                                            className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium cursor-pointer"
                                                         >
                                                             Detail
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
-                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium"
+                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium cursor-pointer"
                                                         >
                                                             Hapus
                                                         </button>
@@ -318,17 +313,17 @@ export default function BuwuhanList() {
                                     >
                                         <div className="text-[10px] sm:text-xs truncate">{row.nameMan}</div>
                                         <div className="text-[10px] sm:text-xs truncate">{row.nameWoman}</div>
-                                        <div className="text-[10px] sm:text-xs text-gray-700">{row.statusText}</div>
+                                        <div className="text-[10px] sm:text-xs text-gray-700">{STATUS_TO_LABEL[row.status] || row.status}</div>
                                         <div className="flex justify-end gap-1">
                                             <button
                                                 onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
-                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] font-medium"
+                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] font-medium cursor-pointer"
                                             >
                                                 Detail
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
-                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#AB1111] text-white rounded-full hover:bg-red-600 font-medium"
+                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#AB1111] text-white rounded-full hover:bg-red-600 font-medium cursor-pointer"
                                             >
                                                 Hapus
                                             </button>
@@ -347,7 +342,7 @@ export default function BuwuhanList() {
                     <div className="flex items-center gap-2">
                         <span className="text-[10px] sm:text-xs text-gray-700">Baris per halaman</span>
                         <span className="px-2 sm:px-2.5 py-1 border-2 border-gray-300 rounded-full text-[10px] sm:text-xs">
-                            {pagination.limit}
+                            {pagination.currentSize}
                         </span>
                     </div>
 
@@ -355,7 +350,7 @@ export default function BuwuhanList() {
                         <button
                             onClick={handlePrevPage}
                             disabled={pagination.currentPage === 1}
-                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2"
+                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2 cursor-pointer"
                         >
                             Sebelumnya
                         </button>
@@ -364,20 +359,20 @@ export default function BuwuhanList() {
                         </button>
                         <button
                             onClick={handleNextPage}
-                            disabled={pagination.currentPage >= pagination.totalPages}
-                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2"
+                            disabled={pagination.currentPage >= pagination.totalPage}
+                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2 cursor-pointer"
                         >
                             Selanjutnya
                         </button>
                     </div>
 
                     <div className="text-[10px] sm:text-xs font-semibold">
-                        Total: <span className="text-black">{pagination.totalItems}</span>
+                        Total: <span className="text-black">{pagination.totalData}</span>
                     </div>
                 </div>
             )}
 
-            {/* Detail Modal */}
+            {/* Buwuhan Detail Modal */}
             <DetailBuwuhan
                 isOpen={detailModal.isOpen}
                 onClose={() => setDetailModal({ isOpen: false, buwuhanId: null })}

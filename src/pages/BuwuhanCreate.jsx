@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createBuwuhan } from '../services/buwuhanService.js';
+import { createBuwuhan, CATEGORY_VALUE_MAP, STATUS_FORM_TO_API } from '../services/buwuhanService.js';
 import { alertSuccess, alertError } from '../alert.js';
 
 export default function BuwuhanCreate() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
-        namaLaki: '',
-        namaPerempuan: '',
-        kategori: '',
-        pemberian: '',
+        nameMan: '',
+        nameWoman: '',
+        categoryId: '',
+        gift: '',
         status: '',
-        alamat: '',
-        keterangan: ''
+        address: '',
+        information: ''
     });
 
     const handleChange = (e) => {
@@ -26,31 +26,31 @@ export default function BuwuhanCreate() {
 
     const handleReset = () => {
         setFormData({
-            namaLaki: '',
-            namaPerempuan: '',
-            kategori: '',
-            pemberian: '',
+            nameMan: '',
+            nameWoman: '',
+            categoryId: '',
+            gift: '',
             status: '',
-            alamat: '',
-            keterangan: ''
+            address: '',
+            information: ''
         });
     };
 
     const handleSubmit = async () => {
         // Validasi form
-        if (!formData.namaLaki.trim()) {
+        if (!formData.nameMan.trim()) {
             await alertError('Nama laki-laki harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
-        if (!formData.namaPerempuan.trim()) {
+        if (!formData.nameWoman.trim()) {
             await alertError('Nama perempuan harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
-        if (!formData.kategori) {
+        if (!formData.categoryId) {
             await alertError('Kategori harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
-        if (!formData.pemberian.trim()) {
+        if (!formData.gift.trim()) {
             await alertError('Pemberian harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
             return;
         }
@@ -62,35 +62,21 @@ export default function BuwuhanCreate() {
         setIsLoading(true);
 
         try {
-            // Map kategori ke categoryId (1=Barang, 2=Beras, 3=Uang, 4=Lainnya)
-            const categoryMap = {
-                'barang': 1,
-                'beras': 2,
-                'uang': 3,
-                'lainnya': 4
-            };
-
-            const response = await createBuwuhan({
-                nameMan: formData.namaLaki,
-                nameWoman: formData.namaPerempuan,
-                categoryId: categoryMap[formData.kategori],
-                gift: formData.pemberian,
-                status: formData.status === 'lunas',
-                address: formData.alamat || '',
-                information: formData.keterangan || ''
+            await createBuwuhan({
+                nameMan: formData.nameMan,
+                nameWoman: formData.nameWoman,
+                categoryId: CATEGORY_VALUE_MAP[formData.categoryId],
+                gift: formData.gift,
+                status: STATUS_FORM_TO_API[formData.status],
+                address: formData.address || '',
+                information: formData.information || ''
             });
 
-            const body = await response.json();
-
-            if (response.ok) {
-                await alertSuccess('Data berhasil ditambah!', 'Berhasil', '/icon-alert-add.png');
-                navigate('/dashboard/buwuhan/list');
-            } else {
-                await alertError(body.message || 'Gagal menambahkan data', 'Gagal', '/icon-alert-error.png');
-            }
+            await alertSuccess('Data berhasil ditambah!', 'Berhasil', '/icon-alert-add.png');
+            navigate('/buwuhan/list');
         } catch (error) {
-            console.error('Error creating buwuhan:', error);
-            await alertError('Terjadi kesalahan saat menambahkan data', 'Error', '/icon-alert-error.png');
+            const errorMsg = error.body?.errors?.[0]?.message || error.message || 'Gagal menambahkan data';
+            await alertError(errorMsg, 'Gagal!', '/icon-alert-error.png');
         } finally {
             setIsLoading(false);
         }
@@ -112,8 +98,8 @@ export default function BuwuhanCreate() {
                         </label>
                         <input
                             type="text"
-                            name="namaLaki"
-                            value={formData.namaLaki}
+                            name="nameMan"
+                            value={formData.nameMan}
                             onChange={handleChange}
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             disabled={isLoading}
@@ -127,8 +113,8 @@ export default function BuwuhanCreate() {
                         </label>
                         <input
                             type="text"
-                            name="namaPerempuan"
-                            value={formData.namaPerempuan}
+                            name="nameWoman"
+                            value={formData.nameWoman}
                             onChange={handleChange}
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             disabled={isLoading}
@@ -141,8 +127,8 @@ export default function BuwuhanCreate() {
                             Kategori
                         </label>
                         <select
-                            name="kategori"
-                            value={formData.kategori}
+                            name="categoryId"
+                            value={formData.categoryId}
                             onChange={handleChange}
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent bg-white"
                             disabled={isLoading}
@@ -162,8 +148,8 @@ export default function BuwuhanCreate() {
                         </label>
                         <input
                             type="text"
-                            name="pemberian"
-                            value={formData.pemberian}
+                            name="gift"
+                            value={formData.gift}
                             onChange={handleChange}
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                             placeholder="Contoh: Rp 500.000 atau 10 kg"
@@ -198,8 +184,8 @@ export default function BuwuhanCreate() {
                             Alamat
                         </label>
                         <textarea
-                            name="alamat"
-                            value={formData.alamat}
+                            name="address"
+                            value={formData.address}
                             onChange={handleChange}
                             rows="4"
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
@@ -212,8 +198,8 @@ export default function BuwuhanCreate() {
                             Keterangan
                         </label>
                         <textarea
-                            name="keterangan"
-                            value={formData.keterangan}
+                            name="information"
+                            value={formData.information}
                             onChange={handleChange}
                             rows="4"
                             className="w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
@@ -226,14 +212,14 @@ export default function BuwuhanCreate() {
             <div className="flex flex-row sm:flex-row gap-3 sm:gap-4 mt-5 sm:mt-6 justify-between">
                 <button
                     onClick={handleReset}
-                    className="px-5 sm:px-3 py-3 sm:py-3 bg-red-600 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-red-600 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-red-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1 cursor-pointer"
                     disabled={isLoading}
                 >
                     Reset Data
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-5 sm:px-3 py-3 sm:py-3 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
+                    className="px-5 sm:px-3 py-3 sm:py-3 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-full hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2 cursor-pointer"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Menambahkan...' : 'Tambah Data'}

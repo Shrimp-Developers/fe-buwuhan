@@ -27,7 +27,6 @@ export default function DetailUser({ isOpen, onClose }) {
                             email: body.data.email || ''
                         });
 
-                        // Set avatar jika ada, jika tidak biarkan null untuk menampilkan initial
                         if (body.data.avatar) {
                             setPreviewImage(body.data.avatar);
                         }
@@ -73,7 +72,6 @@ export default function DetailUser({ isOpen, onClose }) {
 
         if (result.isConfirmed) {
             setIsDeleting(true);
-
             try {
                 const response = await deleteUserProfileAvatar();
 
@@ -134,7 +132,7 @@ export default function DetailUser({ isOpen, onClose }) {
             <div className="relative bg-white border border-gray-200 rounded-xl shadow-xl w-64 p-4">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
+                    className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                     aria-label="Close"
                     disabled={isLoading}
                 >
@@ -144,7 +142,7 @@ export default function DetailUser({ isOpen, onClose }) {
                 {/* Loading State */}
                 {isFetching ? (
                     <div className="flex items-center justify-center py-8">
-                        <p className="text-sm text-black">Loading...</p>
+                        <p className="text-sm text-black">Tunggu Sebentar...</p>
                     </div>
                 ) : (
                     /* Form */
@@ -154,16 +152,16 @@ export default function DetailUser({ isOpen, onClose }) {
                             <div className="w-18 h-18 rounded-full border-2 border-[#8A86D5] flex items-center justify-center relative">
                                 <div className="w-16 h-16 rounded-full overflow-hidden">
                                     {previewImage ? (
-                                    <img
-                                        src={previewImage}
-                                        alt="Profile"
-                                        className="w-full h-full "
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-[#8A86D5] text-white text-2xl font-bold">
-                                        {formData.fullName.charAt(0).toUpperCase() || 'U'}
-                                    </div>
-                                )}
+                                        <img
+                                            src={previewImage}
+                                            alt="Profile"
+                                            className="w-full h-full "
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-[#8A86D5] text-white text-2xl font-bold">
+                                            {formData.fullName.charAt(0).toUpperCase() || 'U'}
+                                        </div>
+                                    )}
                                 </div>
                                 <label className="absolute inset-0 flex items-center justify-center bg-black text-white text-[10px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
                                     Ubah
