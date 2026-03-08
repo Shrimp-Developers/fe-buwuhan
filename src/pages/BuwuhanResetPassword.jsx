@@ -1,55 +1,17 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, Lock } from 'lucide-react';
-import { resetPassword } from '../services/authService.js';
-import { alertSuccess, alertError } from '../alert.js';
+import useResetPassword from '../hooks/auth/useResetPassword';
 
-export default function ResetPassword() {
+export default function BuwuhanResetPassword() {
     const [searchParams] = useSearchParams();
-    const token = searchParams.get('token');
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const token = searchParams.get("token");
+    const { handleSubmit, isLoading } = useResetPassword(token);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-
-        if (newPassword.length < 8) {
-            await alertError('Password minimal 8 karakter', 'Gagal!', '/icon-alert-error.png');
-            return;
-        }
-
-        if (newPassword !== confirmPassword) {
-            await alertError('Konfirmasi password tidak cocok', 'Gagal!', '/icon-alert-error.png');
-            return;
-        }
-
-        if (!token) {
-            await alertError('Token reset password tidak ditemukan', 'Gagal!', '/icon-alert-error.png');
-            return;
-        }
-
-        setIsLoading(true);
-
-        try {
-            const response = await resetPassword({ newPassword, token });
-            const data = await response.json();
-            if (response.ok) {
-                await alertSuccess(data.message || 'Password berhasil direset', 'Berhasil!', '/icon-alert-success.png');
-            } else {
-                const errorMsg = data.errors?.[0]?.message || data.message || 'Gagal mereset password';
-                await alertError(errorMsg, 'Gagal!', '/icon-alert-error.png');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            await alertError('Terjadi kesalahan saat mereset password', 'Gagal!', '/icon-alert-error.png');
-        } finally {
-            setIsLoading(false);
-        }
-    }
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#8A86D5]">
@@ -62,12 +24,11 @@ export default function ResetPassword() {
                 />
             </div>
 
-            {/* Right Side - Reset-Password Form */}
             <div className="flex items-center justify-center flex-1 px-6 py-12 lg:px-12 bg-white rounded-t-[50px] lg:rounded-l-[50px] lg:rounded-t-none shadow-lg">
                 <div className="w-full max-w-sm">
                     <h1 className="text-3xl lg:text-4xl font-bold text-center mb-8">Reset Kata Sandi</h1>
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* New Password Input */}
+                    
                         <div>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -94,7 +55,6 @@ export default function ResetPassword() {
                             </div>
                         </div>
 
-                        {/* Confirm Password Input */}
                         <div>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -120,8 +80,7 @@ export default function ResetPassword() {
                                 </button>
                             </div>
                         </div>
-
-                        {/* Konfirmasi Button */}
+                        
                         <button
                             type="submit"
                             disabled={isLoading}

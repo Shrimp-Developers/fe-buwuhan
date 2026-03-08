@@ -1,100 +1,27 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createBuwuhan, CATEGORY_VALUE_MAP, STATUS_FORM_TO_API } from '../services/buwuhanService.js';
-import { alertSuccess, alertError } from '../alert.js';
+import useCreateBuwuhan from "../hooks/buwuhan/useCreateBuwuhan";
+import { CATEGORY_OPTIONS, STATUS_OPTIONS } from "../constants/buwuhanOptions";
 
 export default function BuwuhanCreate() {
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        nameMan: '',
-        nameWoman: '',
-        categoryId: '',
-        gift: '',
-        status: '',
-        address: '',
-        information: ''
-    });
+    const {
+        formData, 
+        isLoading, 
+        handleChange, 
+        handleReset, 
+        handleSubmit 
+    } = useCreateBuwuhan();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleReset = () => {
-        setFormData({
-            nameMan: '',
-            nameWoman: '',
-            categoryId: '',
-            gift: '',
-            status: '',
-            address: '',
-            information: ''
-        });
-    };
-
-    const handleSubmit = async () => {
-        // Validasi form
-        if (!formData.nameMan.trim()) {
-            await alertError('Nama laki-laki harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-        if (!formData.nameWoman.trim()) {
-            await alertError('Nama perempuan harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-        if (!formData.categoryId) {
-            await alertError('Kategori harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-        if (!formData.gift.trim()) {
-            await alertError('Pemberian harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-        if (!formData.status) {
-            await alertError('Status harus dipilih', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        setIsLoading(true);
-
-        try {
-            await createBuwuhan({
-                nameMan: formData.nameMan,
-                nameWoman: formData.nameWoman,
-                categoryId: CATEGORY_VALUE_MAP[formData.categoryId],
-                gift: formData.gift,
-                status: STATUS_FORM_TO_API[formData.status],
-                address: formData.address || '',
-                information: formData.information || ''
-            });
-
-            await alertSuccess('Data berhasil ditambah!', 'Berhasil', '/icon-alert-add.png');
-            navigate('/buwuhan/list');
-        } catch (error) {
-            const errorMsg = error.body?.errors?.[0]?.message || error.message || 'Gagal menambahkan data';
-            await alertError(errorMsg, 'Gagal!', '/icon-alert-error.png');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <div className="w-full mx-auto px-3 sm:px-4 md:px-5">
-            {/* Judul untuk mobile */}
             <h1 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 md:hidden">
                 Tambah Data
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-10 lg:gap-x-12 gap-y-3 sm:gap-y-4">
-                {/* Kolom Kiri */}
                 <div className="space-y-3 sm:space-y-4">
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">
-                            Nama laki-laki
+                            Nama Laki-laki <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -109,7 +36,7 @@ export default function BuwuhanCreate() {
 
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">
-                            Nama Perempuan
+                            Nama Perempuan <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -124,7 +51,7 @@ export default function BuwuhanCreate() {
 
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">
-                            Kategori
+                            Kategori <span className="text-red-500">*</span>
                         </label>
                         <select
                             name="categoryId"
@@ -135,16 +62,17 @@ export default function BuwuhanCreate() {
                             required
                         >
                             <option value="">Pilih kategori</option>
-                            <option value="barang">Barang</option>
-                            <option value="beras">Beras</option>
-                            <option value="uang">Uang</option>
-                            <option value="lainnya">Lainnya</option>
+                            {CATEGORY_OPTIONS.map((opt) => (
+                                <option key={opt.id} value={opt.id}>
+                                    {opt.label}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">
-                            Pemberian
+                            Pemberian <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -160,7 +88,7 @@ export default function BuwuhanCreate() {
 
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">
-                            Status
+                            Status <span className="text-red-500">*</span>
                         </label>
                         <select
                             name="status"
@@ -171,13 +99,16 @@ export default function BuwuhanCreate() {
                             required
                         >
                             <option value="">Pilih status</option>
-                            <option value="lunas">Lunas</option>
-                            <option value="belum-lunas">Belum Lunas</option>
+                            
+                            {STATUS_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </div>
 
-                {/* Kolom Kanan */}
                 <div className="space-y-3 sm:space-y-4">
                     <div>
                         <label className="block text-xs sm:text-sm font-medium mb-1.5">

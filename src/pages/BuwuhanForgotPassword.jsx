@@ -1,35 +1,14 @@
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
-import { forgotPassword } from '../services/authService.js';
-import { alertSuccess, alertError } from '../alert.js'
+import useForgotPassword from '../hooks/auth/useForgotPassword';
+import { Link } from 'react-router-dom';
 
-export default function ForgotPassword() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [email, setEmail] = useState('');
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setIsLoading(true);
-
-        try {
-            const response = await forgotPassword({ email });
-            const data = await response.json();
-            if (response.ok) {
-                await alertSuccess(data.message || 'Permintaan reset password berhasil dikirim. Silakan cek email Anda', 'Berhasil!', '/icon-alert-success.png');
-            } else {
-                await alertError(data.message || 'Permintaan reset password gagal. Pastikan email yang Anda masukkan benar', 'Gagal!', '/icon-alert-error.png');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            await alertError('Terjadi kesalahan saat mengirim permintaan reset password', 'Gagal!', '/icon-alert-error.png');
-        } finally {
-            setIsLoading(false);
-        }
-    }
+export default function BuwuhanForgotPassword() {
+    const { handleSubmit, isLoading } = useForgotPassword();
+    const [email, setEmail] = useState("");
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#8A86D5]">
-            {/* Left Side - Image Section */}
             <div className="flex items-center justify-center bg-[#8A86D5] w-full lg:w-1/2 h-72 lg:h-auto">
                 <img
                     src="/logo.png"
@@ -38,12 +17,10 @@ export default function ForgotPassword() {
                 />
             </div>
 
-            {/* Right Side - Forgot-Password Form */}
             <div className="flex items-center justify-center flex-1 px-6 py-12 lg:px-12 bg-white rounded-t-[50px] lg:rounded-l-[50px] lg:rounded-t-none shadow-lg">
                 <div className="w-full max-w-sm">
                     <h1 className="text-3xl lg:text-4xl font-bold text-center mb-8">Lupa Kata Sandi</h1>
-                    <div className="space-y-5">
-                        {/* Email Input */}
+                    <form onSubmit={(e) => handleSubmit(e, { email })} className="space-y-5">
                         <div>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -58,10 +35,8 @@ export default function ForgotPassword() {
                             </div>
                         </div>
 
-                        {/* Konfirmasi Button */}
                         <button
                             type="submit"
-                            onClick={handleSubmit}
                             disabled={isLoading}
                             className="w-full bg-[#000000] text-white py-3 rounded-full font-semibold hover:bg-[#8A86D5] transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                         >
@@ -77,7 +52,19 @@ export default function ForgotPassword() {
                                 'Konfirmasi'
                             )}
                         </button>
-                    </div>
+
+                        <div className="text-center mt-4">
+                            <p className="text-sm text-gray-600">
+                                Sudah ingat kata sandi?{' '}
+                                <Link
+                                to="/login"
+                                className="text-[#8A86D5] font-semibold hover:underline"
+                                >
+                                Masuk di sini
+                                </Link>
+                            </p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

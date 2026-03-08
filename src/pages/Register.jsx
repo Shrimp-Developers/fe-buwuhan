@@ -1,72 +1,15 @@
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { userRegister, loginWithGoogle } from "../services/authService.js";
-import { alertError, alertSuccess } from "../alert.js";
+import useRegister from "../hooks/auth/useRegister";
 
 export default function Register() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
 
-    // Handle Google Login (redirect ke backend)
-    const handleGoogleLogin = () => {
-        if (isLoading) return;
-        loginWithGoogle();
-    };
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setIsLoading(true);
-
-        // cek fullNqme minimal 3 maksimal 100
-        if (fullName.length < 3 || fullName.length > 100) {
-            await alertError("Nama lengkap minimal harus terdiri dari 3 karakter", "Validation Error", "/icon-alert-error.png");
-        }
-
-        // Cek email sesuai format atau tidak
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-            await alertError("Format email tidak valid", "Validation Error", "/icon-alert-error.png");
-            setIsLoading(false);
-            return;
-        }
-
-        try {
-            const response = await userRegister({ fullName, email, password });
-            // cek jika berhasil
-            if (response.ok || response.status === 200) {
-                await alertSuccess("Periksa email untuk aktivasi akun terlebih dahulu", "Daftar Berhasil!", "/icon-alert-success.png");
-                navigate("/login");
-            } else if (response.status === 400) {
-                // cek full name harus diisi
-                if (!fullName) {
-                    await alertError("Nama lengkap tidak boleh kosong", "Gagal Daftar!", "/icon-alert-error.png");
-                }
-                // cek email sesuai format atau tidak
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!email || !emailRegex.test(email)) {
-                    await alertError("Format email tidak valid", "Gagal Daftar!", "/icon-alert-error.png");
-                }
-                // Cek password minimal ada huruf besar + angka
-                if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-                    await alertError("Kata sandi harus mengandung setidaknya satu huruf besar dan satu angka", "Gagal Daftar!", "/icon-alert-error.png");
-                }
-            } else if (response.status === 409) {
-                // mengatasi konflik
-                await alertError("Email sudah terdaftar", "Gagal Daftar!", "/icon-alert-error.png");
-            }
-        } catch (err) {
-            // jika server error
-            console.error("Registered error:", err);
-            await alertError(err?.message || "Terjadi masalah jaringan. Silakan coba lagi.", "Gagal Daftar!", "/icon-alert-error.png");
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    const { handleSubmit, isLoading } = useRegister();
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#8A86D5]">
@@ -79,15 +22,14 @@ export default function Register() {
                 />
             </div>
 
-            {/* Right Side - Form Section */}
             <div className="flex items-center justify-center flex-1 px-6 py-12 lg:px-12 bg-white rounded-t-[50px] lg:rounded-l-[50px] lg:rounded-t-none shadow-lg">
                 <div className="w-full max-w-sm">
                     <h1 className="text-3xl lg:text-4xl font-bold text-center mb-8">
                         Daftar
                     </h1>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Full Name */}
+                    <form onSubmit={(e) => handleSubmit(e, { fullName, email, password })} className="space-y-5">
+                    
                         <div>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -104,7 +46,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Email */}
                         <div>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -120,7 +61,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Password */}
                         <div>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#ACA0A0] w-5 h-5" />
@@ -149,7 +89,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Sign Up Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -168,7 +107,6 @@ export default function Register() {
                             )}
                         </button>
 
-                        {/* Divider */}
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">
                                 <div className="w-full border-t border-[#000000]"></div>
@@ -178,11 +116,9 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Login Google */}
                         <div className="flex justify-center">
                             <button
                                 type="button"
-                                onClick={handleGoogleLogin}
                                 className="w-auto px-6 py-3 bg-gray-200 font-medium sm:text-sm text-sm rounded-full gap-3 hover:bg-gray-300 transition flex items-center justify-center disabled:opacity-50 cursor-pointer"
                                 aria-label="Login with Google"
                                 disabled={isLoading}
@@ -195,7 +131,6 @@ export default function Register() {
                                 Daftar dengan Google </button>
                         </div>
 
-                        {/* Sign In Link */}
                         <div className="text-center mt-4">
                             <p className="text-sm text-gray-600">
                                 Sudah punya akun?{' '}

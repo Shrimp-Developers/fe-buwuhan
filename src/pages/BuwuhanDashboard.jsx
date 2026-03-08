@@ -1,88 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Card from '../components/Card.jsx';
-import CardDashboard from '../components/CardDashboard.jsx';
-import { getUserProfile } from '../services/authService.js';
-import { getDashboardBuwuhan } from '../services/buwuhanService.js';
+import { Link } from "react-router-dom";
+import useBuwuhanDashboard from "../hooks/buwuhan/useBuwuhanDashboard";
+import CardDashboard from "../components/CardDashboard";
+import Card from "../components/Card";
 
 export default function BuwuhanDashboard() {
-    const [data, setData] = useState({
-        totalData: 0,
-        items: { paid: 0, unpaid: 0 },
-        rice: { paid: 0, unpaid: 0 },
-        money: { paid: 0, unpaid: 0 },
-        other: { paid: 0, unpaid: 0 }
-    });
-    const [userProfile, setUserProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    // Fetch user profile
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await getUserProfile();
-                const body = await response.json();
-
-                if (response.ok && body.data) {
-                    setUserProfile(body.data);
-                } else {
-                    console.error('Failed to fetch profile:', body.message);
-                }
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-            }
-        };
-
-        fetchProfile();
-    }, []);
-
-    // Fetch dashboard data
-    useEffect(() => {
-        const fetchDashboard = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                const body = await getDashboardBuwuhan();
-                const apiData = body.data;
-
-                setData({
-                    totalData: apiData.totalData || 0,
-                    items: {
-                        paid: apiData.items?.paid || 0,
-                        unpaid: apiData.items?.unpaid || 0
-                    },
-                    rice: {
-                        paid: apiData.rice?.paid || 0,
-                        unpaid: apiData.rice?.unpaid || 0
-                    },
-                    money: {
-                        paid: apiData.money?.paid || 0,
-                        unpaid: apiData.money?.unpaid || 0
-                    },
-                    other: {
-                        paid: apiData.other?.paid || 0,
-                        unpaid: apiData.other?.unpaid || 0
-                    }
-                });
-            } catch (err) {
-                console.error('Error fetching dashboard:', err);
-                setError(err.message || 'Terjadi kesalahan saat memuat data');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDashboard();
-    }, []);
-
-    const categories = [
-        { title: '(Barang)', data: data.items, bgColor: 'bg-[#F9CD19]' },
-        { title: '(Beras)', data: data.rice, bgColor: 'bg-[#FF8BE4]' },
-        { title: '(Uang)', data: data.money, bgColor: 'bg-[#B0CE88]' },
-        { title: '(Lainnya)', data: data.other, bgColor: 'bg-[#FFB167]' }
-    ];
+    const { 
+        userProfile, 
+        loading, 
+        error, 
+        dataBuwuhan, 
+        categories 
+    } = useBuwuhanDashboard();
 
     return (
         <div className="w-full mx-auto px-2 sm:px-4 md:px-5">
@@ -96,12 +24,12 @@ export default function BuwuhanDashboard() {
             >
                 <div className="text-left m-2.5 sm:mx-4 sm:my-6">
                     <h2 className="font-bold text-sm sm:text-base lg:text-base mb-1">
-                        {userProfile ? (`Halo, ${userProfile.fullName}`) : ('Halo! FullName Not Found')}
+                        {userProfile ? (`Halo! ${userProfile.fullName}`) : ('Halo! ')}
                     </h2>
                     <p className="text-xs sm:text-sm lg:text-sm text-gray-800 mb-3">
                         Mau edit apa hari ini?
                     </p>
-                    <Link to="/buwuhan/list" className="bg-[#000000] text-white text-[10px] sm:text-xs px-3 py-3 sm:px-4 sm:py-3 rounded-full hover:bg-gray-800 transition">
+                    <Link to="/dashboard/list" className="bg-[#000000] text-white text-[10px] sm:text-xs px-3 py-3 sm:px-4 sm:py-3 rounded-full hover:bg-gray-800 transition">
                         Lihat semua data
                     </Link>
                 </div>
@@ -136,7 +64,7 @@ export default function BuwuhanDashboard() {
                         {/* Total Data Card */}
                         <Card className="bg-[#C2BFF8] flex flex-col items-center justify-center px-3 py-5 md:py-6" height="h-auto">
                             <p className="text-sm md:text-base font-semibold mb-1">Total Data</p>
-                            <p className="text-2xl md:text-3xl font-bold">{data.totalData}</p>
+                            <p className="text-2xl md:text-3xl font-bold">{dataBuwuhan.totalData}</p>
                         </Card>
 
                         {/* Category Cards */}
@@ -168,7 +96,7 @@ export default function BuwuhanDashboard() {
                         {/* Total Data Card */}
                         <Card className="bg-[#C2BFF8] flex flex-col items-center justify-center" height="h-40 sm:h-48">
                             <p className="text-sm sm:text-base font-bold mb-1">Total data</p>
-                            <p className="text-2xl sm:text-3xl font-bold">{data.totalData}</p>
+                            <p className="text-2xl sm:text-3xl font-bold">{dataBuwuhan.totalData}</p>
                         </Card>
 
                         {/* Category Cards */}

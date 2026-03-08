@@ -1,107 +1,61 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { userUpdatePassword } from "../services/authService.js";
-import { alertSuccess, alertError } from "../alert.js";
+import { Link } from "react-router-dom";
+import useUpdatePassword from "../hooks/auth/useUpdatePassword";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function BuwuhanUpdatePassword() {
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    const { handleSubmit, isLoading } = useUpdatePassword();
+    const [showPasswords, setShowPasswords] = useState({
+        oldPassword: false,
+        newPassword: false,
+        confirmPassword: false,
+    });
     const [formData, setFormData] = useState({
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: ''
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const toggleShow = (field) => {
+        setShowPasswords((prev) => ({
+            ...prev,
+            [field]: !prev[field],
+        }));
+    };
 
-        // Validasi
-        if (!formData.oldPassword.trim()) {
-            await alertError('Kata sandi lama harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        if (!formData.newPassword.trim()) {
-            await alertError('Kata sandi baru harus diisi', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        if (formData.newPassword.length < 6) {
-            await alertError('Kata sandi baru minimal 6 karakter', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        if (formData.newPassword !== formData.confirmPassword) {
-            await alertError('Konfirmasi kata sandi tidak cocok', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        if (formData.oldPassword === formData.newPassword) {
-            await alertError('Kata sandi baru harus berbeda dari kata sandi lama', 'Validasi Gagal', '/icon-alert-error.png');
-            return;
-        }
-
-        setIsLoading(true);
-
-        try {
-            const response = await userUpdatePassword({
-                oldPassword: formData.oldPassword,
-                newPassword: formData.newPassword
-            });
-
-            const body = await response.json();
-
-            if (response.ok) {
-                await alertSuccess('Kata sandi berhasil diubah!', 'Berhasil', '/icon-alert-update.png');
-
-                // Reset form
-                setFormData({
-                    oldPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                });
-
-                navigate('/buwuhan/settings');
-            } else {
-                await alertError(body.message || 'Gagal mengubah kata sandi', 'Gagal', '/icon-alert-error.png');
-            }
-        } catch (error) {
-            console.error('Error updating password:', error);
-            await alertError('Terjadi kesalahan saat mengubah kata sandi', 'Error', '/icon-alert-error.png');
-        } finally {
-            setIsLoading(false);
-        }
+    const resetForm = () => {
+        setFormData({
+            oldPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+        });
     };
 
     return (
         <div className="bg-white sm:w-full rounded-2xl shadow-lg">
             <div className="space-y-6 px-10 py-6">
-
-                {/* Header */}
                 <div className="flex items-center gap-2">
-                    <Link to="/buwuhan/settings" className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 rounded-full">
+                    <Link to="/dashboard/settings" className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 rounded-full">
                         <img src="/icon-left.png" alt="Kembali" className="w-8 h-8" />
                     </Link>
                     <h2 className="text-xl font-semibold">Ganti password</h2>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Password lama */}
-                    <div>
+                <form onSubmit={(e) => { handleSubmit(e, formData, resetForm) }} className="space-y-6">
+                    <div className="relative">
                         <label className="block text-sm font-medium mb-1">
                             Kata sandi saat ini
                         </label>
                         <input
-                            type="password"
+                            type={showPasswords.oldPassword ? "text" : "password"}
                             name="oldPassword"
                             value={formData.oldPassword}
                             onChange={handleChange}
@@ -110,16 +64,26 @@ export default function BuwuhanUpdatePassword() {
                             disabled={isLoading}
                             required
                         />
+                        <button
+                            type="button"
+                            disabled={isLoading}
+                            onClick={() => toggleShow("oldPassword")}
+                            className="absolute bottom-2.5 right-3 flex items-center text-gray-400 hover:text-gray-600 transition">
+                            {showPasswords.oldPassword ? (
+                                <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                            ) : (
+                                <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                            )}
+                        </button>
                     </div>
 
-                    {/* Password baru + konfirmasi */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
+                        <div className="relative">
                             <label className="block text-sm font-medium mb-1">
                                 Kata sandi baru
                             </label>
                             <input
-                                type="password"
+                                type={showPasswords.newPassword ? "text" : "password"}
                                 name="newPassword"
                                 value={formData.newPassword}
                                 onChange={handleChange}
@@ -129,14 +93,25 @@ export default function BuwuhanUpdatePassword() {
                                 required
                                 minLength={6}
                             />
+                            <button
+                                type="button"
+                                disabled={isLoading}
+                                onClick={() => toggleShow("newPassword")}
+                                className="absolute bottom-2.5 right-3 flex items-center text-gray-400 hover:text-gray-600 transition">
+                                {showPasswords.newPassword ? (
+                                    <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                                ) : (
+                                    <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                                )}
+                            </button>
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block text-sm font-medium mb-1">
                                 Konfirmasi kata sandi
                             </label>
                             <input
-                                type="password"
+                                type={showPasswords.confirmPassword ? "text" : "password"}
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
@@ -145,6 +120,17 @@ export default function BuwuhanUpdatePassword() {
                                 disabled={isLoading}
                                 required
                             />
+                            <button
+                                type="button"
+                                disabled={isLoading}
+                                onClick={() => toggleShow("confirmPassword")}
+                                className="absolute bottom-2.5 right-3 flex items-center text-gray-400 hover:text-gray-600 transition">
+                                {showPasswords.confirmPassword ? (
+                                    <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                                ) : (
+                                    <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 text-[#ACA0A0]" />
+                                )}
+                            </button>
                         </div>
                     </div>
 
@@ -159,5 +145,4 @@ export default function BuwuhanUpdatePassword() {
             </div>
         </div>
     );
-
 }

@@ -1,383 +1,356 @@
-import { useEffect, useState, useRef } from "react";
-import { ChevronDown } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useRef } from "react";
+import { ChevronDown, Search, MoreVertical } from "lucide-react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import useBuwuhanList from "../hooks/buwuhan/useBuwuhanList";
+import useDropdownOutside from "../hooks/buwuhan/useDropdownOutside";
+import DetailBuwuhan from "../components/DetailBuwuhan";
 import {
-    getListBuwuhan,
-    deleteBuwuhan,
-    CATEGORY_OPTIONS,
-    STATUS_OPTIONS,
-    CATEGORY_NAME_TO_LABEL,
-    STATUS_TO_LABEL,
-} from "../services/buwuhanService.js";
-import { alertError, alertSuccess, alertConfirm } from "../alert.js";
-import DetailBuwuhan from "../components/DetailBuwuhan.jsx";
+  getCategoryLabelByName,
+  getStatusLabel,
+  CATEGORY_OPTIONS,
+  STATUS_OPTIONS,
+} from "../constants/buwuhanOptions";
 
 export default function BuwuhanList() {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const searchQuery = searchParams.get('search') || '';
-    const [category, setCategory] = useState("");
-    const [status, setStatus] = useState("");
-    const [showCategory, setShowCategory] = useState(false);
-    const [showStatus, setShowStatus] = useState(false);
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [pagination, setPagination] = useState({
-        currentPage: 1,
-        currentSize: 10,
-        totalPage: 1,
-        totalData: 0
-    });
-    const categoryRef = useRef(null);
-    const statusRef = useRef(null);
-    const [detailModal, setDetailModal] = useState({ isOpen: false, buwuhanId: null });
-    const [refreshKey, setRefreshKey] = useState(0);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-    // Helper
-    const getCategoryLabel = (val) => CATEGORY_OPTIONS.find(o => o.value === val)?.label || val;
-    const getStatusLabel = (val) => STATUS_OPTIONS.find(o => o.value === val)?.label || val;
+  const searchQuery = searchParams.get("search") || "";
+  const [searchValue, setSearchValue] = useState(searchQuery);
 
-    // Fetch data
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
+  const {
+    data,
+    loading,
+    error,
+    category,
+    status,
+    handleCategoryChange,
+    handleChangeStatus,
+    pagination,
+    handlePrevPage,
+    handleNextPage,
+    handleChangeSize,
+    handleChangePage,
+    handleDeleteData,
+  } = useBuwuhanList(searchQuery);
 
-            try {
-                const params = {
-                    category: category || undefined,
-                    status: status || undefined,
-                };
+  const [showCategory, setShowCategory] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
 
-                // Hanya kirim pagination params saat bukan halaman pertama
-                if (pagination.currentPage > 1) {
-                    params.page = pagination.currentPage;
-                    params.size = pagination.currentSize;
-                }
+  const [openAction, setOpenAction] = useState(null);
 
-                const body = await getListBuwuhan(params);
+  const [detailModal, setDetailModal] = useState({
+    isOpen: false,
+    buwuhanId: null,
+  });
 
-                // Filter client-side agar bisa cari di nameMan dan nameWoman
-                let results = body.data || [];
-                if (searchQuery) {
-                    const query = searchQuery.toLowerCase();
-                    results = results.filter(item =>
-                        (item.nameMan && item.nameMan.toLowerCase().includes(query)) ||
-                        (item.nameWoman && item.nameWoman.toLowerCase().includes(query))
-                    );
-                }
+  const categoryRef = useRef(null);
+  const statusRef = useRef(null);
 
-                setData(results);
+  useDropdownOutside(categoryRef, setShowCategory);
+  useDropdownOutside(statusRef, setShowStatus);
 
-                // Update pagination
-                if (body.paging) {
-                    setPagination(prev => ({
-                        ...prev,
-                        totalPage: body.paging.totalPage || 1,
-                        totalData: body.paging.totalData
-                    }));
-                } else {
-                    setPagination(prev => ({
-                        ...prev,
-                        totalData: (body.data || []).length
-                    }));
-                }
-            } catch (err) {
-                console.error('Error fetching buwuhan list:', err);
-                if (err.body) console.error('API error details:', JSON.stringify(err.body));
-                setError(err.message || 'Terjadi kesalahan saat memuat data');
-                setData([]);
-            } finally {
-                setLoading(false);
-            }
-        };
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/dashboard/list?search=${searchValue}`);
+    }
+  };
 
-        fetchData();
-    }, [searchQuery, category, status, pagination.currentPage, refreshKey]);
+  return (
+    <div className="w-full mx-auto p-3 sm:p-4 md:px-5">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div className="flex gap-2 flex-wrap">
+          {/* Category */}
+          <div className="relative" ref={categoryRef}>
+            <button
+              onClick={() => {
+                setShowCategory(!showCategory);
+                setShowStatus(false);
+              }}
+              className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded-full text-xs"
+            >
+              {category ? getCategoryLabelByName(category) : "Kategori"}
+              <ChevronDown size={16} />
+            </button>
 
-    // Tutup dropdown
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (categoryRef.current && !categoryRef.current.contains(e.target)) setShowCategory(false);
-            if (statusRef.current && !statusRef.current.contains(e.target)) setShowStatus(false);
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+            {showCategory && (
+              <div className="absolute mt-2 w-40 bg-white border rounded-xl shadow-lg z-20">
+                <button
+                  onClick={() => handleCategoryChange("")}
+                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                >
+                  Semua Kategori
+                </button>
 
-    // Handle filter reset
-    const handleCategoryChange = (opt) => {
-        setCategory(opt);
-        setShowCategory(false);
-        setPagination(prev => ({ ...prev, currentPage: 1 }));
-    };
-
-    const handleStatusChange = (opt) => {
-        setStatus(opt);
-        setShowStatus(false);
-        setPagination(prev => ({ ...prev, currentPage: 1 }));
-    };
-
-    // Pagination handlers
-    const handlePrevPage = () => {
-        if (pagination.currentPage > 1) {
-            setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }));
-        }
-    };
-
-    const handleNextPage = () => {
-        if (pagination.currentPage < pagination.totalPage) {
-            setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }));
-        }
-    };
-
-    // Delete handler
-    const handleDelete = async (id, nameMan, nameWoman) => {
-        const result = await alertConfirm('Hapus Data Buwuhan?', `Apakah Kamu yakin ingin menghapus data ini?`, '/icon-alert-confirm.png');
-
-        if (result.isConfirmed) {
-            try {
-                await deleteBuwuhan(id);
-                await alertSuccess('Data berhasil dihapus', 'Berhasil!', '/icon-alert-delete.png');
-
-                // Refresh data
-                setRefreshKey(prev => prev + 1);
-                setPagination(prev => ({ ...prev, currentPage: 1 }));
-            } catch (error) {
-                console.error('Error deleting buwuhan:', error);
-                await alertError('Gagal menghapus data', 'Gagal!', '/icon-alert-error.png');
-            }
-        }
-    };
-
-    return (
-        <div className="w-full mx-auto p-3 sm:p-4 md:px-5">
-            {/* Judul (mobile only) */}
-            <h1 className="text-base sm:text-lg font-semibold text-[#000000] mb-3 sm:mb-4 md:hidden">
-                Lihat Semua Data
-            </h1>
-
-            {/* Filter Bar */}
-            <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-3 sm:mb-4">
-                {/* Dropdown Kategori */}
-                <div className="relative" ref={categoryRef}>
-                    <button
-                        onClick={() => {
-                            setShowCategory(!showCategory);
-                            setShowStatus(false);
-                        }}
-                        className="flex items-center gap-1.5 sm:gap-2 bg-black text-white px-3 sm:px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-xs font-medium"
-                    >
-                        {category ? getCategoryLabel(category) : 'Kategori'} <ChevronDown size={16} className="w-4 h-4" />
-                    </button>
-
-                    {showCategory && (
-                        <div className="absolute mt-2 w-36 sm:w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
-                            <button
-                                onClick={() => handleCategoryChange("")}
-                                className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 first:rounded-t-xl"
-                            >
-                                Semua Kategori
-                            </button>
-                            {CATEGORY_OPTIONS.map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    onClick={() => handleCategoryChange(opt.value)}
-                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl cursor-pointer"
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                {/* Dropdown Status */}
-                <div className="relative" ref={statusRef}>
-                    <button
-                        onClick={() => {
-                            setShowStatus(!showStatus);
-                            setShowCategory(false);
-                        }}
-                        className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-gray-300 px-3 sm:px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-xs font-medium shadow-lg cursor-pointer"
-                    >
-                        {status ? getStatusLabel(status) : 'Status'} <ChevronDown size={16} className="w-4 h-4" />
-                    </button>
-
-                    {showStatus && (
-                        <div className="absolute mt-2 w-36 sm:w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
-                            <button
-                                onClick={() => handleStatusChange("")}
-                                className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 first:rounded-t-xl cursor-pointer"
-                            >
-                                Semua Status
-                            </button>
-                            {STATUS_OPTIONS.map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    onClick={() => handleStatusChange(opt.value)}
-                                    className="w-full text-left px-3 py-2 text-xs sm:text-sm hover:bg-gray-100 text-gray-700 last:rounded-b-xl cursor-pointer"
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Loading */}
-            {loading && (
-                <div className="text-center py-10 text-xs text-gray-500">Memuat data...</div>
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleCategoryChange(opt.value)}
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             )}
+          </div>
 
-            {/* Error */}
-            {error && (
-                <div className="text-center py-10 text-xs text-red-600">
-                    Terjadi kesalahan: {error}
-                </div>
+          {/* Status */}
+          <div className="relative" ref={statusRef}>
+            <button
+              onClick={() => {
+                setShowStatus(!showStatus);
+                setShowCategory(false);
+              }}
+              className="flex items-center gap-2 border px-3 py-2 rounded-full text-xs"
+            >
+              {status ? getStatusLabel(status) : "Status"}
+              <ChevronDown size={16} />
+            </button>
+
+            {showStatus && (
+              <div className="absolute mt-2 w-40 bg-white border rounded-xl shadow-lg z-20">
+                <button
+                  onClick={() => handleChangeStatus("")}
+                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                >
+                  Semua Status
+                </button>
+
+                {STATUS_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleChangeStatus(opt.value)}
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             )}
-
-            {/* Table */}
-            {!loading && !error && (
-                <>
-                    {data.length === 0 ? (
-                        <div className="text-center py-10 text-xs text-gray-500">
-                            Tidak ada data yang ditemukan
-                        </div>
-                    ) : (
-                        <>
-                            {/* Desktop/Tablet Table */}
-                            <div className="hidden md:block border-2 border-black rounded-3xl overflow-hidden px-4 md:px-6 py-2">
-                                <table className="w-full text-xs md:text-sm">
-                                    <thead>
-                                        <tr>
-                                            <th className="p-1.5 md:p-2 text-left font-semibold">Nama Laki-laki</th>
-                                            <th className="p-1.5 md:p-2 text-left font-semibold">Nama Perempuan</th>
-                                            <th className="p-1.5 md:p-2 text-left font-semibold">Kategori</th>
-                                            <th className="p-1.5 md:p-2 text-left font-semibold">Status</th>
-                                            <th className="p-1.5 md:p-2 text-center font-semibold">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.map((row, index) => (
-                                            <tr key={row.id || index} className="border-b border-black last:border-b-0">
-                                                <td className="p-1.5 md:p-2">{row.nameMan}</td>
-                                                <td className="p-1.5 md:p-2">{row.nameWoman}</td>
-                                                <td className="p-1.5 md:p-2">{CATEGORY_NAME_TO_LABEL[row.categoryName] || row.categoryName}</td>
-                                                <td className="p-1.5 md:p-2">{STATUS_TO_LABEL[row.status] || row.status}</td>
-                                                <td className="p-1.5 md:p-2">
-                                                    <div className="flex justify-center gap-1.5 md:gap-2">
-                                                        <button
-                                                            onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
-                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs border-2 border-[#8A86D5] text-[#8A86D5] rounded-full hover:bg-[#ECEBFF] transition font-medium cursor-pointer"
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
-                                                            className="px-3 py-1 text-xs bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] transition font-medium cursor-pointer"
-                                                        >
-                                                            Detail
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
-                                                            className="px-2.5 md:px-3 py-1 text-[10px] md:text-xs bg-[#AB1111] text-white rounded-full hover:bg-red-600 transition font-medium cursor-pointer"
-                                                        >
-                                                            Hapus
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {/* Mobile Card */}
-                            <div className="block md:hidden border-2 border-black rounded-3xl overflow-hidden bg-white">
-                                {/* Header */}
-                                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 p-2 sm:p-2.5 bg-white border-b-2 border-gray-200">
-                                    <div className="font-semibold text-[10px] sm:text-xs">Nama<br />Laki-laki</div>
-                                    <div className="font-semibold text-[10px] sm:text-xs">Nama<br />Perempuan</div>
-                                    <div className="font-semibold text-[10px] sm:text-xs">Status</div>
-                                    <div></div>
-                                </div>
-
-                                {/* Rows */}
-                                {data.map((row, index) => (
-                                    <div
-                                        key={row.id || index}
-                                        className="grid grid-cols-4 gap-1.5 sm:gap-2 p-2.5 sm:p-3 border-b border-gray-200 last:border-b-0 items-center"
-                                    >
-                                        <div className="text-[10px] sm:text-xs truncate">{row.nameMan}</div>
-                                        <div className="text-[10px] sm:text-xs truncate">{row.nameWoman}</div>
-                                        <div className="text-[10px] sm:text-xs text-gray-700">{STATUS_TO_LABEL[row.status] || row.status}</div>
-                                        <div className="flex justify-end gap-1">
-                                            <button
-                                                onClick={() => setDetailModal({ isOpen: true, buwuhanId: row.id })}
-                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#8A86D5] text-white rounded-full hover:bg-[#6D67C4] font-medium cursor-pointer"
-                                            >
-                                                Detail
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(row.id, row.nameMan, row.nameWoman)}
-                                                className="px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] bg-[#AB1111] text-white rounded-full hover:bg-red-600 font-medium cursor-pointer"
-                                            >
-                                                Hapus
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    )}
-                </>
-            )}
-
-            {/* Pagination */}
-            {!loading && !error && data.length > 0 && (
-                <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row justify-between items-center gap-2.5 sm:gap-3">
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] sm:text-xs text-gray-700">Baris per halaman</span>
-                        <span className="px-2 sm:px-2.5 py-1 border-2 border-gray-300 rounded-full text-[10px] sm:text-xs">
-                            {pagination.currentSize}
-                        </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-3">
-                        <button
-                            onClick={handlePrevPage}
-                            disabled={pagination.currentPage === 1}
-                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2 cursor-pointer"
-                        >
-                            Sebelumnya
-                        </button>
-                        <button className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-[#8A86D5] text-white rounded-lg font-medium text-xs sm:text-sm">
-                            {pagination.currentPage}
-                        </button>
-                        <button
-                            onClick={handleNextPage}
-                            disabled={pagination.currentPage >= pagination.totalPage}
-                            className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed px-2 cursor-pointer"
-                        >
-                            Selanjutnya
-                        </button>
-                    </div>
-
-                    <div className="text-[10px] sm:text-xs font-semibold">
-                        Total: <span className="text-black">{pagination.totalData}</span>
-                    </div>
-                </div>
-            )}
-
-            {/* Buwuhan Detail Modal */}
-            <DetailBuwuhan
-                isOpen={detailModal.isOpen}
-                onClose={() => setDetailModal({ isOpen: false, buwuhanId: null })}
-                buwuhanId={detailModal.buwuhanId}
-            />
+          </div>
         </div>
-    );
+
+        {/* Search */}
+        <div className="relative w-[500px]">
+          <input
+            type="text"
+            placeholder="Cari . . ."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleSearch}
+            className="pl-5 pr-10 py-2 w-full h-[40px] bg-white rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none shadow border border-gray-200"
+          />
+
+          <Search className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" />
+        </div>
+      </div>
+
+      {/* Loading */}
+      {loading && (
+        <div className="text-center py-10 text-xs text-gray-500">
+          Memuat data...
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="text-center py-10 text-xs text-red-600">{error}</div>
+      )}
+
+      {/* Table */}
+      {!loading && !error && (
+        <>
+          {data.length === 0 ? (
+            <div className="text-center py-10 text-xs text-gray-500">
+              Tidak ada data
+            </div>
+          ) : (
+            <div className="border-1 rounded-2xl">
+            <div className="p-7">
+              <table className="w-full text-xs md:text-s">
+                <thead>
+                  <tr>
+                    <th className="p-2 text-left">Nama Laki-laki</th>
+                    <th className="p-2 text-left">Nama Perempuan</th>
+                    <th className="p-2 text-left">Kategori</th>
+                    <th className="p-2 text-left">Status</th>
+                    <th className="p-2 text-center">Aksi</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {data.map((row) => (
+                    <tr key={row.id} className="border-b">
+                      <td className="p-2">{row.nameMan}</td>
+                      <td className="p-2">{row.nameWoman}</td>
+                      <td className="p-2">
+                        {getCategoryLabelByName(row.categoryName)}
+                      </td>
+                      <td className="p-2">{getStatusLabel(row.status)}</td>
+
+                      <td className="p-2 text-center relative">
+                        {/* Desktop Actions */}
+                        <div className="hidden sm:flex justify-center gap-2">
+                          <button
+                            onClick={() => navigate(`/buwuhan/edit/${row.id}`)}
+                            className="px-3 py-1 border rounded-full text-xs"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              setDetailModal({
+                                isOpen: true,
+                                buwuhanId: row.id,
+                              })
+                            }
+                            className="px-3 py-1 bg-[#8A86D5] text-white rounded-full text-xs"
+                          >
+                            Detail
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteData(row.id)}
+                            className="px-3 py-1 bg-red-600 text-white rounded-full text-xs"
+                          >
+                            Hapus
+                          </button>
+                        </div>
+
+                        {/* Mobile Options */}
+                        <div className="sm:hidden flex justify-center">
+                          <button
+                            onClick={() =>
+                              setOpenAction(
+                                openAction === row.id ? null : row.id,
+                              )
+                            }
+                            className="p-2 rounded-full hover:bg-gray-200"
+                          >
+                            <MoreVertical size={18} />
+                          </button>
+
+                          {openAction === row.id && (
+                            <div className="absolute right-2 mt-2 w-32 bg-white border rounded-lg shadow-lg z-30">
+                              <button
+                                onClick={() =>
+                                  navigate(`/buwuhan/edit/${row.id}`)
+                                }
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                              >
+                                Edit
+                              </button>
+
+                              <button
+                                onClick={() =>
+                                  setDetailModal({
+                                    isOpen: true,
+                                    buwuhanId: row.id,
+                                  })
+                                }
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                              >
+                                Detail
+                              </button>
+
+                              <button
+                                onClick={() => handleDeleteData(row.id)}
+                                className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100"
+                              >
+                                Hapus
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Pagination */}
+      <div className="mt-6 flex flex-col lg:flex-row items-center justify-between gap-4 text-sm">
+        {/* Baris per halaman */}
+        <div className="flex items-center gap-2 text-gray-600">
+          <span>Baris per halaman</span>
+
+          <div className="relative">
+            <select
+              value={pagination.size}
+              onChange={(e) => handleChangeSize(Number(e.target.value))}
+              className="px-3 py-1 pr-6 border border-gray-300 rounded-full text-sm appearance-none bg-white focus:outline-none cursor-pointer"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+            </select>
+
+            <ChevronDown className="w-4 h-4 text-gray-600 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrevPage}
+            disabled={pagination.currentPage === 1}
+            className="px-3 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Sebelumnya
+          </button>
+
+          {/* Page Numbers */}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: pagination.totalPage }, (_, i) => i + 1).map(
+              (page) => (
+                <button
+                  key={page}
+                  onClick={() => handleChangePage(page)}
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg font-medium transition ${
+                    pagination.currentPage === page
+                      ? "bg-[#8A86D5] text-white"
+                      : "text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {page}
+                </button>
+              ),
+            )}
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            disabled={pagination.currentPage >= pagination.totalPage}
+            className="px-3 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Selanjutnya
+          </button>
+        </div>
+
+        {/* Total */}
+        <div className="text-gray-700">
+          Total: <span className="font-semibold">{pagination.totalData}</span>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <DetailBuwuhan
+        isOpen={detailModal.isOpen}
+        buwuhanId={detailModal.buwuhanId}
+        onClose={() =>
+          setDetailModal({
+            isOpen: false,
+            buwuhanId: null,
+          })
+        }
+      />
+    </div>
+  );
 }

@@ -1,75 +1,85 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 import { userLogin } from "../services/authService";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        const storedUser = localStorage.getItem('user');
+  // cek token 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const userData = localStorage.getItem("userData");
 
-        if (token && storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('user');
-            }
-        }
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
 
-        setLoading(false);
-    }, []);
+    if (token) {
+      setIsAuthenticated(true);
+    }
 
-    const login = async (email, password) => {
-        try {
-            setError(null);
+    setLoading(false);
+  }, []);
 
-            const response = await userLogin({ email, password });
-            const body = await response.json();
+  const login = async (email, password) => {
+    try {
+      const response = await userLogin({ email, password });
+      const data = response.data;
 
-            if (!response.ok) {
-                throw new Error(body?.message || "Login gagal");
-            }
+      // save token and user data to localStorage
+      localStorage.setItem("accessToken", data.data.accessToken);
+      localStorage.setItem("userData", JSON.stringify(data.data));
 
-            const token = body?.data?.accessToken;
-            const user = body?.data?.user;
+      // update state
+      setIsAuthenticated(true);
+      setUser(data.data);
 
-            localStorage.setItem('accessToken', token);
-            localStorage.setItem('user', JSON.stringify(user));
-            setUser(user);
+      return {
+        success: true,
+        data: data.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error.response?.data?.message ||
+          "Email atau password salah",
+      };
+    }
+  };
 
-            return { success: true };
+  // Logout function to clear token and user data
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
-        } catch (err) {
-            setError(err.message);
-            return { success: false, error: err.message };
-        }
-    };
-
-    const logout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        setUser(null);
-    };
-
-    const value = {
-        user,
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
         loading,
-        error,
+        user,
         login,
         logout,
-        isAuthenticated: !!user
-    };
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) throw new Error('useAuth must be used within an AuthProvider');
-    return context;
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
 };
