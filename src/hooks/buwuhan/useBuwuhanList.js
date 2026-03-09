@@ -2,14 +2,10 @@ import { useEffect, useState } from "react";
 import { getListBuwuhan, deleteBuwuhan } from "../../services/buwuhanService";
 import { alertConfirm, alertError, alertSuccess } from "../../lib/sweetalert";
 
-export default function useBuwuhanList(searchQuery) {
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
-
+export default function useBuwuhanList({ searchQuery, category, status }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [pagination, setPagination] = useState({
@@ -19,47 +15,36 @@ export default function useBuwuhanList(searchQuery) {
     totalData: 0,
   });
 
+  // Reset ke page 1 saat filter berubah
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  }, [searchQuery, category, status]);
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const params = {
+      const response = await getListBuwuhan({
+        name: searchQuery,
+        category,
+        status,
         page: pagination.currentPage,
         size: pagination.currentSize,
-      };
-
-      if (category) params.category = category;
-      if (status) params.status = status;
-
-      const response = await getListBuwuhan(params);
+      });
 
       const body = response.data;
-
-      let results = body.data || [];
-
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-
-        results = results.filter(
-          (item) =>
-            item.nameMan?.toLowerCase().includes(query) ||
-            item.nameWoman?.toLowerCase().includes(query),
-        );
-      }
-
-      setData(results);
+      setData(body.data || []);
 
       if (body.paging) {
         setPagination((prev) => ({
           ...prev,
-          totalPage: body.paging.totalPage || 1,
-          totalData: body.paging.totalData || 0,
+          totalPage: body.paging.totalPage,
+          totalData: body.paging.totalData,
         }));
       }
     } catch (err) {
       console.error("Error fetching buwuhan list:", err);
-
       setError(err.message || "Terjadi kesalahan saat memuat data");
       setData([]);
     } finally {
@@ -78,48 +63,25 @@ export default function useBuwuhanList(searchQuery) {
     refreshKey,
   ]);
 
-  const handleCategoryChange = (val) => {
-    setCategory(val);
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
-  };
-
-  const handleChangeStatus = (val) => {
-    setStatus(val);
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
-  };
-
   const handlePrevPage = () => {
     if (pagination.currentPage > 1) {
-      setPagination((prev) => ({
-        ...prev,
-        currentPage: prev.currentPage - 1,
-      }));
+      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
     }
   };
 
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPage) {
-      setPagination((prev) => ({
-        ...prev,
-        currentPage: prev.currentPage + 1,
-      }));
+      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
     }
   };
 
-  const handleChangeSize = (currentSize) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentSize,
-      currentPage: 1,
-    }));
+  const handleChangePage = (pg) => {
+    setPagination((prev) => ({ ...prev, currentPage: pg }));
   };
 
-  const handleChangePage = (page) => {
-  setPagination((prev) => ({
-    ...prev,
-    currentPage: page
-  }));
-};
+  const handleChangeSize = (currentSize) => {
+    setPagination((prev) => ({ ...prev, currentSize, currentPage: 1 }));
+  };
 
   const handleDeleteData = async (buwuhanId) => {
     const confirm = await alertConfirm(
@@ -132,18 +94,14 @@ export default function useBuwuhanList(searchQuery) {
 
     try {
       await deleteBuwuhan(buwuhanId);
-      console.log("DELETE ID:", buwuhanId);
-
       await alertSuccess(
         "Data berhasil dihapus",
         "Berhasil!",
         "/icon-alert-delete.png",
       );
-
       setRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error(err);
-
       await alertError(
         "Gagal menghapus data",
         "Gagal!",
@@ -156,10 +114,6 @@ export default function useBuwuhanList(searchQuery) {
     data,
     loading,
     error,
-    category,
-    status,
-    handleCategoryChange,
-    handleChangeStatus,
     pagination,
     handlePrevPage,
     handleNextPage,

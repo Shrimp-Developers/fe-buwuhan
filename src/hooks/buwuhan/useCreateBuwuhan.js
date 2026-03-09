@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBuwuhan } from "../../services/buwuhanService";
-import { alertError, alertSuccess } from "../../lib/sweetalert";
+import { alertError, alertSuccess } from "../../lib/sweetAlert";
 
 export default function useCreateBuwuhan() {
   const navigate = useNavigate();
