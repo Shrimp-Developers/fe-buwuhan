@@ -8,7 +8,6 @@ export default function DashboardLayout() {
     const { loading } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // Auto close sidebar saat resize ke desktop
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
@@ -20,7 +19,6 @@ export default function DashboardLayout() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Tunggu auth selesai dicek
     if (loading) {
         return <div className="h-screen flex items-center justify-center">Loading...</div>;
     }
