@@ -2,11 +2,14 @@ import { useState, useRef } from "react";
 import DetailUser from "./DetailUser";
 import useClickOutside from "../hooks/navbar/useClickOutside";
 import usePageTitle from "../hooks/navbar/usePageTitle";
+import useUserProfile from "../hooks/auth/useUserProfile";
 
 export default function Navbar({ onMenuClick }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const title = usePageTitle();
+
+  const { previewImage, isFetching } = useUserProfile(true);
 
   useClickOutside(profileRef, () => setIsProfileOpen(false));
 
@@ -31,20 +34,7 @@ export default function Navbar({ onMenuClick }) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 relative">
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-            }}
-            className="md:hidden w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000]"
-          >
-            <img
-              src="/icon-search.png"
-              alt="deskripsi icon-search"
-              className="w-4 h-4 sm:w-5 sm:h-5"
-            />
-          </button>
-
-          <button className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] hover:bg-gray-200 transition border-2 border-[#000000] cursor-pointer">
+          <button className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] transition border-2 border-[#000000] cursor-pointer overflow-hidden">
             <img
               src="/icon-moon.png"
               alt="deskripsi icon-moon"
@@ -55,12 +45,14 @@ export default function Navbar({ onMenuClick }) {
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="w-8 h-8 sm:w-8 sm:h-8 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition cursor-pointer"
+              className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-[#E8E9EE] transition border-2 border-[#000000] cursor-pointer overflow-hidden"
             >
               <img
-                src="/icon-user.png"
+                src={
+                  !isFetching && previewImage ? previewImage : "/icon-user.png"
+                }
                 alt="deskripsi icon-user"
-                className="w-8 h-8 sm:w-8 sm:h-8"
+                className="w-full h-full object-cover"
               />
             </button>
 
