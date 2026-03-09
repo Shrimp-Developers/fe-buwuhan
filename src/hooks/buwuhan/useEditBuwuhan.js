@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getDetailBuwuhan, updateDataBuwuhan } from "../services/buwuhanService";
-import { alertSuccess, alertError, alertConfirm } from "../alert";
+import { getDetailBuwuhan, updateDataBuwuhan } from "../../services/buwuhanService";
+import { alertConfirm, alertSuccess, alertError } from "../../lib/sweetAlert";
 
-export default function useEditBuwuhan(id) {
+export default function useEditBuwuhan(buwuhanId) {
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,21 +21,22 @@ export default function useEditBuwuhan(id) {
 
   
   useEffect(() => {
+
     const fetchData = async () => {
       setIsFetching(true);
 
       try {
-        const body = await getDetailBuwuhan(id);
+        const body = await getDetailBuwuhan(buwuhanId);
         const data = body.data;
 
         setFormData({
-          nameMan: data.nameMan || "",
-          nameWoman: data.nameWoman || "",
-          categoryId: data.categoryId || "",
-          gift: data.gift || "",
-          status: data.status || "",
-          address: data.address,
-          information: data.information || "",
+          nameMan: data.data.nameMan,
+          nameWoman: data.data.nameWoman,
+          categoryId: data.data.categoryId,
+          gift: data.data.gift,
+          status: data.data.status,
+          address: data.data.address,
+          information: data.data.information,
         });
       } catch (error) {
         console.error("Error fetching buwuhan:", error);
@@ -52,8 +53,8 @@ export default function useEditBuwuhan(id) {
       }
     };
 
-    if (id) fetchData();
-  }, [id, navigate]);
+    if (buwuhanId) fetchData();
+  }, [buwuhanId, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,8 +66,15 @@ export default function useEditBuwuhan(id) {
   };
 
   const handleReset = () => {
-    navigate(`/buwuhan/edit/${id}`);
-    window.location.reload();
+    setFormData({
+      nameMan: "",
+      nameWoman: "",
+      categoryId: "",
+      gift: "",
+      status: "",
+      address: "",
+      information: ""
+    });
   };
 
   const handleSubmit = async () => {
@@ -121,7 +129,7 @@ export default function useEditBuwuhan(id) {
     setIsLoading(true);
 
     try {
-      const responseBody = await updateDataBuwuhan(id, {
+      const responseBody = await updateDataBuwuhan(buwuhanId, {
         nameMan: formData.nameMan,
         nameWoman: formData.nameWoman,
         categoryId: formData.categoryId,
@@ -131,15 +139,16 @@ export default function useEditBuwuhan(id) {
         information: formData.information || "",
       });
 
+      console.log(responseBody)
+
       await alertSuccess(
         "Data berhasil diupdate!",
         "Berhasil",
         "/icon-alert-update.png"
       );
 
-      console.log(responseBody);
+      navigate("/dashboard/list");
 
-      navigate("/buwuhan/list");
     } catch (error) {
       await alertError("Gagal mengupdate data", "Gagal", "/icon-alert-error.png");
       console.log("Error updating buwuhan:", error);
