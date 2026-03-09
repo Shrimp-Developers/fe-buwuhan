@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { alertConfirm, alertSuccess } from "../../lib/sweeAlert.js";
+import { alertConfirm, alertSuccess } from "../../lib/sweetAlert.js";
 
 export default function useSidebar() {
   const { pathname } = useLocation();
