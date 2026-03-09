@@ -1,15 +1,15 @@
 import { useParams } from "react-router-dom";
-import useEditBuwuhan from "../hooks/useEditBuwuhan";
+import useEditBuwuhan from "../hooks/buwuhan/useEditBuwuhan";
 
 export default function BuwuhanEditData() {
-    const { id: buwuhanId  } = useParams();
+    const { buwuhanId  } = useParams();
     const { 
         formData, 
         isLoading, 
         handleChange, 
         handleSubmit, 
         handleReset 
-    } = useEditBuwuhan(buwuhanId );
+    } = useEditBuwuhan(buwuhanId);
 
     return (
         <div className="w-full mx-auto px-4 md:px-5">
@@ -64,10 +64,10 @@ export default function BuwuhanEditData() {
                             required
                         >
                             <option value="">Pilih kategori</option>
-                            <option value="barang">Barang</option>
-                            <option value="beras">Beras</option>
-                            <option value="uang">Uang</option>
-                            <option value="lainnya">Lainnya</option>
+                            <option value="3">Barang</option>
+                            <option value="2">Beras</option>
+                            <option value="1">Uang</option>
+                            <option value="4">Lainnya</option>
                         </select>
                     </div>
 
@@ -100,8 +100,8 @@ export default function BuwuhanEditData() {
                             required
                         >
                             <option value="">Pilih status</option>
-                            <option value="lunas">Lunas</option>
-                            <option value="belum-lunas">Belum Lunas</option>
+                            <option value="paid">Lunas</option>
+                            <option value="unpaid">Belum Lunas</option>
                         </select>
                     </div>
                 </div>
