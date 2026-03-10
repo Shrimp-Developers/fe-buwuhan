@@ -24,7 +24,7 @@ export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
                     </div>
                 ) : (
                     <>
-                        {/* Mobile: 1 kolom (urutan 1-7), Desktop: 3 kolom (urutan asli) */}
+                        {/* Mobile: 1 kolom (urutan 1-7), Desktop: 3 kolom */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                             {/* Nama Laki-laki — mobile: 1, desktop: row1 col1 */}
                             <div className="order-1 sm:order-1">
@@ -39,7 +39,7 @@ export default function DetailBuwuhan({ isOpen, onClose, buwuhanId }) {
                             {/* Status — mobile: 7, desktop: row1 col3 */}
                             <div className="order-7 sm:order-3">
                                 <h2 className="text-xs sm:text-sm font-semibold text-gray-800 mb-1 sm:mb-2">Status</h2>
-                                <span className="px-3 py-1 text-[10px] sm:text-xs rounded-full border border-[#8A86D5] text-[#8A86D5]">
+                                <span className={`px-3 py-1 text-[10px] sm:text-xs rounded-full border ${buwuhanData?.status === 'unpaid' ? 'border-red-500 text-red-500' : 'border-[#8A86D5] text-[#8A86D5]'}`}>
                                     {getStatusLabel(buwuhanData?.status)}
                                 </span>
                             </div>
