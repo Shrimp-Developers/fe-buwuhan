@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updatePassword } from "../../services/authService";
-import { alertSuccess, alertError } from "../../lib/sweetalert";
+import { alertSuccess, alertError } from "../../lib/sweetAlert";
 
 export default function useUpdatePassword() {
   const navigate = useNavigate();

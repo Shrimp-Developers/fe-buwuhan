@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { activateAccount } from "../../services/authService";
-import { alertSuccess, alertError } from "../../lib/sweetalert";
+import { alertSuccess, alertError } from "../../lib/sweetAlert";
 
 export default function useActivation() {
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { forgotPassword } from "../../services/authService";
-import { alertSuccess, alertError } from "../../lib/sweetalert";
+import { alertSuccess, alertError } from "../../lib/sweetAlert";
 
 export default function useForgotPassword() {
 

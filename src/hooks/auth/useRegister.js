@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userRegister } from "../../services/authService";
-import { alertError, alertSuccess } from "../../lib/sweetalert";
+import { alertError, alertSuccess } from "../../lib/sweetAlert";
 
 export default function useRegister() {
 
