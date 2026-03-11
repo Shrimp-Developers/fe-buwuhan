@@ -5,7 +5,8 @@ export default function usePageTitle() {
     const location = useLocation();
     const path = location.pathname.replace(/\/+$/, "");
 
-    if (path === "/dashboard") return "Dashboard";
+    if (path === "/dashboard") 
+        return "Ringkasan";
 
     if (path === "/dashboard/create" || path.startsWith("/dashboard/create/"))
         return "Tambah Data";
@@ -15,6 +16,9 @@ export default function usePageTitle() {
 
     if (path === "/dashboard/settings" || path.startsWith("/dashboard/settings/"))
         return "Pengaturan";
+
+    if (path === "/dashboard/edit" || path.startsWith("/dashboard/edit/"))
+        return "Edit Data";
 
     return null;
 }
