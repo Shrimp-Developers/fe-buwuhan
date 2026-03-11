@@ -30,14 +30,13 @@ export default function Sidebar({ isOpen, onClose }) {
                 w-[280px] lg:w-[270px]
                 bg-[#FFFFFF]
                 flex flex-col 
-                h-screen 
+                h-full min-h-screen
                 z-50
                 transform transition-transform duration-300 ease-in-out
                 shadow-2xl md:shadow-none
                 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
             `}
       >
-        {/* Profile */}
         <div className="py-4 sm:py-5 px-6 sm:px-8 flex items-center justify-between">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
@@ -52,13 +51,12 @@ export default function Sidebar({ isOpen, onClose }) {
 
           <button
             onClick={onClose}
-            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors"
+            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
           </button>
         </div>
 
-        {/* Menu Items */}
         <nav className="flex-1 px-4 sm:px-6 md:px-5 lg:px-7 py-3 sm:py-4 md:py-2">
           <Link to="/dashboard" className={menuClasses("/dashboard")}>
             <LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -85,15 +83,17 @@ export default function Sidebar({ isOpen, onClose }) {
             <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
             <span>Pengaturan</span>
           </Link>
+        </nav>
 
+        <div className="px-4 sm:px-6 md:px-5 lg:px-7 py-4 sm:py-5">
           <button
-            className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 mt-2 cursor-pointer"
+            className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
             <span>Keluar</span>
           </button>
-        </nav>
+        </div>
       </aside>
     </>
   );
