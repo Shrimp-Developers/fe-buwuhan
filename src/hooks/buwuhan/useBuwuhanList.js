@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getListBuwuhan, deleteBuwuhan } from "../../services/buwuhanService";
-import { alertConfirm, alertError, alertSuccess } from "../../lib/sweetalert";
+import { alertConfirm, alertError, alertSuccess } from "../../lib/sweetAlert";
 
 export default function useBuwuhanList({ searchQuery, category, status }) {
   const [data, setData] = useState([]);

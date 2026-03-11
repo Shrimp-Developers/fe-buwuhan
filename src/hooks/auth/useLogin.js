@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { alertError, alertSuccess } from "../../lib/sweetalert";
+import { alertError, alertSuccess } from "../../lib/sweetAlert";
 
 export default function useLogin() {
   const [isLoading, setIsLoading] = useState(false);
