@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import useBuwuhanList from "../hooks/buwuhan/useBuwuhanList";
 import useDropdownOutside from "../hooks/buwuhan/useDropdownOutside";
 import DetailBuwuhan from "../components/DetailBuwuhan";
-import useBuwuhanExportData from "../hooks/buwuhan/useBuwuhanExportData"
+import useBuwuhanExportData from "../hooks/buwuhan/useBuwuhanExportData";
 import {
   getCategoryLabelByName,
   getStatusLabel,
@@ -35,7 +35,7 @@ export default function BuwuhanList() {
   useDropdownOutside(categoryRef, setShowCategory);
   useDropdownOutside(statusRef, setShowStatus);
 
-  const { handleExportDataBuwuhan, isExporting } = useBuwuhanExportData()
+  const { handleExportDataBuwuhan, isExporting } = useBuwuhanExportData();
 
   const {
     data,
@@ -76,6 +76,10 @@ export default function BuwuhanList() {
 
   return (
     <div className="w-full mx-auto p-3 sm:p-4 md:px-5">
+      <h1 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 md:hidden">
+        Lihat Semua Data
+      </h1>
+
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex gap-2 flex-wrap">
           {/* Category */}
@@ -85,17 +89,17 @@ export default function BuwuhanList() {
                 setShowCategory(!showCategory);
                 setShowStatus(false);
               }}
-              className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded-full text-xs"
+              className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded-full text-xs cursor-pointer"
             >
               {category ? getCategoryLabelByName(category) : "Kategori"}
               <ChevronDown size={16} />
             </button>
 
             {showCategory && (
-              <div className="absolute mt-2 w-40 bg-white border rounded-xl shadow-lg z-20">
+              <div className="absolute mt-2 w-40 bg-white rounded-xl shadow-lg z-20">
                 <button
                   onClick={() => handleCategoryChange("")}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                 >
                   Semua Kategori
                 </button>
@@ -103,7 +107,7 @@ export default function BuwuhanList() {
                   <button
                     key={opt.value}
                     onClick={() => handleCategoryChange(opt.value)}
-                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                   >
                     {opt.label}
                   </button>
@@ -119,17 +123,17 @@ export default function BuwuhanList() {
                 setShowStatus(!showStatus);
                 setShowCategory(false);
               }}
-              className="flex items-center gap-2 border px-3 py-2 rounded-full text-xs"
+              className="flex items-center gap-2 border px-3 py-2 rounded-full text-xs cursor-pointer"
             >
               {status ? getStatusLabel(status) : "Status"}
               <ChevronDown size={16} />
             </button>
 
             {showStatus && (
-              <div className="absolute mt-2 w-40 bg-white border rounded-xl shadow-lg z-20">
+              <div className="absolute mt-2 w-40 bg-white rounded-xl shadow-lg z-20">
                 <button
                   onClick={() => handleChangeStatus("")}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                 >
                   Semua Status
                 </button>
@@ -137,7 +141,7 @@ export default function BuwuhanList() {
                   <button
                     key={opt.value}
                     onClick={() => handleChangeStatus(opt.value)}
-                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                   >
                     {opt.label}
                   </button>
@@ -152,7 +156,7 @@ export default function BuwuhanList() {
             disabled={isExporting}
             onClick={handleExportDataBuwuhan}
           >
-            <Download  size={16} />
+            <Download size={16} />
             {isExporting ? "Mengexport Data..." : "Export Excel"}
           </button>
         </div>
@@ -187,11 +191,24 @@ export default function BuwuhanList() {
       {!loading && !error && (
         <>
           {data.length === 0 ? (
-            <div className="text-center py-10 text-xs text-gray-500">
-              Tidak ada data
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
+              <img
+                src="/icon-not-data.png"
+                alt="tidak ada data"
+                className="w-40"
+              />
+              <h1 className="text-lg font-bold text-[#7D79C0]">
+                Belum ada data disini
+              </h1>
+              <button
+                onClick={() => navigate("/dashboard/create")}
+                className="px-3 py-2 bg-[#8A86D5] w-[200px] font-semibold text-white text-sm rounded-full hover:bg-[#7a76c5] shadow-xl transition cursor-pointer"
+              >
+                Tambah Data
+              </button>
             </div>
           ) : (
-            <div className="border-1 rounded-2xl">
+            <div className="border-1 rounded-2xl bg-[#FFFFFF]">
               <div className="py-3 px-5">
                 <table className="w-full text-xs md:text-s">
                   <thead>
@@ -205,7 +222,7 @@ export default function BuwuhanList() {
                   </thead>
                   <tbody>
                     {data.map((row) => (
-                      <tr key={row.id} className="border-b">
+                      <tr key={row.id} className="border-t">
                         <td className="p-2">{row.nameMan}</td>
                         <td className="p-2">{row.nameWoman}</td>
                         <td className="p-2">
@@ -219,7 +236,7 @@ export default function BuwuhanList() {
                               onClick={() =>
                                 navigate(`/dashboard/edit/${row.id}`)
                               }
-                              className="px-3 py-1 border rounded-full text-xs"
+                              className="px-3 py-1 border rounded-full text-xs cursor-pointer"
                             >
                               Edit
                             </button>
@@ -230,13 +247,13 @@ export default function BuwuhanList() {
                                   buwuhanId: row.id,
                                 })
                               }
-                              className="px-3 py-1 bg-[#8A86D5] text-white rounded-full text-xs"
+                              className="px-3 py-1 bg-[#8A86D5] text-white rounded-full text-xs cursor-pointer"
                             >
                               Detail
                             </button>
                             <button
                               onClick={() => handleDeleteData(row.id)}
-                              className="px-3 py-1 bg-red-600 text-white rounded-full text-xs"
+                              className="px-3 py-1 bg-red-600 text-white rounded-full text-xs cursor-pointer"
                             >
                               Hapus
                             </button>
@@ -250,17 +267,17 @@ export default function BuwuhanList() {
                                   openAction === row.id ? null : row.id,
                                 )
                               }
-                              className="p-2 rounded-full hover:bg-gray-200"
+                              className="p-2 rounded-full hover:bg-gray-200 cursor-pointer"
                             >
                               <MoreVertical size={18} />
                             </button>
                             {openAction === row.id && (
-                              <div className="absolute right-2 mt-2 w-32 bg-white border rounded-lg shadow-lg z-30">
+                              <div className="absolute right-2 mt-2 w-32 bg-white rounded-lg shadow-lg z-30">
                                 <button
                                   onClick={() =>
                                     navigate(`/dashboard/edit/${row.id}`)
                                   }
-                                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                                 >
                                   Edit
                                 </button>
@@ -271,13 +288,13 @@ export default function BuwuhanList() {
                                       buwuhanId: row.id,
                                     })
                                   }
-                                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100"
+                                  className="w-full text-left px-3 py-2 text-xs hover:bg-gray-100 cursor-pointer"
                                 >
                                   Detail
                                 </button>
                                 <button
                                   onClick={() => handleDeleteData(row.id)}
-                                  className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100"
+                                  className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 cursor-pointer"
                                 >
                                   Hapus
                                 </button>
@@ -296,14 +313,14 @@ export default function BuwuhanList() {
       )}
 
       {/* Pagination */}
-      <div className="mt-6 flex flex-col lg:flex-row items-center justify-between gap-4 text-sm">
+      <div className="mt-6 flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
         <div className="flex items-center gap-2 text-gray-600">
           <span>Baris per halaman</span>
           <div className="relative">
             <select
               value={pagination.currentSize}
               onChange={(e) => handleChangeSize(Number(e.target.value))}
-              className="px-3 py-1 pr-6 border border-gray-300 rounded-full text-sm appearance-none bg-white focus:outline-none cursor-pointer"
+              className="px-3 py-1 pr-6 border border-gray-300 rounded-full text-xs appearance-none bg-white focus:outline-none cursor-pointer"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -317,7 +334,7 @@ export default function BuwuhanList() {
           <button
             onClick={handlePrevPage}
             disabled={pagination.currentPage === 1}
-            className="px-3 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-3 py-1 rounded-lg border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             Sebelumnya
           </button>
@@ -327,7 +344,7 @@ export default function BuwuhanList() {
                 <button
                   key={pg}
                   onClick={() => handleChangePage(pg)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg font-medium transition ${
+                  className={`w-6 h-6 flex items-center justify-center rounded-lg font-medium transition cursor-pointer ${
                     pagination.currentPage === pg
                       ? "bg-[#8A86D5] text-white"
                       : "text-gray-600 hover:bg-gray-200"
@@ -341,7 +358,7 @@ export default function BuwuhanList() {
           <button
             onClick={handleNextPage}
             disabled={pagination.currentPage >= pagination.totalPage}
-            className="px-3 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-3 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             Selanjutnya
           </button>
