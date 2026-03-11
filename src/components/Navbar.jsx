@@ -18,7 +18,7 @@ export default function Navbar({ onMenuClick }) {
       <header className="py-4 sm:py-5 px-4 sm:px-6 md:px-8 lg:px-12 flex items-center justify-between z-40 relative">
         <div className="flex items-center">
           <button
-            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"
+            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center cursor-pointer"
             onClick={onMenuClick}
           >
             <img
