@@ -16,19 +16,21 @@ export default function DetailUser({ isOpen, onClose }) {
 
   return (
     <div className="absolute z-50 top-12 right-3">
-      <div className="relative bg-white border border-gray-200 rounded-xl shadow-xl w-64 p-4">
+      <div className="relative bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl w-64 p-4">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+          className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] rounded-full transition-colors cursor-pointer"
           aria-label="Close"
           disabled={isLoading}
         >
-          <X className="w-5 h-5 text-black" />
+          <X className="w-5 h-5 text-black dark:text-white" />
         </button>
 
         {isFetching ? (
           <div className="flex items-center justify-center py-8">
-            <p className="text-sm text-black">Tunggu Sebentar...</p>
+            <p className="text-sm text-black dark:text-white">
+              Tunggu Sebentar...
+            </p>
           </div>
         ) : (
           <form className="space-y-3 mt-2" onSubmit={handleSubmit}>
@@ -39,7 +41,7 @@ export default function DetailUser({ isOpen, onClose }) {
                     <img
                       src={previewImage}
                       alt="Profile"
-                      className="w-full h-full "
+                      className="w-full h-full"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-[#8A86D5] text-white text-2xl font-bold">
@@ -62,7 +64,7 @@ export default function DetailUser({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={handleDeleteAvatar}
-                  className="w-fit md:w-fit px-2 py-2 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[8px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-fit px-2 py-2 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[8px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   disabled={isDeleting || isLoading}
                 >
                   {isDeleting ? "Menghapus..." : "Hapus Foto Profile"}
@@ -71,7 +73,7 @@ export default function DetailUser({ isOpen, onClose }) {
             </div>
 
             <div>
-              <label className="text-[10px] text-gray-600 mb-0.5 block">
+              <label className="text-[10px] text-gray-600 dark:text-gray-400 mb-0.5 block">
                 Nama Lengkap
               </label>
               <input
@@ -81,29 +83,30 @@ export default function DetailUser({ isOpen, onClose }) {
                 onChange={(e) =>
                   setFormData({ ...formData, fullName: e.target.value })
                 }
-                className="w-full px-2 py-1.5 border border-gray-300 rounded text-[11px] focus:outline-none focus:ring-1 focus:ring-[#8A86D5] focus:border-[#8A86D5]"
+                className="w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] text-black dark:text-white rounded text-[11px] focus:outline-none focus:ring-1 focus:ring-[#8A86D5] focus:border-[#8A86D5] placeholder:text-xs"
                 disabled={isLoading}
                 required
               />
             </div>
 
             <div>
-              <label className="text-[10px] text-gray-600 mb-0.5 block">
+              <label className="text-[10px] text-gray-600 dark:text-gray-400 mb-0.5 block">
                 Email
               </label>
               <input
                 type="email"
                 placeholder="example@gmail.com"
                 value={formData.email}
-                className="w-full px-2 py-1.5 border border-gray-300 rounded text-[11px] bg-gray-100 cursor-not-allowed"
+                className="w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-[#2a2a2a] text-black dark:text-gray-400 rounded text-[11px] cursor-not-allowed"
                 disabled
                 readOnly
               />
             </div>
+
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-fit md:w-fit px-4 py-1.5 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[11px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-fit px-4 py-1.5 bg-[#8A86D5] hover:bg-[#7975C9] text-white rounded-full text-[11px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 disabled={isLoading}
               >
                 {isLoading ? "Mengupdate..." : "Ubah Profile"}

@@ -28,7 +28,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 fixed md:static
                 top-0 left-0
                 w-[280px] lg:w-[270px]
-                bg-[#FFFFFF]
+                bg-[#FFFFFF] dark:bg-[#0D0D0D]
                 flex flex-col 
                 h-full min-h-screen
                 z-50
@@ -46,14 +46,16 @@ export default function Sidebar({ isOpen, onClose }) {
                 className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
               />
             </div>
-            <span className="font-semibold text-base sm:text-lg">BUWUHAN</span>
+            <span className="font-semibold text-base sm:text-lg dark:text-[#ffffff]">
+              BUWUHAN
+            </span>
           </div>
 
           <button
             onClick={onClose}
-            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
+            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-[#FFFFFF]" />
           </button>
         </div>
 
@@ -87,7 +89,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <div className="px-4 sm:px-6 md:px-5 lg:px-7 py-4 sm:py-5">
           <button
-            className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center gap-4 sm:gap-5 md:gap-6 px-3 sm:px-4 py-3 sm:py-4 text-[#000000] dark:text-[#ffffff] hover:bg-[#8A86D533] rounded-lg text-xs sm:text-sm md:text-xs transition-all duration-200 cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
