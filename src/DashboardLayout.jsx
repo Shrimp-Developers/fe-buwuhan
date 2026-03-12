@@ -24,7 +24,7 @@ export default function DashboardLayout() {
     }
 
     return (
-        <div className="flex h-screen bg-[#F5F6FA]">
+        <div className="flex h-screen bg-[#F5F6FA] dark:bg-[#141414]">
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
