@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { userLogin } from "../services/authService";
+import Cookies from "js-cookie";
 
 export const AuthContext = createContext(null);
 
@@ -8,16 +9,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  // cek token 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const userData = localStorage.getItem("userData");
+    const userData = Cookies.get("userData");
 
     if (userData) {
       setUser(JSON.parse(userData));
-    }
-
-    if (token) {
       setIsAuthenticated(true);
     }
 
@@ -29,46 +25,35 @@ export const AuthProvider = ({ children }) => {
       const response = await userLogin({ email, password });
       const data = response.data;
 
-      // save token and user data to localStorage
-      localStorage.setItem("accessToken", data.data.accessToken);
-      localStorage.setItem("userData", JSON.stringify(data.data));
-
-      // update state
-      setIsAuthenticated(true);
-      setUser(data.data);
-
-      return {
-        success: true,
-        data: data.data,
+      const safeUserData = {
+        id: data.data.id,
+        fullName: data.data.fullName,
+        email: data.data.email,
+        avatar: data.data.avatar,
       };
+
+      Cookies.set("userData", JSON.stringify(safeUserData), { expires: 7 });
+
+      setIsAuthenticated(true);
+      setUser(safeUserData);
+
+      return { success: true, data: data.data };
     } catch (error) {
       return {
         success: false,
-        error:
-          error.response?.data?.message ||
-          "Email atau password salah",
+        error: error.response?.data?.message || "Email atau password salah",
       };
     }
   };
 
-  // Logout function to clear token and user data
   const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
+    Cookies.remove("userData");
     setIsAuthenticated(false);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated,
-        loading,
-        user,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, loading, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -76,10 +61,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };
