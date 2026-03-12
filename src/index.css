@@ -1,127 +1,133 @@
- @import "tailwindcss";
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: "Poppins", sans-serif;
+  --font-sans: "Poppins", sans-serif;
 }
 
 @layer base {
-    body {
-        @apply font-sans;
-    }
+  body {
+    @apply font-sans;
+  }
 }
 
 .my-alert-popup {
-    border-radius: 20px !important;
-    width: 90% !important;
-    max-width: 320px !important;
-    height: auto !important;
-    min-height: 280px !important;
-    padding: 20px 15px !important;
+  border-radius: 20px !important;
+  width: 90% !important;
+  max-width: 320px !important;
+  height: auto !important;
+  min-height: 280px !important;
+  padding: 20px 15px !important;
 }
 
 .my-alert-title {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #8D8D9B !important;
-    margin-top: 10px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #8d8d9b !important;
+  margin-top: 10px !important;
 }
 
 .my-alert-text {
-    font-size: 13px !important;
-    color: #7A7A7A !important;
-    padding: 0 10px !important;
+  font-size: 13px !important;
+  color: #7a7a7a !important;
+  padding: 0 10px !important;
 }
 
 .my-confirm-btn {
-    color: #ffffff !important;
-    background-color: #8A86D5 !important;
-    border-radius: 20px !important;
-    padding: 8px 25px !important;
-    font-weight: 600 !important;
-    box-shadow: none !important;
-    font-size: 14px !important;
+  color: #ffffff !important;
+  background-color: #8a86d5 !important;
+  border-radius: 20px !important;
+  padding: 8px 25px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
 }
 
 .my-alert-image {
-    margin: 15px auto 10px !important;
+  margin: 15px auto 10px !important;
 }
 
 .my-cancel-btn {
-    color: #ffffff !important;
-    background-color: #8A86D5 !important;
-    border-radius: 20px !important;
-    padding: 6px 25px !important;
-    font-weight: 600 !important;
-    box-shadow: none !important;
-    font-size: 14px !important;
-    margin-right: 10px !important;
-};
-
-.swal2-actions {
-    gap: 15px !important;
+  color: #ffffff !important;
+  background-color: #8a86d5 !important;
+  border-radius: 20px !important;
+  padding: 6px 25px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  margin-right: 10px !important;
+  cursor: pointer !important;
 }
 
+.swal2-actions {
+  gap: 15px !important;
+}
 
 @media (max-width: 640px) {
-    .my-alert-popup {
-        width: 85% !important;
-        max-width: 280px !important;
-        min-height: 260px !important;
-        border-radius: 18px !important;
-        padding: 18px 12px !important;
-    }
-    
-    .my-alert-title {
-        font-size: 16px !important;
-        margin-top: 8px !important;
-    }
-    
-    .my-alert-text {
-        font-size: 12px !important;
-    }
-    
-    .my-confirm-btn {
-        padding: 7px 20px !important;
-        font-size: 13px !important;
-        border-radius: 18px !important;
-    }
+  .my-alert-popup {
+    width: 85% !important;
+    max-width: 280px !important;
+    min-height: 260px !important;
+    border-radius: 18px !important;
+    padding: 18px 12px !important;
+  }
 
-    .my-cancel-btn {
-        padding: 5px 20px !important;
-        font-size: 13px !important;
-        border-radius: 18px !important;
-        margin-right: 8px !important;
-    }
+  .my-alert-title {
+    font-size: 16px !important;
+    margin-top: 8px !important;
+  }
 
-    .swal2-image {
-        width: 80px !important;
-        height: 80px !important;
-    }
+  .my-alert-text {
+    font-size: 12px !important;
+  }
+
+  .my-confirm-btn {
+    padding: 7px 20px !important;
+    font-size: 13px !important;
+    border-radius: 18px !important;
+    cursor: pointer !important;
+  }
+
+  .my-cancel-btn {
+    padding: 5px 20px !important;
+    font-size: 13px !important;
+    border-radius: 18px !important;
+    margin-right: 8px !important;
+    cursor: pointer !important;
+  }
+
+  .swal2-image {
+    width: 80px !important;
+    height: 80px !important;
+  }
 }
 
 @media (max-width: 375px) {
-    .my-alert-popup {
-        width: 90% !important;
-        max-width: 260px !important;
-        min-height: 240px !important;
-    }
-    
-    .my-alert-title {
-        font-size: 15px !important;
-    }
-    
-    .my-alert-text {
-        font-size: 11px !important;
-    }
+  .my-alert-popup {
+    width: 90% !important;
+    max-width: 260px !important;
+    min-height: 240px !important;
+  }
 
-     .my-cancel-btn, .my-confirm-btn {
-        padding: 5px 15px !important;
-        font-size: 12px !important;
-        margin-right: 5px !important;
-    }
+  .my-alert-title {
+    font-size: 15px !important;
+  }
 
-    .swal2-image {
-        width: 70px !important;
-        height: 70px !important;
-    }
+  .my-alert-text {
+    font-size: 11px !important;
+  }
+
+  .my-cancel-btn,
+  .my-confirm-btn {
+    padding: 5px 15px !important;
+    font-size: 12px !important;
+    margin-right: 5px !important;
+    cursor: pointer !important;
+  }
+
+  .swal2-image {
+    width: 70px !important;
+    height: 70px !important;
+  }
 }
