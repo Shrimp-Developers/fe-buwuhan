@@ -13,7 +13,6 @@ export default function useRegister() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validasi nama
     if (fullName.length < 3 || fullName.length > 100) {
 
       await alertError(
@@ -26,7 +25,6 @@ export default function useRegister() {
       return;
     }
 
-    // Validasi email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email || !emailRegex.test(email)) {

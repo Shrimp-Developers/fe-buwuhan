@@ -50,7 +50,7 @@ export default function useLogin() {
           );
         } else {
           await alertError(
-            result.error || "Email atau kata sandi salah",
+            "Email atau kata sandi salah",
             "Gagal Masuk!",
             "/icon-alert-error.png"
           );

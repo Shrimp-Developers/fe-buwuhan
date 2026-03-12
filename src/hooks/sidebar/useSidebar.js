@@ -11,14 +11,14 @@ export default function useSidebar() {
     const result = await alertConfirm(
       "Apakah Kamu ingin keluar?",
       "Konfirmasi Logout",
-      "/icon-alert-confirm.png"
+      "/icon-alert-confirm.png",
     );
 
     if (result.isConfirmed) {
       await alertSuccess(
         "Sampai jumpa lagi!",
         "Logout Berhasil",
-        "/icon-alert-logout.png"
+        "/icon-alert-logout.png",
       );
 
       logout();
@@ -31,7 +31,7 @@ export default function useSidebar() {
     ${
       pathname === path
         ? "bg-[#8A86D5] text-[#ffffff] hover:bg-[#8A86D5]"
-        : "text-[#000000] hover:bg-[#8A86D533] hover:text-[#000000]"
+        : "text-[#000000] dark:text-[#ffffff] hover:bg-[#8A86D533] hover:text-[#000000] dark:hover:text-[#ffffff]"
     }`;
 
   return {
