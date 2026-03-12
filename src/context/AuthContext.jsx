@@ -25,13 +25,14 @@ export const AuthProvider = ({ children }) => {
       const response = await userLogin({ email, password });
       const data = response.data;
 
+      Cookies.set("accessToken", data.data.accessToken, { expires: 7 });
+
       const safeUserData = {
         id: data.data.id,
         fullName: data.data.fullName,
         email: data.data.email,
         avatar: data.data.avatar,
       };
-
       Cookies.set("userData", JSON.stringify(safeUserData), { expires: 7 });
 
       setIsAuthenticated(true);
@@ -47,13 +48,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    Cookies.remove("accessToken");
     Cookies.remove("userData");
     setIsAuthenticated(false);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, loading, user, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
